@@ -43,27 +43,21 @@ const handleFunc = async (data, context) => {
 			'The function must be called with a valid thumbnail value.',
 		)
 	}
-	if (data.uploads && typeof data.uploads !== 'array') {
+	if (data.uploads && !Array.isArray(data.uploads)) {
 		// Throwing an HttpsError so that the client gets the error details.
 		throw new functions.https.HttpsError(
 			'failed-precondition',
 			'The function must be called with a valid uploads value.',
 		)
 	}
-	if (data.tags && typeof data.tags !== 'array') {
+	if (data.tags && !Array.isArray(data.tags)) {
 		// Throwing an HttpsError so that the client gets the error details.
 		throw new functions.https.HttpsError(
 			'failed-precondition',
 			'The function must be called with a valid tags value.',
 		)
 	}
-	if (data.uploads && typeof data.uploads !== 'array') {
-		// Throwing an HttpsError so that the client gets the error details.
-		throw new functions.https.HttpsError(
-			'failed-precondition',
-			'The function must be called with a valid uploads value.',
-		)
-	}
+
 	if (data.folder && typeof data.folder !== 'string') {
 		// Throwing an HttpsError so that the client gets the error details.
 		throw new functions.https.HttpsError(
