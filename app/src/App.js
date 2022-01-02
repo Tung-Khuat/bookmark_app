@@ -3,7 +3,6 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 
 function App(props) {
-	console.log(props)
 	return (
 		<div className="App">
 			<Bookmark />

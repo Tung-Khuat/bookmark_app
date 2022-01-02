@@ -49,6 +49,7 @@ function ImageDropzone({_callbackOnDrop}) {
 	const {getRootProps, getInputProps, isDragActive} = useDropzone({
 		accept: 'image/*',
 		onDrop: acceptedFiles => {
+			_callbackOnDrop(acceptedFiles)
 			setFiles(acceptedFiles.map(file => Object.assign(file, {
 				preview: URL.createObjectURL(file)
 			})));
@@ -58,7 +59,6 @@ function ImageDropzone({_callbackOnDrop}) {
 
 	useEffect(() => {
 		files.forEach(file => URL.revokeObjectURL(file.preview));
-		_callbackOnDrop(files)
 	}, [files]);
 
 	const previews = files.map(file => (

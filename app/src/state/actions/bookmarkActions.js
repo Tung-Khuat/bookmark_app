@@ -26,3 +26,27 @@ export const _createBookmark = ({ title, description, link, thumbnail, uploads, 
 			return false
 		}
 	}
+
+export const _updateBookmark = ({ title, description, link, thumbnail, uploads, tags, folder, uuid }) =>
+	async function (dispatch, getState, getFirebase) {
+		try {
+			const messageChannelCreate = functions.httpsCallable(
+				'bookmarkUpdate',
+			)
+			const result = await messageChannelCreate({
+				title,
+				description,
+				link,
+				thumbnail, 
+				uploads,
+				tags,
+				folder,
+				uuid
+			})
+			return result
+		} catch (ex) {
+			console.log(ex)
+			if (window.sentry) window.sentry.captureException(ex)
+			return false
+		}
+	}
