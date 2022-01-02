@@ -5,6 +5,7 @@ import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore'
 import 'firebase/compat/functions'
 import 'firebase/compat/auth'
+import { getStorage } from "firebase/storage";
 import {
 	firebaseReducer
   } from 'react-redux-firebase'
@@ -26,7 +27,8 @@ const firebaseConfig = {
 
 // Initialize firebase instance
 export const firebaseApp = firebase.initializeApp(firebaseConfig)
-const auth = firebaseApp.auth()
+export const storage = getStorage(firebaseApp)
+export const auth = firebaseApp.auth()
 
 if (process.env.REACT_APP_FIREBASE_EMULATORS === 'enabled') {
 	firebaseApp.functions('europe-west2').useEmulator('localhost', 5001)
