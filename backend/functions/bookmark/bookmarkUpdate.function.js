@@ -87,8 +87,8 @@ const handleFunc = async (data, context) => {
 	if (data.title) update.title = title
 	if (typeof data.description === 'string') update.description = description
 	if (data.link) update.link = link
-	if (data.thumbnail) {update.thumbnail = thumbnail}
-	if (typeof data.description === 'string') {
+	if (data.thumbnail) update.thumbnail = thumbnail
+	if (data.uploads) {
 		update.uploads = uploads
 		if(!data.thumbnail && !bookmarkData.thumbnail && data.uploads.length > 0){
 			update.thumbnail = data.uploads[0]
