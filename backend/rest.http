@@ -1,0 +1,8 @@
+POST http://localhost:5001/bookmark2021-9b9cd/europe-west2/bookmarkCreate
+Content-Type: application/json
+
+{
+	"title": "Test",
+	"link": "https://www.google.com",
+	"description": "test"
+}
