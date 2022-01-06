@@ -8,6 +8,7 @@ import { createFirestoreInstance } from 'redux-firestore'
 import firebase from 'firebase/compat/app'
 import { SnackbarProvider } from 'notistack';
 import { StyledEngineProvider } from '@mui/material/styles';
+import GlobalStyles from './components/StyledComponents/GlobalStyles'
 
 const rrfProps = {
 	firebase,
@@ -27,6 +28,7 @@ ReactDOM.render(
 			<ReactReduxFirebaseProvider {...rrfProps}>
 				<StyledEngineProvider injectFirst>					
 					<SnackbarProvider maxSnack={3}>
+						<GlobalStyles />
 						<App />
 					</SnackbarProvider>
 				</StyledEngineProvider>

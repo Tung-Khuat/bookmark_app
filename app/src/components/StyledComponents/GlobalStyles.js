@@ -10,6 +10,12 @@ const GlobalStyles = createGlobalStyle`
     	scroll-behavior: smooth;
 	}
 
+	body {
+		color: #242E4C;
+		font-family: "Muli", sans-serif;
+		background: #fcfcff;
+	}
+
 	* {
 		margin: 0; 
 		padding: 0;
