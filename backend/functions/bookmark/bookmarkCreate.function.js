@@ -31,7 +31,7 @@ const handleFunc = async (data, context) => {
 		thumbnail,
 		uploads: uploads || [],
 		folder,
-		ts,
+		createdAt: ts,
 	})
 
 	const bookmark = await db.collection('bookmark').doc(dataUUID).get()
