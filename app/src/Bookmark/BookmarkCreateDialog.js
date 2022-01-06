@@ -99,7 +99,7 @@ function BookmarkCreateDialog (props) {
 		if(uploadFiles && bookmarkResponse) {
 			const renamedFiles = getRenamedFilesToIncludeBookmarkUUID(uploadFiles, bookmarkResponse.uuid)
 			renamedFiles.forEach((file) => {
-				const storageRef = ref(storage, `bookmark-uploads/${file.name}`)
+				const storageRef = ref(storage, `bookmark-uploads/${bookmarkResponse.uuid}/${file.name}`)
 				const uploadTask = uploadBytesResumable(storageRef, file)
 				uploadTask.on(
 					"state_changed",
