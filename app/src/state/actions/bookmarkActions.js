@@ -27,7 +27,7 @@ export const _createBookmark = ({ title, description, link, thumbnail, uploads, 
 		}
 	}
 
-export const _updateBookmark = ({ title, description, link, thumbnail, uploads, tags, folder, uuid }) =>
+export const _updateBookmark = ({ title, description, link, thumbnail, uploads, tags, folder }, uuid) =>
 	async function (dispatch, getState, getFirebase) {
 		try {
 			const messageChannelCreate = functions.httpsCallable(
