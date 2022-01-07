@@ -8,6 +8,7 @@ import Card from '@mui/material/Card'
 import { Button, Tooltip } from '@mui/material'
 import { ContentCopy } from '@mui/icons-material'
 import moment from 'moment'
+import BookmarkUpdateDialog from './BookmarkUpdateDialog'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -24,6 +25,7 @@ const BookmarkCard = styled(Card)`
 	width: 320px;
 	height: 275px;
 	box-shadow: 0 20px 10px -15px rgb(197 192 249 / 20%);
+	cursor: pointer;
 	&:hover {
 		box-shadow: 0 20px 10px -15px rgb(95 98 214 / 20%);
 		transform: scale(1.03);
@@ -46,6 +48,8 @@ const BookmarkInfo = styled.div`
 
 function Bookmark ({ bookmarks }) {
 	const [createDialogVisible, setCreateDialogVisible] = useState(false)
+	const [updateDialogVisible, setUpdateDialogVisible] = useState(false)
+	const [bookmarkInUpdateDialog, setBookmarkInUpdateDialog] = useState(false)
 	console.log(bookmarks)
 	const renderTags = (tag) => {
 		return (
@@ -54,7 +58,8 @@ function Bookmark ({ bookmarks }) {
 	}
 	const renderBookmark = (bookmark) => {
 		return (
-			<BookmarkCard onClick={()=>console.log("open edit dialog")}>
+			<BookmarkCard 
+				onClick={()=>{setBookmarkInUpdateDialog(bookmark); setUpdateDialogVisible(true)}}>
 					{
 						bookmark.thumbnail ? (
 							<Thumbnail url={bookmark.thumbnail} />
@@ -86,6 +91,15 @@ function Bookmark ({ bookmarks }) {
 				{ bookmarks ? bookmarks.map(renderBookmark) : <div>No Bookmarks found</div> }
 			</BookmarksContainer>
 			<BookmarkCreateDialog visible={createDialogVisible} _setVisible={setCreateDialogVisible} />
+			{
+				bookmarkInUpdateDialog && updateDialogVisible && (
+					<BookmarkUpdateDialog 
+						bookmark={bookmarkInUpdateDialog} 
+						visible={updateDialogVisible} 
+						_setVisible={setUpdateDialogVisible} 
+					/>
+				)
+			}
 		</div>
 	)
 }
