@@ -6,9 +6,8 @@ import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import * as bookmarkActions from '../../state/actions/bookmarkActions'
 import { useSnackbar } from 'notistack'
-import { ManageUploadsAndThumbnailPanel } from './ManageUploadsAndThumbnailPanel'
+import ManageUploadsAndThumbnailPanel from './ManageUploadsAndThumbnailPanel'
 import { firestoreConnect } from 'react-redux-firebase'
-import WithLoadingUntilFirestoreLoaded from '../../components/HOC/WithLoadingUntilFirestoreLoaded'
 
 const StyledInputField = styled(TextField)`
 	width: 100%;
