@@ -8,7 +8,7 @@ import Card from '@mui/material/Card'
 import { Button, Tooltip } from '@mui/material'
 import { ContentCopy } from '@mui/icons-material'
 import moment from 'moment'
-import BookmarkUpdateDialog from './BookmarkUpdateDialog'
+import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -49,8 +49,8 @@ const BookmarkInfo = styled.div`
 function Bookmark ({ bookmarks }) {
 	const [createDialogVisible, setCreateDialogVisible] = useState(false)
 	const [updateDialogVisible, setUpdateDialogVisible] = useState(false)
-	const [bookmarkInUpdateDialog, setBookmarkInUpdateDialog] = useState(false)
-	console.log(bookmarks)
+	const [bookmarkUUIDForUpdate, setBookmarkUUIDForUpdate] = useState(null)
+
 	const renderTags = (tag) => {
 		return (
 			<div>{tag.label}</div>
@@ -59,7 +59,7 @@ function Bookmark ({ bookmarks }) {
 	const renderBookmark = (bookmark) => {
 		return (
 			<BookmarkCard 
-				onClick={()=>{setBookmarkInUpdateDialog(bookmark); setUpdateDialogVisible(true)}}>
+				onClick={()=>{setBookmarkUUIDForUpdate(bookmark.uuid); setUpdateDialogVisible(true)}}>
 					{
 						bookmark.thumbnail ? (
 							<Thumbnail url={bookmark.thumbnail} />
@@ -70,7 +70,11 @@ function Bookmark ({ bookmarks }) {
 						<Tooltip title={bookmark.link}><BookmarkTitle style={{margin: 0}}>{bookmark.title}</BookmarkTitle></Tooltip>
 						<Tooltip 
 							title={bookmark.link || 'No link provided'} 
-							onClick={()=>navigator.clipboard.writeText(bookmark.link)}
+							onClick={(e)=>{
+								e.preventDefault()
+								e.stopPropagation()
+								navigator.clipboard.writeText(bookmark.link)
+							}}
 							style={{
 								cursor: 'pointer',
 								fontSize: '1.1em',
@@ -92,9 +96,9 @@ function Bookmark ({ bookmarks }) {
 			</BookmarksContainer>
 			<BookmarkCreateDialog visible={createDialogVisible} _setVisible={setCreateDialogVisible} />
 			{
-				bookmarkInUpdateDialog && updateDialogVisible && (
+				bookmarkUUIDForUpdate && updateDialogVisible && (
 					<BookmarkUpdateDialog 
-						bookmark={bookmarkInUpdateDialog} 
+						bookmarkUUID={bookmarkUUIDForUpdate} 
 						visible={updateDialogVisible} 
 						_setVisible={setUpdateDialogVisible} 
 					/>
