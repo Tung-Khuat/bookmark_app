@@ -38,10 +38,10 @@ function BookmarkCreateDialog (props) {
 	const updateInputValue = (value) => {
 		setBookmark({...bookmark, ...value})
 	}
-	const getRenamedFilesToIncludeBookmarkUUID = (files, bookmarkUUID) => {	
+	const getSanitizedNameFiles = (files) => {	
 		const renamedFiles = files.map((file) => {
 			const sanitizedFile = renameFileWithSanitizedName(file)
-			const newFileName = `${bookmarkUUID};${sanitizedFile.name.replace(/ /g,"_")}`
+			const newFileName = sanitizedFile.name.replace(/ /g,"_")
 			return new File([file], newFileName);
 		})
 		return renamedFiles
@@ -84,8 +84,7 @@ function BookmarkCreateDialog (props) {
 				if(uploadFiles.length === uploadURLs.length){
 					const updateUploadResponse = await _updateBookmark({
 						uploads: uploadURLs,
-						uuid: bookmarkResponse.uuid,
-					})
+					},  bookmarkResponse.uuid)
 					if (updateUploadResponse) {
 						enqueueSnackbar('Upload successful', {variant: 'success'})
 						setBookmark(initialBookmarkState)
@@ -97,7 +96,7 @@ function BookmarkCreateDialog (props) {
 		}
 
 		if(uploadFiles && bookmarkResponse) {
-			const renamedFiles = getRenamedFilesToIncludeBookmarkUUID(uploadFiles, bookmarkResponse.uuid)
+			const renamedFiles = getSanitizedNameFiles(uploadFiles, bookmarkResponse.uuid)
 			renamedFiles.forEach((file) => {
 				const storageRef = ref(storage, `bookmark-uploads/${bookmarkResponse.uuid}/${file.name}`)
 				const uploadTask = uploadBytesResumable(storageRef, file)
