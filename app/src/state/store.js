@@ -21,9 +21,8 @@ const firebaseConfig = {
 	projectId: "bookmark2021-9b9cd",
 	storageBucket: "bookmark2021-9b9cd.appspot.com",
 	messagingSenderId: "911713041894",
-	appId: "1:911713041894:web:2c9e4a350d414549e32a27",
-	databaseURL: 'https://taloyhtio-app.firebaseio.com',
-};
+	appId: "1:911713041894:web:2c9e4a350d414549e32a27"
+}
 
 // Initialize firebase instance
 export const firebaseApp = firebase.initializeApp(firebaseConfig)
