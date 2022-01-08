@@ -85,7 +85,7 @@ function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updat
 				<Preview 
 					url={url} 
 					onClick={()=>setCurrentSpotlight(preview)} 
-					style={{ borderColor: url === currentSpotlight.url ? '#1776d1' : 'transparent'}}
+					style={{ borderColor: url === currentSpotlight?.url ? '#1776d1' : 'transparent'}}
 				/>
 			</Badge>
 		)
@@ -97,13 +97,13 @@ function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updat
 			return false
 		
 		const uploadFileRef = ref(storage, `bookmark-uploads/${bookmarkUUID}/${uploadFile.name}`)
-		const spotlightIndex = uploadLinks.findIndex(u => u.url === currentSpotlight.url)
+		const spotlightIndex = uploadLinks.findIndex(u => u.url === currentSpotlight?.url)
 		const nextUploadInPreview = uploadLinks[spotlightIndex + 1 < uploadLinks.length ? spotlightIndex +1 : 0]
 		deleteObject(uploadFileRef).then(async () => {
 			enqueueSnackbar(`Successfully deleted ${uploadFile.name} file`, {variant: 'success'})
 			const updateUploadResponse = await _updateBookmark({
-				uploads: uploadLinks.filter(upload => upload.url !== currentSpotlight.url),
-				thumbnail: currentSpotlight.url === bookmarkThumbnail.url && nextUploadInPreview
+				uploads: uploadLinks.filter(upload => upload.url !== currentSpotlight?.url),
+				thumbnail: currentSpotlight?.url === bookmarkThumbnail.url && nextUploadInPreview
 			}, bookmarkUUID)
 			if (updateUploadResponse) {
 				enqueueSnackbar('Updated bookmark uploads successful', {variant: 'success'})
@@ -122,7 +122,7 @@ function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updat
 	return (
 		<div>
 			<SpotlightContainer>
-				<Spotlight src={currentSpotlight.url} />
+				<Spotlight src={currentSpotlight?.url} />
 				<SpotlightActions>
 					<ActionButton 
 						onClick={()=>_setThumbnail(currentSpotlight)}
