@@ -33,7 +33,6 @@ function StandardDialog (props) {
 	return (
 		<Dialog
 			{...props}
-			aria-labelledby={`${title || 'untitled'}-dialog`}
 			maxWidth={false}
 		>
 			{renderTitleAction()}
