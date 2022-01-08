@@ -106,7 +106,6 @@ export function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail,
 				visible={addUploadDialogVisible}
 				_setVisible={setAddUploadDialogVisible}
 				bookmarkUUID={bookmarkUUID}
-				existingUploads={uploadLinks}
 			/>
 		</div>
 	)

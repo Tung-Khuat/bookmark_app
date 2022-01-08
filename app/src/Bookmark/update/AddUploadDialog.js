@@ -5,14 +5,14 @@ import { bindActionCreators, compose } from 'redux'
 import StandardDialog from '../../components/Dialogs/StandardDialog'
 import { useSnackbar } from 'notistack'
 import { storage } from '../../state/store'
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
+import { getDownloadURL, ref, uploadBytesResumable, listAll } from "firebase/storage"
 import {
 	renameFileWithSanitizedName,
 } from '../../utils/sanitizeFileName'
 import ImageDropzone from '../../components/ImageDropzone'
 import * as bookmarkActions from '../../state/actions/bookmarkActions'
 
-function AddUploadDialog({visible, _setVisible, bookmarkUUID, existingUploads, _updateBookmark}) {
+function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark}) {
 	const [processing, setProcessing] = useState(false)
 	const [uploadFiles, setUploadFiles ] = useState([])
 	const { enqueueSnackbar } = useSnackbar();
@@ -27,7 +27,8 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, existingUploads, _
 	}
 
 	const uploadFilesAndSaveURL = () => {
-		const uploadURLs = []
+		let filesUploadedCount = 0
+		setProcessing(true)
 		const onSnapshot = (snapshot) => {
 			const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 			console.log('Upload is ' + progress + '% done');
@@ -40,21 +41,39 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, existingUploads, _
 					break;
 			}
 		}
-		const onUploadComplete = (uploadTask) => {
-			getDownloadURL(uploadTask.snapshot.ref).then( async (url) => {
-				uploadURLs.push(url)
-				enqueueSnackbar(`Uploaded ${uploadTask.snapshot.ref}`, {variant: 'success'})
-				if(uploadFiles.length === uploadURLs.length){
-					const updateUploadResponse = await _updateBookmark({
-						uploads: [...existingUploads, ...uploadURLs],
-					}, bookmarkUUID)
-					if (updateUploadResponse) {
-						enqueueSnackbar('Updated bookmark uploads successful', {variant: 'success'})
-					} else {
-						enqueueSnackbar('Update book uploads failed. Please try again later.', {variant: 'error'})
-					}
-				}
-			});		  
+		const onUploadComplete = async (uploadTask) => {
+			enqueueSnackbar(`Uploaded ${uploadTask._metadata.name}`, {variant: 'success'})
+			filesUploadedCount++
+			if(uploadFiles.length === filesUploadedCount){
+				const bookmarkFileListRef = ref(storage, `bookmark-uploads/${bookmarkUUID}`)
+				const downloadPaths = []
+				listAll(bookmarkFileListRef)
+					.then((res) => {
+						res.prefixes.forEach((folderRef) => {
+						// All folders under ref.
+						})
+						res.items.forEach((fileRef) => {
+						// All files under ref.
+							getDownloadURL(fileRef).then(async (url) => {
+								downloadPaths.push(url)
+								if(res.items.length === downloadPaths.length) {
+									const updateUploadResponse = await _updateBookmark({
+										uploads: downloadPaths,
+									}, bookmarkUUID)
+									if (updateUploadResponse) {
+										enqueueSnackbar('Updated bookmark uploads successful', {variant: 'success'})
+									} else {
+										enqueueSnackbar('Update book uploads failed. Please try again later.', {variant: 'error'})
+									}
+									setProcessing(false)
+									_setVisible(false)
+								}
+							})  
+						})
+					}).catch((error) => {
+						console.log(error)
+					})				
+			}
 		}
 
 		if(uploadFiles && bookmarkUUID) {
@@ -65,7 +84,7 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, existingUploads, _
 				uploadTask.on(
 					"state_changed",
 					onSnapshot,
-					error => console.log(error),
+					error => enqueueSnackbar(error, {variant: 'error'}),
 					()=>onUploadComplete(uploadTask),
 				)
 			})
