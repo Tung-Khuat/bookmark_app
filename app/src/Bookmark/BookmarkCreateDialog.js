@@ -79,6 +79,7 @@ function BookmarkCreateDialog (props) {
 			}
 		}
 		const onUploadComplete = (uploadTask) => {
+			enqueueSnackbar(`Uploaded ${uploadTask._metadata.name}`, {variant: 'success'})
 			getDownloadURL(uploadTask.snapshot.ref).then( async (url) => {
 				uploadURLs.push(url)
 				if(uploadFiles.length === uploadURLs.length){
