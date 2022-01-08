@@ -8,6 +8,7 @@ import Card from '@mui/material/Card'
 import { Button, Tooltip } from '@mui/material'
 import { ContentCopy } from '@mui/icons-material'
 import moment from 'moment'
+import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -24,6 +25,7 @@ const BookmarkCard = styled(Card)`
 	width: 320px;
 	height: 275px;
 	box-shadow: 0 20px 10px -15px rgb(197 192 249 / 20%);
+	cursor: pointer;
 	&:hover {
 		box-shadow: 0 20px 10px -15px rgb(95 98 214 / 20%);
 		transform: scale(1.03);
@@ -46,7 +48,9 @@ const BookmarkInfo = styled.div`
 
 function Bookmark ({ bookmarks }) {
 	const [createDialogVisible, setCreateDialogVisible] = useState(false)
-	console.log(bookmarks)
+	const [updateDialogVisible, setUpdateDialogVisible] = useState(false)
+	const [bookmarkUUIDForUpdate, setBookmarkUUIDForUpdate] = useState(null)
+
 	const renderTags = (tag) => {
 		return (
 			<div>{tag.label}</div>
@@ -54,10 +58,11 @@ function Bookmark ({ bookmarks }) {
 	}
 	const renderBookmark = (bookmark) => {
 		return (
-			<BookmarkCard onClick={()=>console.log("open edit dialog")}>
+			<BookmarkCard 
+				onClick={()=>{setBookmarkUUIDForUpdate(bookmark.uuid); setUpdateDialogVisible(true)}}>
 					{
 						bookmark.thumbnail ? (
-							<Thumbnail url={bookmark.thumbnail} />
+							<Thumbnail url={bookmark.thumbnail.url} />
 						) : <div style={{height: 180}} />
 					}
 				<BookmarkInfo>
@@ -65,7 +70,11 @@ function Bookmark ({ bookmarks }) {
 						<Tooltip title={bookmark.link}><BookmarkTitle style={{margin: 0}}>{bookmark.title}</BookmarkTitle></Tooltip>
 						<Tooltip 
 							title={bookmark.link || 'No link provided'} 
-							onClick={()=>navigator.clipboard.writeText(bookmark.link)}
+							onClick={(e)=>{
+								e.preventDefault()
+								e.stopPropagation()
+								navigator.clipboard.writeText(bookmark.link)
+							}}
 							style={{
 								cursor: 'pointer',
 								fontSize: '1.1em',
@@ -86,6 +95,15 @@ function Bookmark ({ bookmarks }) {
 				{ bookmarks ? bookmarks.map(renderBookmark) : <div>No Bookmarks found</div> }
 			</BookmarksContainer>
 			<BookmarkCreateDialog visible={createDialogVisible} _setVisible={setCreateDialogVisible} />
+			{
+				bookmarkUUIDForUpdate && updateDialogVisible && (
+					<BookmarkUpdateDialog 
+						bookmarkUUID={bookmarkUUIDForUpdate} 
+						visible={updateDialogVisible} 
+						_setVisible={setUpdateDialogVisible} 
+					/>
+				)
+			}
 		</div>
 	)
 }

@@ -14,7 +14,7 @@ const DialogTitleWithActions = styled(StandardDialogTitle)`
 `
 
 function StandardDialog (props) {
-	const { _setOpen, title, leftTitleActions, rightTitleActions, dialogActions, noTitle, children } = props
+	const { _setOpen, dialogTitle, leftTitleActions, rightTitleActions, dialogActions, noTitle, children } = props
 	const defaultCloseButton = <Button onClick={()=>_setOpen(false)}><Close style={{color: '#fff'}} /></Button>
 
 	const renderTitleAction = () => {
@@ -24,7 +24,7 @@ function StandardDialog (props) {
 		return (
 			<DialogTitleWithActions>
 				<div>{leftTitleActions ? [defaultCloseButton, ...leftTitleActions] : defaultCloseButton}</div>
-				<div style={{ width: '100%', margin: '0 16px' }}>{title}</div>
+				<div style={{ width: '100%', margin: '0 16px' }}>{dialogTitle}</div>
 				<div>{rightTitleActions}</div>
 			</DialogTitleWithActions>
 		)
@@ -33,7 +33,6 @@ function StandardDialog (props) {
 	return (
 		<Dialog
 			{...props}
-			aria-labelledby={`${title || 'untitled'}-dialog`}
 			maxWidth={false}
 		>
 			{renderTitleAction()}
