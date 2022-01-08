@@ -103,7 +103,9 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark}) 
 			_setOpen={_setVisible}
 			title="Add upload"
 			dialogActions={[
-				<Button onClick={uploadFilesAndSaveURL}>{processing ? 'Loading...' : 'Upload'}</Button>
+				<Button 
+					disabled={!uploadFiles || uploadFiles.length < 1} 
+					onClick={uploadFilesAndSaveURL}>{processing ? 'Loading...' : 'Upload'}</Button>
 			]}
 		>
 			<ImageDropzone _callbackOnDrop={(files) => setUploadFiles(files)} />
