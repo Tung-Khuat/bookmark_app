@@ -1,7 +1,8 @@
-import { Delete, Photo } from '@mui/icons-material'
+import { AddCircle, Delete, Photo } from '@mui/icons-material'
 import { Badge, IconButton } from '@mui/material'
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import AddUploadDialog from './AddUploadDialog'
 
 const PreviewsContainer = styled.div`
 	display: grid;
@@ -48,9 +49,23 @@ const ActionButton = styled(IconButton)`
 		background-color: #1776d1;
 	}
 `
+const AddUploadButton = styled.div`
+	cursor: pointer;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	display: grid;
+	place-items: center;
+	opacity: 0.5;
+	&:hover {
+		color: #1776d1;
+		opacity: 1;
+	}
+`
 
-export function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updateUploadLinks, _setThumbnail}) {
+export function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updateUploadLinks, _setThumbnail, bookmarkUUID}) {
 	const [currentSpotlight, setCurrentSpotlight] = useState(bookmarkThumbnail || uploadLinks[0])
+	const [addUploadDialogVisible, setAddUploadDialogVisible] = useState(false)
 	const renderPreviews = (url) => {
 		const isBookmarkThumbnail = url === bookmarkThumbnail
 		return (
@@ -85,7 +100,15 @@ export function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail,
 			</SpotlightContainer>
 			<PreviewsContainer>
 				{uploadLinks?.map(renderPreviews)}
+				<AddUploadButton onClick={()=>setAddUploadDialogVisible(true)}><AddCircle style={{ fontSize: '2em' }} /></AddUploadButton>
 			</PreviewsContainer>
+			<AddUploadDialog 
+				visible={addUploadDialogVisible}
+				_setVisible={setAddUploadDialogVisible}
+				bookmarkUUID={bookmarkUUID}
+				existingUploads={uploadLinks}
+			/>
 		</div>
 	)
 }
+
