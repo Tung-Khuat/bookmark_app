@@ -19,6 +19,8 @@ const InstructionText = styled.p`
 const PreviewsContainer = styled.div`
 	display: flex;
 	margin-top: 8px;
+	overflow: scroll;
+	width: 100%;
 `
 const PreviewOuter = styled.div`
 	display: inline-flex;
