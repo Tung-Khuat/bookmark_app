@@ -8,7 +8,7 @@ const handleFunc = async (data, context) => {
 		title, //string
 		description, //string
 		link, //string
-		thumbnail, //string
+		thumbnail, //object
 		uploads, //array of strings
 		tags,// array of tag objects
 		folder, // string
@@ -36,7 +36,7 @@ const handleFunc = async (data, context) => {
 			'The function must be called with a valid link value.',
 		)
 	}
-	if (data.thumbnail && typeof data.thumbnail !== 'string') {
+	if (data.thumbnail && typeof data.thumbnail !== 'object') {
 		// Throwing an HttpsError so that the client gets the error details.
 		throw new functions.https.HttpsError(
 			'failed-precondition',

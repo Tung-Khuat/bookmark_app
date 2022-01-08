@@ -62,7 +62,7 @@ function Bookmark ({ bookmarks }) {
 				onClick={()=>{setBookmarkUUIDForUpdate(bookmark.uuid); setUpdateDialogVisible(true)}}>
 					{
 						bookmark.thumbnail ? (
-							<Thumbnail url={bookmark.thumbnail} />
+							<Thumbnail url={bookmark.thumbnail.url} />
 						) : <div style={{height: 180}} />
 					}
 				<BookmarkInfo>

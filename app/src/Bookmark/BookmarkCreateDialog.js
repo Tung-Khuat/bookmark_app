@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import * as bookmarkActions from '../state/actions/bookmarkActions'
 import { useSnackbar } from 'notistack'
 import { storage } from '../state/store'
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
+import { getDownloadURL, getMetadata, ref, uploadBytesResumable } from "firebase/storage"
 import {
 	renameFileWithSanitizedName,
 } from '../utils/sanitizeFileName'
@@ -65,7 +65,7 @@ function BookmarkCreateDialog (props) {
 	}
 
 	const uploadFilesAndUpdateBookmark = (bookmarkResponse) => {
-		const uploadURLs = []
+		const uploadsInStorage = []
 		const onSnapshot = (snapshot) => {
 			const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 			console.log('Upload is ' + progress + '% done');
@@ -81,10 +81,16 @@ function BookmarkCreateDialog (props) {
 		const onUploadComplete = (uploadTask) => {
 			enqueueSnackbar(`Uploaded ${uploadTask._metadata.name}`, {variant: 'success'})
 			getDownloadURL(uploadTask.snapshot.ref).then( async (url) => {
-				uploadURLs.push(url)
-				if(uploadFiles.length === uploadURLs.length){
+				const fileMetaData = await getMetadata(uploadTask.snapshot.ref)
+				const { name, timeCreated } = fileMetaData
+				uploadsInStorage.push({
+					url,
+					name,
+					createdAt: timeCreated,
+				})
+				if(uploadFiles.length === uploadsInStorage.length){
 					const updateUploadResponse = await _updateBookmark({
-						uploads: uploadURLs,
+						uploads: uploadsInStorage,
 					},  bookmarkResponse.uuid)
 					if (updateUploadResponse) {
 						enqueueSnackbar('Upload successful', {variant: 'success'})

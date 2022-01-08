@@ -66,8 +66,9 @@ const AddUploadButton = styled.div`
 export function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updateUploadLinks, _setThumbnail, bookmarkUUID}) {
 	const [currentSpotlight, setCurrentSpotlight] = useState(bookmarkThumbnail || uploadLinks[0])
 	const [addUploadDialogVisible, setAddUploadDialogVisible] = useState(false)
-	const renderPreviews = (url) => {
-		const isBookmarkThumbnail = url === bookmarkThumbnail
+	const renderPreviews = (preview) => {
+		const { url } = preview
+		const isBookmarkThumbnail = url === bookmarkThumbnail.url
 		return (
 			<Badge 
 				badgeContent={isBookmarkThumbnail && <Photo style={{ fontSize: '1em', color: "fff" }} />}
@@ -75,25 +76,30 @@ export function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail,
 			>
 				<Preview 
 					url={url} 
-					onClick={()=>setCurrentSpotlight(url)} 
-					style={{ borderColor: url === currentSpotlight ? '#1776d1' : 'transparent'}}
+					onClick={()=>setCurrentSpotlight(preview)} 
+					style={{ borderColor: url === currentSpotlight.url ? '#1776d1' : 'transparent'}}
 				/>
 			</Badge>
 		)
 	}
+
+	const handleUploadDelete = () => {
+		console.log("soon")
+	}
+
 	return (
 		<div>
 			<SpotlightContainer>
-				<Spotlight src={currentSpotlight} />
+				<Spotlight src={currentSpotlight.url} />
 				<SpotlightActions>
 					<ActionButton 
 						onClick={()=>_setThumbnail(currentSpotlight)}
-						disabled={currentSpotlight === bookmarkThumbnail} 
-						coloredIcon={currentSpotlight === bookmarkThumbnail}
+						disabled={currentSpotlight?.url === bookmarkThumbnail?.url} 
+						coloredIcon={currentSpotlight?.url === bookmarkThumbnail?.url}
 					>
 						<Photo/>
 					</ActionButton> 
-					<ActionButton  onClick={()=>console.log("TODO: delete")}>
+					<ActionButton  onClick={handleUploadDelete}>
 						<Delete/>
 					</ActionButton> 
 				</SpotlightActions>

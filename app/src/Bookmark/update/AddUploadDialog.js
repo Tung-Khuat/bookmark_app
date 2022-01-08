@@ -5,7 +5,7 @@ import { bindActionCreators, compose } from 'redux'
 import StandardDialog from '../../components/Dialogs/StandardDialog'
 import { useSnackbar } from 'notistack'
 import { storage } from '../../state/store'
-import { getDownloadURL, ref, uploadBytesResumable, listAll } from "firebase/storage"
+import { getDownloadURL, ref, uploadBytesResumable, listAll, getMetadata } from "firebase/storage"
 import {
 	renameFileWithSanitizedName,
 } from '../../utils/sanitizeFileName'
@@ -46,7 +46,7 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark}) 
 			filesUploadedCount++
 			if(uploadFiles.length === filesUploadedCount){
 				const bookmarkFileListRef = ref(storage, `bookmark-uploads/${bookmarkUUID}`)
-				const downloadPaths = []
+				const uploadsInStorage = []
 				listAll(bookmarkFileListRef)
 					.then((res) => {
 						res.prefixes.forEach((folderRef) => {
@@ -55,10 +55,16 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark}) 
 						res.items.forEach((fileRef) => {
 						// All files under ref.
 							getDownloadURL(fileRef).then(async (url) => {
-								downloadPaths.push(url)
-								if(res.items.length === downloadPaths.length) {
+								const fileMetaData = await getMetadata(fileRef)
+								const { name, timeCreated } = fileMetaData
+								uploadsInStorage.push({
+									url,
+									name,
+									createdAt: timeCreated,
+								})
+								if(res.items.length === uploadsInStorage.length) {
 									const updateUploadResponse = await _updateBookmark({
-										uploads: downloadPaths,
+										uploads: uploadsInStorage,
 									}, bookmarkUUID)
 									if (updateUploadResponse) {
 										enqueueSnackbar('Updated bookmark uploads successful', {variant: 'success'})
