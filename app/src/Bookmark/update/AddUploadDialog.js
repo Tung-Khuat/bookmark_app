@@ -101,7 +101,7 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark}) 
 		<StandardDialog
 			open={visible}
 			_setOpen={_setVisible}
-			title="Add upload"
+			dialogTitle="Add upload"
 			dialogActions={[
 				<Button 
 					disabled={!uploadFiles || uploadFiles.length < 1} 

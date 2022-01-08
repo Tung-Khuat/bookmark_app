@@ -60,7 +60,7 @@ function BookmarkUpdateDialog (props) {
 		<StandardDialog
 			open={visible}
 			_setOpen={_setVisible}
-			title={"Bookmark update"}
+			dialogTitle={"Bookmark update"}
 			dialogActions={[
 				<Button onClick={onBookmarkUpdate}>{processing ? 'Loading...' : 'Update'}</Button>
 			]}

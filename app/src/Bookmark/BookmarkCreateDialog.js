@@ -121,7 +121,7 @@ function BookmarkCreateDialog (props) {
 		<StandardDialog
 			open={visible}
 			_setOpen={_setVisible}
-			title={"Bookmark create"}
+			dialogTitle={"Bookmark create"}
 			dialogActions={[
 				<Button onClick={onBookmarkCreate}>{processing ? 'Loading...' : 'Create'}</Button>
 			]}
