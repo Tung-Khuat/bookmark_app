@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button, TextField } from '@mui/material'
+import { Button, CircularProgress, IconButton, TextField } from '@mui/material'
 import StandardDialog from '../../components/Dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -8,6 +8,10 @@ import * as bookmarkActions from '../../state/actions/bookmarkActions'
 import { useSnackbar } from 'notistack'
 import ManageUploadsAndThumbnailPanel from './ManageUploadsAndThumbnailPanel'
 import { firestoreConnect } from 'react-redux-firebase'
+import { Delete } from '@mui/icons-material'
+import { storage } from '../../state/store'
+import { ref, deleteObject, listAll } from "firebase/storage"
+
 
 const StyledInputField = styled(TextField)`
 	width: 100%;
@@ -15,7 +19,7 @@ const StyledInputField = styled(TextField)`
 `
 
 function BookmarkUpdateDialog (props) {
-	const { visible, bookmarkUUID, ordered, _setVisible, _updateBookmark } = props
+	const { visible, bookmarkUUID, ordered, _setVisible, _updateBookmark, _deleteBookmark } = props
 	const [updatedBookmark, setUpdatedBookmark ] = useState(null)
 	const [processing, setProcessing ] = useState(false)
 	const { enqueueSnackbar } = useSnackbar();
@@ -32,7 +36,7 @@ function BookmarkUpdateDialog (props) {
 		}
 	},[bookmark])
 
-	if(!updatedBookmark)
+	if(!updatedBookmark || !bookmark)
 		return null
 
 	const updateInputValue = (value) => {
@@ -56,13 +60,44 @@ function BookmarkUpdateDialog (props) {
 		setProcessing(false)
 	}
 
+	const onBookmarkDelete = async () => {
+		if(processing)
+			return 
+
+		setProcessing(true)
+		const folderRef = ref(storage, `bookmark-uploads/${bookmark.uuid}`)
+		const fileList = await listAll(folderRef)
+		const promises = []
+		for(let item of fileList.items) {
+			promises.push(deleteObject(item))
+		}
+		try {
+			await Promise.all(promises)
+			enqueueSnackbar(`Successfully deleted uploads`, {variant: 'success'})
+			const response = await _deleteBookmark( bookmark.uuid )
+
+			if (response) {
+				enqueueSnackbar('Successfully deleted bookmark', {variant: 'success'})
+			} else {
+				enqueueSnackbar('Something went wrong. Please try again later.', {variant: 'error'})
+			}
+		} catch (error) {
+			enqueueSnackbar('Failed to delete uploads.', {variant: 'error'})
+		}
+
+		setProcessing(false)
+	}
+
 	return (
 		<StandardDialog
 			open={visible}
 			_setOpen={_setVisible}
 			dialogTitle={"Bookmark update"}
 			dialogActions={[
-				<Button onClick={onBookmarkUpdate}>{processing ? 'Loading...' : 'Update'}</Button>
+				<Button onClick={onBookmarkUpdate}>{processing ? <CircularProgress/> : 'Update'}</Button>
+			]}
+			rightTitleActions={[
+				<IconButton onClick={onBookmarkDelete}>{processing ? <CircularProgress/> : <Delete style={{ color:'#fff' }}/>}</IconButton>
 			]}
 		>
 			<StyledInputField
@@ -100,6 +135,7 @@ const mapState = ({
 
 const mapDispatchToProps = (dispatch) => ({
 	_updateBookmark: bindActionCreators(bookmarkActions._updateBookmark, dispatch),
+	_deleteBookmark: bindActionCreators(bookmarkActions._deleteBookmark, dispatch),
 })
 
 export default compose(
