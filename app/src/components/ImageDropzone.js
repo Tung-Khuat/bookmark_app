@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
-import { Button } from '@mui/material'
 import { v4 as uuid } from 'uuid'
+import { StyledAnchor } from './StyledComponents/BasicComponents'
+import { Close } from '@mui/icons-material'
 
 const DropzoneContainer = styled.div`
 	width: 100%;
-	height: 250px;
+	height: 200px;
 	border-radius: 8px;
 	background-color: #fafafa;
 	border: 2px dashed #dbdbdb; 
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 `
 const InstructionText = styled.p`
 	font-size: 1.5em;
-	color: #dbdbdb;
+	color: #adacac;
 `
 const PreviewsContainer = styled.div`
 	display: flex;
@@ -34,6 +36,7 @@ const PreviewOuter = styled.div`
 	height: 125px;
 	padding: 4px;
 	box-sizing: border-box;
+	position: relative;
 `
 const PreviewInner = styled.div`
 	display: flex;
@@ -47,6 +50,26 @@ const PreviewImage = styled.img`
 	width: auto;
 	height: 100%;
 `
+const DropzoneAnchor = styled(StyledAnchor)`
+	opacity: 0.7;
+	&:hover {
+		opacity: 1;
+	}
+`
+const RemoveIconButton = styled.div`
+	border-radius: 50%;
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: #323232;
+	opacity: 0.5;
+	display: grid;
+	place-items: center;
+	&:hover {
+		opacity: 0.8;
+	}
+`
 
 function ImageDropzone({_callbackOnDrop}) {
 	const [files, setFiles] = useState([])
@@ -55,9 +78,6 @@ function ImageDropzone({_callbackOnDrop}) {
 		accept: 'image/*',
 		onDrop: acceptedFiles => {
 			setFiles(acceptedFiles)
-			setFilePreviews(acceptedFiles.map(file => Object.assign(file, {
-				preview: URL.createObjectURL(file)
-			})))
 		},
 		multiple: true,
 		noClick: true,
@@ -66,14 +86,42 @@ function ImageDropzone({_callbackOnDrop}) {
 
 	useEffect(() => {
 		_callbackOnDrop(files)
+		if(files) {
+			setFilePreviews(files.map(file => Object.assign(file, {
+				preview: URL.createObjectURL(file)
+			})))
+		}
 	}, [files])
 
 	useEffect(() => {
 		filePreviews.forEach(file => URL.revokeObjectURL(file.preview))
 	}, [filePreviews])
 
-	const previews = filePreviews.map(file => (
-		<PreviewOuter key={file.name}>
+	const handlePaste = (e) => {
+		if(e.clipboardData.files.length) {
+			const fileObject = e.clipboardData.files[0]
+			const fileUUID = uuid()
+			const newFileName = `${fileObject.name}-${fileUUID}`
+			const renamedFile = new File([fileObject], newFileName)
+
+			setFiles([...files, renamedFile])
+		}
+	}
+	const handleRemoveFile = (index) => {
+		if(index > 0){
+			const updatedFiles = [...files]
+			updatedFiles.splice(index, 1)
+			setFiles(updatedFiles)
+		} else if (index === 0) {
+			setFiles([])
+		}
+	}
+	
+	const previews = filePreviews.map((file, index) => (
+		<PreviewOuter key={index} >
+			<RemoveIconButton onClick={()=>handleRemoveFile(index)}>
+				<Close style={{ fontSize: '1.2em', color: "fff", opacity: 1 }} />
+			</RemoveIconButton>
 			<PreviewInner>
 				<PreviewImage
 					src={file.preview}
@@ -82,35 +130,20 @@ function ImageDropzone({_callbackOnDrop}) {
 		</PreviewOuter>
 	))
 
-	const handlePaste = (e) => {
-		if(e.clipboardData.files.length) {
-			const fileObject = e.clipboardData.files[0]
-			const fileUUID = uuid()
-			const newFileName = `${fileObject.name}-${fileUUID}`
-			const renamedFile = new File([fileObject], newFileName)
-	
-			const fileMetaDataWithPreview = {
-				getRawFile: () => fileObject,
-				name: renamedFile.name,
-				size: fileObject.size,
-				preview: URL.createObjectURL(fileObject),
-			}
-			setFiles([...files, renamedFile])
-			setFilePreviews([...filePreviews, fileMetaDataWithPreview])
-		}
-	}
-
 	return (
 		<div onPaste={handlePaste}>
 			<DropzoneContainer {...getRootProps()}>
 				<input {...getInputProps()} />
 				{
 					isDragActive ?
-					<InstructionText>Drop the files here ...</InstructionText> :
-					<InstructionText>Drag 'n' drop some files here, or click and paste.</InstructionText>
+					<InstructionText>Drop the files here ...</InstructionText> : (
+						<>
+							<InstructionText>Drag 'n' drop or click and paste some files here...</InstructionText>
+							<InstructionText>or <DropzoneAnchor onClick={open}>browse files</DropzoneAnchor></InstructionText>
+						</>
+					)
 				}
 			</DropzoneContainer>
-			<Button style={{marginTop: 4}} variant='outlined' onClick={open}>Select files...</Button>
 			<PreviewsContainer>{previews}</PreviewsContainer>
 		</div>
 	)
