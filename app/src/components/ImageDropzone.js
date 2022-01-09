@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Dropzone, { useDropzone } from 'react-dropzone'
+import { useDropzone } from 'react-dropzone'
+import { v4 as uuid } from 'uuid'
+import { StyledAnchor } from './StyledComponents/BasicComponents'
+import { Close } from '@mui/icons-material'
 
 const DropzoneContainer = styled.div`
 	width: 100%;
-	height: 250px;
+	height: 200px;
 	border-radius: 8px;
 	background-color: #fafafa;
 	border: 2px dashed #dbdbdb; 
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 `
 const InstructionText = styled.p`
 	font-size: 1.5em;
-	color: #dbdbdb;
+	color: #adacac;
 `
 const PreviewsContainer = styled.div`
 	display: flex;
@@ -32,6 +36,7 @@ const PreviewOuter = styled.div`
 	height: 125px;
 	padding: 4px;
 	box-sizing: border-box;
+	position: relative;
 `
 const PreviewInner = styled.div`
 	display: flex;
@@ -45,46 +50,102 @@ const PreviewImage = styled.img`
 	width: auto;
 	height: 100%;
 `
+const DropzoneAnchor = styled(StyledAnchor)`
+	opacity: 0.7;
+	&:hover {
+		opacity: 1;
+	}
+`
+const RemoveIconButton = styled.div`
+	border-radius: 50%;
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: #323232;
+	opacity: 0.5;
+	display: grid;
+	place-items: center;
+	&:hover {
+		opacity: 0.8;
+	}
+`
 
 function ImageDropzone({_callbackOnDrop}) {
-	const [files, setFiles] = useState([]);
-	const {getRootProps, getInputProps, isDragActive} = useDropzone({
+	const [files, setFiles] = useState([])
+	const [filePreviews, setFilePreviews] = useState([])
+	const {getRootProps, getInputProps, isDragActive, open} = useDropzone({
 		accept: 'image/*',
 		onDrop: acceptedFiles => {
-			_callbackOnDrop(acceptedFiles)
-			setFiles(acceptedFiles.map(file => Object.assign(file, {
-				preview: URL.createObjectURL(file)
-			})));
+			setFiles(acceptedFiles)
 		},
 		multiple: true,
-	});
+		noClick: true,
+		noKeyboard: true,
+	})
 
 	useEffect(() => {
-		files.forEach(file => URL.revokeObjectURL(file.preview));
-	}, [files]);
+		_callbackOnDrop(files)
+		if(files) {
+			setFilePreviews(files.map(file => Object.assign(file, {
+				preview: URL.createObjectURL(file)
+			})))
+		}
+	}, [files])
 
-	const previews = files.map(file => (
-		<PreviewOuter key={file.name}>
+	useEffect(() => {
+		filePreviews.forEach(file => URL.revokeObjectURL(file.preview))
+	}, [filePreviews])
+
+	const handlePaste = (e) => {
+		if(e.clipboardData.files.length) {
+			const fileObject = e.clipboardData.files[0]
+			const fileUUID = uuid()
+			const newFileName = `${fileObject.name}-${fileUUID}`
+			const renamedFile = new File([fileObject], newFileName)
+
+			setFiles([...files, renamedFile])
+		}
+	}
+	const handleRemoveFile = (index) => {
+		if(index > 0){
+			const updatedFiles = [...files]
+			updatedFiles.splice(index, 1)
+			setFiles(updatedFiles)
+		} else if (index === 0) {
+			setFiles([])
+		}
+	}
+	
+	const previews = filePreviews.map((file, index) => (
+		<PreviewOuter key={index} >
+			<RemoveIconButton onClick={()=>handleRemoveFile(index)}>
+				<Close style={{ fontSize: '1.2em', color: "fff", opacity: 1 }} />
+			</RemoveIconButton>
 			<PreviewInner>
 				<PreviewImage
 					src={file.preview}
 				/>
 			</PreviewInner>
 		</PreviewOuter>
-	));
+	))
 
 	return (
-		<>
+		<div onPaste={handlePaste}>
 			<DropzoneContainer {...getRootProps()}>
 				<input {...getInputProps()} />
 				{
 					isDragActive ?
-					<InstructionText>Drop the files here ...</InstructionText> :
-					<InstructionText>Drag 'n' drop some files here, or click to select files</InstructionText>
+					<InstructionText>Drop the files here ...</InstructionText> : (
+						<>
+							<InstructionText>Drag 'n' drop or click and paste some files here...</InstructionText>
+							<InstructionText>or <DropzoneAnchor onClick={open}>browse files</DropzoneAnchor></InstructionText>
+						</>
+					)
 				}
 			</DropzoneContainer>
 			<PreviewsContainer>{previews}</PreviewsContainer>
-		</>
+		</div>
 	)
 }
 export default ImageDropzone

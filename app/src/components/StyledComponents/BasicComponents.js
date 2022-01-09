@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components'
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material'
+import { DialogTitle } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 export const StandardDialogTitle = styled(DialogTitle)`
@@ -44,11 +44,11 @@ export const Subtext = styled.span`
 `
 export const StyledAnchor = styled.a`
   cursor: pointer;
-  color: ${(props) => props.theme.primary};
+  color: ${(props) => props.theme.primary || '#1976d2'};
 `
 export const StyledLink = styled(Link)`
   cursor: pointer;
-  color: ${(props) => props.theme.primary};
+  color: ${(props) => props.theme.primary || '#1976d2'};
 `
 const slideIn = keyframes`
   from {

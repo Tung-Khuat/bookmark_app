@@ -74,13 +74,14 @@ function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updat
 	const [addUploadDialogVisible, setAddUploadDialogVisible] = useState(false)
 	const { enqueueSnackbar } = useSnackbar();
 
-	const renderPreviews = (preview) => {
+	const renderPreviews = (preview, index) => {
 		const { url } = preview
 		const isBookmarkThumbnail = url === bookmarkThumbnail.url
 		return (
 			<Badge 
 				badgeContent={isBookmarkThumbnail && <Photo style={{ fontSize: '1em', color: "fff" }} />}
 				color={isBookmarkThumbnail ? "primary" : undefined}
+				key={index}
 			>
 				<Preview 
 					url={url} 
@@ -149,14 +150,10 @@ function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updat
 	)
 }
 
-const mapState = ({
-}) => ({
-})
-
 const mapDispatchToProps = (dispatch) => ({
 	_updateBookmark: bindActionCreators(bookmarkActions._updateBookmark, dispatch),
 })
 
 export default compose(
-	connect(mapState, mapDispatchToProps)
+	connect(null, mapDispatchToProps)
 )(ManageUploadsAndThumbnailPanel)
