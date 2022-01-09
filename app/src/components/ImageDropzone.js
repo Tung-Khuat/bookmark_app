@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Dropzone, { useDropzone } from 'react-dropzone'
+import { useDropzone } from 'react-dropzone'
+import { Button } from '@mui/material'
+import { v4 as uuid } from 'uuid'
 
 const DropzoneContainer = styled.div`
 	width: 100%;
@@ -47,23 +49,30 @@ const PreviewImage = styled.img`
 `
 
 function ImageDropzone({_callbackOnDrop}) {
-	const [files, setFiles] = useState([]);
-	const {getRootProps, getInputProps, isDragActive} = useDropzone({
+	const [files, setFiles] = useState([])
+	const [filePreviews, setFilePreviews] = useState([])
+	const {getRootProps, getInputProps, isDragActive, open} = useDropzone({
 		accept: 'image/*',
 		onDrop: acceptedFiles => {
-			_callbackOnDrop(acceptedFiles)
-			setFiles(acceptedFiles.map(file => Object.assign(file, {
+			setFiles(acceptedFiles)
+			setFilePreviews(acceptedFiles.map(file => Object.assign(file, {
 				preview: URL.createObjectURL(file)
-			})));
+			})))
 		},
 		multiple: true,
-	});
+		noClick: true,
+		noKeyboard: true,
+	})
 
 	useEffect(() => {
-		files.forEach(file => URL.revokeObjectURL(file.preview));
-	}, [files]);
+		_callbackOnDrop(files)
+	}, [files])
 
-	const previews = files.map(file => (
+	useEffect(() => {
+		filePreviews.forEach(file => URL.revokeObjectURL(file.preview))
+	}, [filePreviews])
+
+	const previews = filePreviews.map(file => (
 		<PreviewOuter key={file.name}>
 			<PreviewInner>
 				<PreviewImage
@@ -71,20 +80,39 @@ function ImageDropzone({_callbackOnDrop}) {
 				/>
 			</PreviewInner>
 		</PreviewOuter>
-	));
+	))
+
+	const handlePaste = (e) => {
+		if(e.clipboardData.files.length) {
+			const fileObject = e.clipboardData.files[0]
+			const fileUUID = uuid()
+			const newFileName = `${fileObject.name}-${fileUUID}`
+			const renamedFile = new File([fileObject], newFileName)
+	
+			const fileMetaDataWithPreview = {
+				getRawFile: () => fileObject,
+				name: renamedFile.name,
+				size: fileObject.size,
+				preview: URL.createObjectURL(fileObject),
+			}
+			setFiles([...files, renamedFile])
+			setFilePreviews([...filePreviews, fileMetaDataWithPreview])
+		}
+	}
 
 	return (
-		<>
+		<div onPaste={handlePaste}>
 			<DropzoneContainer {...getRootProps()}>
 				<input {...getInputProps()} />
 				{
 					isDragActive ?
 					<InstructionText>Drop the files here ...</InstructionText> :
-					<InstructionText>Drag 'n' drop some files here, or click to select files</InstructionText>
+					<InstructionText>Drag 'n' drop some files here, or click and paste.</InstructionText>
 				}
 			</DropzoneContainer>
+			<Button style={{marginTop: 4}} variant='outlined' onClick={open}>Select files...</Button>
 			<PreviewsContainer>{previews}</PreviewsContainer>
-		</>
+		</div>
 	)
 }
 export default ImageDropzone
