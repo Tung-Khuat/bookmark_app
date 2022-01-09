@@ -94,10 +94,10 @@ function BookmarkUpdateDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Bookmark update"}
 			dialogActions={[
-				<Button onClick={onBookmarkUpdate}>{processing ? <CircularProgress/> : 'Update'}</Button>
+				<Button onClick={onBookmarkUpdate}>{processing ? <CircularProgress size={20} /> : 'Update'}</Button>
 			]}
 			rightTitleActions={[
-				<IconButton onClick={onBookmarkDelete}>{processing ? <CircularProgress/> : <Delete style={{ color:'#fff' }}/>}</IconButton>
+				<IconButton onClick={onBookmarkDelete}>{processing ? <CircularProgress size={20}/> : <Delete style={{ color:'#fff' }}/>}</IconButton>
 			]}
 		>
 			<StyledInputField
