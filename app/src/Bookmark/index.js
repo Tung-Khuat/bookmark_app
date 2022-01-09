@@ -59,6 +59,7 @@ function Bookmark ({ bookmarks }) {
 	const renderBookmark = (bookmark) => {
 		return (
 			<BookmarkCard 
+				key={bookmark.uuid}
 				onClick={()=>{setBookmarkUUIDForUpdate(bookmark.uuid); setUpdateDialogVisible(true)}}>
 					{
 						bookmark.thumbnail ? (
