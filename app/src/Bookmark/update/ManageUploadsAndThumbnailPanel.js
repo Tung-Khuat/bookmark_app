@@ -150,14 +150,10 @@ function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updat
 	)
 }
 
-const mapState = ({
-}) => ({
-})
-
 const mapDispatchToProps = (dispatch) => ({
 	_updateBookmark: bindActionCreators(bookmarkActions._updateBookmark, dispatch),
 })
 
 export default compose(
-	connect(mapState, mapDispatchToProps)
+	connect(null, mapDispatchToProps)
 )(ManageUploadsAndThumbnailPanel)

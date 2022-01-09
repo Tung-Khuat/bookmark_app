@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material'
+import { Dialog, DialogContent, Button } from '@mui/material'
 import { Close } from '@mui/icons-material';
 import config from './config'
 import { StandardDialogTitle } from '../StyledComponents/BasicComponents'

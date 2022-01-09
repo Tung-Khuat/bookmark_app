@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components'
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material'
+import { DialogTitle } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 export const StandardDialogTitle = styled(DialogTitle)`
