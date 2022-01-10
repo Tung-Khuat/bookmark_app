@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import BookmarkCreateDialog from './BookmarkCreateDialog'
 import { firestoreConnect } from 'react-redux-firebase'
-import { compose } from 'redux'
+import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import Card from '@mui/material/Card'
-import { Button, Tooltip } from '@mui/material'
-import { ContentCopy } from '@mui/icons-material'
+import { Button, Checkbox, CircularProgress, Tooltip } from '@mui/material'
+import { ContentCopy, Delete } from '@mui/icons-material'
 import moment from 'moment'
 import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
+import * as bookmarkActions from '../state/actions/bookmarkActions'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -25,6 +26,7 @@ const BookmarkCard = styled(Card)`
 	width: 320px;
 	height: 275px;
 	box-shadow: 0 20px 10px -15px rgb(197 192 249 / 20%);
+	position: relative;
 	cursor: pointer;
 	&:hover {
 		box-shadow: 0 20px 10px -15px rgb(95 98 214 / 20%);
@@ -45,22 +47,139 @@ const BookmarkInfo = styled.div`
 	margin-top: 8px;
 	display: grid;
 `
+const BookmarkSelectCheckbox = styled(Checkbox)`
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 2;
+	background-color: #ffffff94;
+    padding: 4px;
+    border-radius: 0 0 0 8px;
+	&:hover {
+		background-color: #fff;
+	}
+`
+const SelectModePanel = styled.div`
+	display: grid;
+	grid-template-columns: 1fr auto;
+	padding: 16px 0;
+	width: 100%;
+	justify-content: end;
+	place-items: center;
+`
+const SelectModeLeftContainer = styled.div`
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+	margin-right: 16px;
+	place-items: center;
+	div {
+		display: flex;
+		place-items: center;
+	}
+`
 
-function Bookmark ({ bookmarks }) {
+function Bookmark ({ bookmarks, _deleteBookmark }) {
 	const [createDialogVisible, setCreateDialogVisible] = useState(false)
 	const [updateDialogVisible, setUpdateDialogVisible] = useState(false)
 	const [bookmarkUUIDForUpdate, setBookmarkUUIDForUpdate] = useState(null)
+	const [selectMode, setSelectMode] = useState(false)
+	const [selectedBookmarkUUIDs, setSelectedBookmarkUUIDs] = useState([])
+	const [processing, setProcessing] = useState(false)
+
+	const handleDeleteSelected = async () => {
+		const confirm = window.confirm(`Are you sure you want to delete these (${selectedBookmarkUUIDs.length})bookmarks`)
+		if(confirm) {
+			setProcessing(true)
+			const promises = selectedBookmarkUUIDs.map(uuid => {
+				return _deleteBookmark(uuid)
+			})
+			try {
+				await Promise.all(promises)
+				setSelectedBookmarkUUIDs([])
+			} catch (error) {
+				console.log(error)
+			}
+			setProcessing(false)
+		}
+	}
 
 	const renderTags = (tag) => {
 		return (
 			<div>{tag.label}</div>
 		)
 	}
+	const renderSelectModePanel = () => {
+		if(!bookmarks)
+			return null
+		const allBookmarkUUIDs = bookmarks.map((bookmark)=> bookmark.uuid)
+
+		if(selectMode){
+			return (
+				<SelectModePanel>
+					<SelectModeLeftContainer>
+						<div>
+							<Button 
+								disabled={!selectedBookmarkUUIDs.length || processing}
+								variant='outlined' 
+								color='error' 
+								onClick={handleDeleteSelected}>{processing ? <CircularProgress size={20} /> : (<><Delete />  Delete selected</>)} </Button>
+						</div>
+						<div style={{ marginRight: 16 }}>
+							<Checkbox 
+								checked={Boolean(selectedBookmarkUUIDs.length === bookmarks.length)}
+								onClick={() => setSelectedBookmarkUUIDs(selectedBookmarkUUIDs.length === bookmarks.length ? [] : allBookmarkUUIDs)} 
+							/> Select All
+						</div>
+						<div>{`${selectedBookmarkUUIDs?.length} selected`}</div>
+					</SelectModeLeftContainer>
+					<Button 
+						style={{ marginRight: 16 }}
+						onClick={()=>setSelectMode(false)}
+						variant="contained"
+					>Cancel select mode</Button>
+				</SelectModePanel>
+			)
+		}
+		return (
+			<SelectModePanel>
+				<SelectModeLeftContainer>
+					<div>{`${bookmarks.length} bookmarks`}</div>
+				</SelectModeLeftContainer>
+				<Button 
+					style={{ marginRight: 16 }}
+					onClick={()=>setSelectMode(true)}
+					variant="outlined"
+				>Select mode</Button>
+			</SelectModePanel>
+		)
+	}
 	const renderBookmark = (bookmark) => {
+		const isBookmarkChecked = Boolean(selectedBookmarkUUIDs.find(uuid => uuid === bookmark.uuid))
+		const handleCheckboxClick = (e) => {
+			e.preventDefault()
+			e.stopPropagation()
+			const matchingUUID = selectedBookmarkUUIDs.find(uuid => uuid === bookmark.uuid)
+			if(matchingUUID){
+				const filteredSelected = [...selectedBookmarkUUIDs].filter( uuid => uuid !== bookmark.uuid)
+				setSelectedBookmarkUUIDs(filteredSelected)
+			} else {
+				setSelectedBookmarkUUIDs([...selectedBookmarkUUIDs, bookmark.uuid])
+			}
+
+		}
 		return (
 			<BookmarkCard 
 				key={bookmark.uuid}
 				onClick={()=>{setBookmarkUUIDForUpdate(bookmark.uuid); setUpdateDialogVisible(true)}}>
+					{
+						selectMode && (
+							<BookmarkSelectCheckbox 
+								onClick={handleCheckboxClick}
+								checked={isBookmarkChecked}
+							/>
+						)
+					}
 					{
 						bookmark.thumbnail ? (
 							<Thumbnail url={bookmark.thumbnail.url} />
@@ -92,6 +211,9 @@ function Bookmark ({ bookmarks }) {
 	return (
 		<div>
 			<Button onClick={()=>setCreateDialogVisible(true)}>Add Bookmark</Button>
+			{
+				renderSelectModePanel()
+			}
 			<BookmarksContainer>
 				{ bookmarks ? bookmarks.map(renderBookmark) : <div>No Bookmarks found</div> }
 			</BookmarksContainer>
@@ -116,13 +238,13 @@ const mapState = ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
+	_deleteBookmark: bindActionCreators(bookmarkActions._deleteBookmark, dispatch),
 })
 
 export default compose(
 	firestoreConnect(({ authorUUID }) => [
 		{
 			collection: 'bookmark',
-			// where: [['uuid', '==', queryParams.uuid || null]],
 			storeAs: 'bookmarks',
 		},
 	]),
