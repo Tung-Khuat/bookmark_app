@@ -36,7 +36,7 @@ function StandardDialog (props) {
 		return (
 			<DialogTitleWithActions>
 				<div>{leftTitleActions ? [defaultCloseButton, ...leftTitleActions].map(renderActionWithKey) : defaultCloseButton}</div>
-				<div style={{ width: '100%', margin: '0 16px' }}>{dialogTitle}</div>
+				<div style={{ width: '100%' }}>{dialogTitle}</div>
 				<div>{rightTitleActions?.map(renderActionWithKey)}</div>
 			</DialogTitleWithActions>
 		)
