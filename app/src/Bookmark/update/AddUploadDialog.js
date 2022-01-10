@@ -26,9 +26,10 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark}) 
 		return renamedFiles
 	}
 
-	const uploadFilesAndSaveURL = () => {
-		let filesUploadedCount = 0
+	const uploadFilesAndSaveURL = async () => {
 		setProcessing(true)
+		const uploadsInStorage = []
+
 		const onSnapshot = (snapshot) => {
 			const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
 			console.log('Upload is ' + progress + '% done')
@@ -44,48 +45,13 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark}) 
 			}
 		}
 		const onUploadComplete = async (uploadTask) => {
-			enqueueSnackbar(`Uploaded ${uploadTask._metadata.name}`, {variant: 'success'})
-			filesUploadedCount++
-			if(uploadFiles.length === filesUploadedCount){
-				const bookmarkFileListRef = ref(storage, `bookmark-uploads/${bookmarkUUID}`)
-				const uploadsInStorage = []
-				listAll(bookmarkFileListRef)
-					.then((res) => {
-						res.prefixes.forEach((folderRef) => {
-						// All folders under ref.
-						})
-						res.items.forEach((fileRef) => {
-						// All files under ref.
-							getDownloadURL(fileRef).then(async (url) => {
-								const fileMetaData = await getMetadata(fileRef)
-								const { name, timeCreated } = fileMetaData
-								uploadsInStorage.push({
-									url,
-									name,
-									createdAt: timeCreated,
-								})
-								if(res.items.length === uploadsInStorage.length) {
-									const updateUploadResponse = await _updateBookmark({
-										uploads: uploadsInStorage,
-									}, bookmarkUUID)
-									if (updateUploadResponse) {
-										enqueueSnackbar('Updated bookmark uploads successful', {variant: 'success'})
-									} else {
-										enqueueSnackbar('Update book uploads failed. Please try again later.', {variant: 'error'})
-									}
-									setProcessing(false)
-									_setVisible(false)
-								}
-							})  
-						})
-					}).catch((error) => {
-						console.log(error)
-					})				
-			}
+			console.log(`%cUploaded ${uploadTask._metadata.name}`, 'color: green')
 		}
 
 		if(uploadFiles && bookmarkUUID) {
 			const renamedFiles = getSanitizedNameFiles(uploadFiles, bookmarkUUID)
+			const uploadPromises = []
+			// Upload starts
 			renamedFiles.forEach((file) => {
 				const storageRef = ref(storage, `bookmark-uploads/${bookmarkUUID}/${file.name}`)
 				const uploadTask = uploadBytesResumable(storageRef, file)
@@ -93,9 +59,41 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark}) 
 					"state_changed",
 					onSnapshot,
 					error => enqueueSnackbar(error, {variant: 'error'}),
-					()=>onUploadComplete(uploadTask),
+					()=> onUploadComplete(uploadTask),
 				)
 			})
+			try {
+				await Promise.all(uploadPromises)
+				// Finished uploading, now getting download urls
+				const bookmarkFileListRef = ref(storage, `bookmark-uploads/${bookmarkUUID}`)
+				const fileList = await listAll(bookmarkFileListRef)
+				const urlFetchPromises = []
+				for(let fileRef of fileList.items) {
+					urlFetchPromises.push(getDownloadURL(fileRef).then(async (url) => {
+						const fileMetaData = await getMetadata(fileRef)
+						const { name, timeCreated } = fileMetaData
+						uploadsInStorage.push( {
+							url,
+							name,
+							createdAt: timeCreated,
+						})
+					}))
+				}
+				await Promise.all(urlFetchPromises)	
+				enqueueSnackbar(`All Uploads successful `, {variant: 'success'})
+				const updateUploadResponse = await _updateBookmark({
+					uploads: uploadsInStorage,
+				}, bookmarkUUID)
+				if (updateUploadResponse) {
+					enqueueSnackbar('Updated bookmark uploads', {variant: 'success'})
+				} else {
+					enqueueSnackbar('Update book uploads failed. Please try again later.', {variant: 'error'})
+				}
+				setProcessing(false)
+				_setVisible(false)
+			} catch (error) {
+				enqueueSnackbar(`Not all uploads passed`, {variant: 'error'})
+			}
 		}
 	}
 

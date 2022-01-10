@@ -7,14 +7,14 @@ import { StandardDialogTitle } from '../StyledComponents/BasicComponents'
 
 const DialogTitleWithActions = styled(StandardDialogTitle)`
 	display: grid;
-	grid-template-columns: auto 1fr minmax(auto, 40vw);
+	grid-template-columns: auto minmax(80px, 1fr) auto;
 	background-color:  #273b6b;
 	color: #fff;
 	align-items: center;
 `
 const ActionContainer = styled.div`
 	display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
 `
 
 function StandardDialog (props) {
@@ -36,7 +36,7 @@ function StandardDialog (props) {
 		return (
 			<DialogTitleWithActions>
 				<div>{leftTitleActions ? [defaultCloseButton, ...leftTitleActions].map(renderActionWithKey) : defaultCloseButton}</div>
-				<div style={{ width: '100%', margin: '0 16px' }}>{dialogTitle}</div>
+				<div style={{ width: '100%' }}>{dialogTitle}</div>
 				<div>{rightTitleActions?.map(renderActionWithKey)}</div>
 			</DialogTitleWithActions>
 		)

@@ -76,7 +76,7 @@ function ImageDropzone({_callbackOnDrop}) {
 	const [filePreviews, setFilePreviews] = useState([])
 	const {getRootProps, getInputProps, isDragActive, open} = useDropzone({
 		accept: 'image/*',
-		onDrop: acceptedFiles => {
+		onDrop: async acceptedFiles => {
 			setFiles(acceptedFiles)
 		},
 		multiple: true,
@@ -87,15 +87,16 @@ function ImageDropzone({_callbackOnDrop}) {
 	useEffect(() => {
 		_callbackOnDrop(files)
 		if(files) {
-			setFilePreviews(files.map(file => Object.assign(file, {
+			const filesWithPreview = files.map(file => Object.assign(file, {
 				preview: URL.createObjectURL(file)
-			})))
+			}))
+			setFilePreviews(filesWithPreview)
 		}
 	}, [files])
 
 	useEffect(() => {
-		filePreviews.forEach(file => URL.revokeObjectURL(file.preview))
-	}, [filePreviews])
+		return () => filePreviews.forEach(file => URL.revokeObjectURL(file.preview))
+	}, [])
 
 	const handlePaste = (e) => {
 		if(e.clipboardData.files.length) {
@@ -116,20 +117,22 @@ function ImageDropzone({_callbackOnDrop}) {
 			setFiles([])
 		}
 	}
-	
-	const previews = filePreviews.map((file, index) => (
-		<PreviewOuter key={index} >
-			<RemoveIconButton onClick={()=>handleRemoveFile(index)}>
-				<Close style={{ fontSize: '1.2em', color: "fff", opacity: 1 }} />
-			</RemoveIconButton>
-			<PreviewInner>
-				<PreviewImage
-					src={file.preview}
-				/>
-			</PreviewInner>
-		</PreviewOuter>
-	))
 
+	const renderPreview = (file, index) => {
+		return (
+			<PreviewOuter key={index} >
+				<RemoveIconButton onClick={()=>handleRemoveFile(index)}>
+					<Close style={{ fontSize: '1.2em', color: "fff", opacity: 1 }} />
+				</RemoveIconButton>
+				<PreviewInner>
+					<PreviewImage
+						src={file.preview}
+					/>
+				</PreviewInner>
+			</PreviewOuter>
+		)
+	}
+	
 	return (
 		<div onPaste={handlePaste}>
 			<DropzoneContainer {...getRootProps()}>
@@ -144,7 +147,7 @@ function ImageDropzone({_callbackOnDrop}) {
 					)
 				}
 			</DropzoneContainer>
-			<PreviewsContainer>{previews}</PreviewsContainer>
+			<PreviewsContainer>{filePreviews.map(renderPreview)}</PreviewsContainer>
 		</div>
 	)
 }
