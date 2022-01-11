@@ -1,23 +1,28 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Button, TextField } from '@mui/material'
+import { Button, CircularProgress, TextField } from '@mui/material'
 import StandardDialog from '../components/Dialogs/StandardDialog'
 import ImageDropzone from '../components/ImageDropzone'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import * as bookmarkActions from '../state/actions/bookmarkActions'
 import { useSnackbar } from 'notistack'
-import { storage } from '../state/store'
-import { getDownloadURL, getMetadata, ref, uploadBytesResumable } from "firebase/storage"
-import {
-	renameFileWithSanitizedName,
-} from '../utils/sanitizeFileName'
 
 const StyledInputField = styled(TextField)`
 	width: 100%;
 	margin-bottom: 16px;
 `
-
+const DropzoneLoadingPlaceholder = styled.div`
+	width: 100%;
+	height: 200px;
+	border-radius: 8px;
+	background-color: #fafafa;
+	border: 2px dashed #dbdbdb; 
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+`
 const initialBookmarkState =  {
 	title: "",
 	description: "",
@@ -28,95 +33,50 @@ const initialBookmarkState =  {
 	folder: null,
 }
 
+
 function BookmarkCreateDialog (props) {
-	const { visible, _setVisible, _createBookmark, _updateBookmark } = props
+	const { visible, _setVisible, _createBookmark, _updateBookmark, _upload } = props
 	const [bookmark, setBookmark ] = useState(initialBookmarkState)
 	const [uploadFiles, setUploadFiles ] = useState([])
 	const [processing, setProcessing ] = useState(false)
+	const [uploading, setUploading ] = useState(false)
 	const { enqueueSnackbar } = useSnackbar();
 
 	const updateInputValue = (value) => {
 		setBookmark({...bookmark, ...value})
 	}
-	const getSanitizedNameFiles = (files) => {	
-		const renamedFiles = files.map((file) => {
-			const sanitizedFile = renameFileWithSanitizedName(file)
-			const newFileName = sanitizedFile.name.replace(/ /g,"_")
-			return new File([file], newFileName);
-		})
-		return renamedFiles
-	}
+
 	const onBookmarkCreate = async () => {
 		if(processing)
 			return 
 
 		setProcessing(true)
-
+		// create bookmark without uploads first
 		const response = await _createBookmark(bookmark)
 
 		if (response) {
-			uploadFilesAndUpdateBookmark(response.data)
-			enqueueSnackbar('Successfully created a bookmark', {variant: 'success'})
+			try {
+				const bookmarkUUID = response.data.uuid
+				//upload files
+				setUploading(true)
+				const promises = uploadFiles.map((file)=>_upload({bookmarkUUID, file}))
+				await Promise.all(promises)
+				setUploading(false)
+
+				//update bookmark to get file urls and meta data
+				await _updateBookmark({}, bookmarkUUID)
+
+				enqueueSnackbar('Successfully created a bookmark', {variant: 'success'})
+				setBookmark(initialBookmarkState)
+				setUploadFiles([])
+			} catch (error) {
+				enqueueSnackbar('Unable to update uploads.', {variant: 'error'})
+			}
 		} else {
 			enqueueSnackbar('Something went wrong. Please try again later.', {variant: 'error'})
 		}
 
 		setProcessing(false)
-	}
-
-	const uploadFilesAndUpdateBookmark = (bookmarkResponse) => {
-		const uploadsInStorage = []
-		const onSnapshot = (snapshot) => {
-			const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-			console.log('Upload is ' + progress + '% done')
-			switch (snapshot.state) {
-				case 'paused':
-					console.log('Upload is paused')
-					break
-				case 'running':
-					console.log('Upload is running')
-					break
-				default: 
-					break
-			}
-		}
-		const onUploadComplete = (uploadTask) => {
-			enqueueSnackbar(`Uploaded ${uploadTask._metadata.name}`, {variant: 'success'})
-			getDownloadURL(uploadTask.snapshot.ref).then( async (url) => {
-				const fileMetaData = await getMetadata(uploadTask.snapshot.ref)
-				const { name, timeCreated } = fileMetaData
-				uploadsInStorage.push({
-					url,
-					name,
-					createdAt: timeCreated,
-				})
-				if(uploadFiles.length === uploadsInStorage.length){
-					const updateUploadResponse = await _updateBookmark({
-						uploads: uploadsInStorage,
-					},  bookmarkResponse.uuid)
-					if (updateUploadResponse) {
-						enqueueSnackbar('Upload successful', {variant: 'success'})
-						setBookmark(initialBookmarkState)
-					} else {
-						enqueueSnackbar('Upload failed. Please try again later.', {variant: 'error'})
-					}
-				}
-			});		  
-		}
-
-		if(uploadFiles && bookmarkResponse) {
-			const renamedFiles = getSanitizedNameFiles(uploadFiles, bookmarkResponse.uuid)
-			renamedFiles.forEach((file) => {
-				const storageRef = ref(storage, `bookmark-uploads/${bookmarkResponse.uuid}/${file.name}`)
-				const uploadTask = uploadBytesResumable(storageRef, file)
-				uploadTask.on(
-					"state_changed",
-					onSnapshot,
-					error => console.log(error),
-					()=>onUploadComplete(uploadTask),
-				)
-			})
-		}
 	}
 
 	return (
@@ -125,7 +85,7 @@ function BookmarkCreateDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Bookmark create"}
 			dialogActions={[
-				<Button onClick={onBookmarkCreate}>{processing ? 'Loading...' : 'Create'}</Button>
+				<Button onClick={onBookmarkCreate}>{processing ? <CircularProgress size={20} /> : 'Create'}</Button>
 			]}
 		>
 			<StyledInputField
@@ -145,7 +105,16 @@ function BookmarkCreateDialog (props) {
 				rows={3} 
 				multiline
 				onChange={(event) => updateInputValue({description: event.target.value})} />
-			<ImageDropzone _callbackOnDrop={(files) => setUploadFiles(files)} />
+			
+			{
+				uploading ? (
+					<DropzoneLoadingPlaceholder>
+						<CircularProgress />
+					</DropzoneLoadingPlaceholder>
+				) : (
+					<ImageDropzone _callbackOnDrop={(files) => setUploadFiles(files)} />
+				)
+			}
 		</StandardDialog>
 	)
 }
@@ -153,6 +122,7 @@ function BookmarkCreateDialog (props) {
 const mapDispatchToProps = (dispatch) => ({
 	_createBookmark: bindActionCreators(bookmarkActions._createBookmark, dispatch),
 	_updateBookmark: bindActionCreators(bookmarkActions._updateBookmark, dispatch),
+	_upload: bindActionCreators(bookmarkActions._upload, dispatch),
 })
 
 export default compose(

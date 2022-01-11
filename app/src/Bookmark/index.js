@@ -10,6 +10,7 @@ import { ContentCopy, Delete } from '@mui/icons-material'
 import moment from 'moment'
 import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
 import * as bookmarkActions from '../state/actions/bookmarkActions'
+import { useSnackbar } from 'notistack'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -86,6 +87,7 @@ function Bookmark ({ bookmarks, _deleteBookmark }) {
 	const [selectMode, setSelectMode] = useState(false)
 	const [selectedBookmarkUUIDs, setSelectedBookmarkUUIDs] = useState([])
 	const [processing, setProcessing] = useState(false)
+	const { enqueueSnackbar } = useSnackbar();
 
 	const handleDeleteSelected = async () => {
 		const confirm = window.confirm(`Are you sure you want to delete these (${selectedBookmarkUUIDs.length})bookmarks`)
@@ -97,6 +99,7 @@ function Bookmark ({ bookmarks, _deleteBookmark }) {
 			try {
 				await Promise.all(promises)
 				setSelectedBookmarkUUIDs([])
+				enqueueSnackbar('Successfully deleted selected bookmarks', {variant: 'success'})
 			} catch (error) {
 				console.log(error)
 			}

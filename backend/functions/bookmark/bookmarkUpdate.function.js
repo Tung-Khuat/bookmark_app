@@ -9,7 +9,7 @@ const handleFunc = async (data, context) => {
 		description, //string
 		link, //string
 		thumbnail, //object
-		uploads, //array of strings
+		uploads, //array of objects
 		tags,// array of tag objects
 		folder, // string
 		uuid // string

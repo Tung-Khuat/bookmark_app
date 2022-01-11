@@ -65,24 +65,12 @@ function BookmarkUpdateDialog (props) {
 			return 
 
 		setProcessing(true)
-		const folderRef = ref(storage, `bookmark-uploads/${bookmark.uuid}`)
-		const fileList = await listAll(folderRef)
-		const promises = []
-		for(let item of fileList.items) {
-			promises.push(deleteObject(item))
-		}
-		try {
-			await Promise.all(promises)
-			enqueueSnackbar(`Successfully deleted uploads`, {variant: 'success'})
-			const response = await _deleteBookmark( bookmark.uuid )
+		const response = await _deleteBookmark( bookmark.uuid )
 
-			if (response) {
-				enqueueSnackbar('Successfully deleted bookmark', {variant: 'success'})
-			} else {
-				enqueueSnackbar('Something went wrong. Please try again later.', {variant: 'error'})
-			}
-		} catch (error) {
-			enqueueSnackbar('Failed to delete uploads.', {variant: 'error'})
+		if (response) {
+			enqueueSnackbar('Successfully deleted bookmark', {variant: 'success'})
+		} else {
+			enqueueSnackbar('Something went wrong. Please try again later.', {variant: 'error'})
 		}
 
 		setProcessing(false)
