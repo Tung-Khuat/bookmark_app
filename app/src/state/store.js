@@ -11,7 +11,7 @@ import {
   } from 'react-redux-firebase'
   import { firestoreReducer } from 'redux-firestore'
 
-import appReducer from './reducers/appReducer'
+import appReducer from './ui/authState/app-ui-reducer'
 
 
 // Firebase configuration

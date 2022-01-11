@@ -6,7 +6,7 @@ import { bindActionCreators, compose } from 'redux'
 import StandardDialog from '../../components/Dialogs/StandardDialog'
 import { useSnackbar } from 'notistack'
 import ImageDropzone from '../../components/ImageDropzone'
-import * as bookmarkActions from '../../state/actions/bookmarkActions'
+import * as bookmarkActions from '../../state/bookmarkState/bookmark-actions'
 
 const DropzoneLoadingPlaceholder = styled.div`
 	width: 100%;

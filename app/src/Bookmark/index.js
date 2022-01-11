@@ -9,7 +9,7 @@ import { Button, Checkbox, CircularProgress, Tooltip } from '@mui/material'
 import { ContentCopy, Delete } from '@mui/icons-material'
 import moment from 'moment'
 import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
-import * as bookmarkActions from '../state/actions/bookmarkActions'
+import * as bookmarkActions from '../state/bookmarkState/bookmark-actions'
 import { useSnackbar } from 'notistack'
 
 const BookmarksContainer = styled.div`

@@ -5,7 +5,7 @@ import StandardDialog from '../components/Dialogs/StandardDialog'
 import ImageDropzone from '../components/ImageDropzone'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import * as bookmarkActions from '../state/actions/bookmarkActions'
+import * as bookmarkActions from '../state/bookmarkState/bookmark-actions'
 import { useSnackbar } from 'notistack'
 
 const StyledInputField = styled(TextField)`
