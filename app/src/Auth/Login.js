@@ -1,30 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { compose } from 'redux'
+import { compose, bindActionCreators } from 'redux'
 import { useHistory } from 'react-router-dom'
 
-import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
-import { useAuth } from '../AuthContext'
+import * as appActions from '../state/ui/authState/app-actions'
 
-import { withSnackbar } from 'notistack'
-import HelperTextField from '../../components/HelperTextField'
-import { StandardTitle, StyledLink } from '../../components/StyledComponents/BasicComponents'
+import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
+import { useAuth } from './AuthContext'
+import HelperTextField from '../components/HelperTextField'
+import { StandardTitle, StyledLink } from '../components/StyledComponents/BasicComponents'
+import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import { AccountCircle, Lock } from '@mui/icons-material'
 
-const SignupContainer = styled.div`
+
+const LoginContainer = styled.div`
 	width: 100%;
 	min-height: 100vh;
 	display: flex;
 	align-items: center;
 `
-const SignupCard = styled(Card)`
+const LoginCard = styled(Card)`
 	width: 80vw;
 	max-width: 500px;
 	margin: 0 auto;
 	padding: 24px;
 `
-const SignupActions = styled(CardActions)`
+const LoginActions = styled(CardActions)`
 	flex-direction: column;
 	padding: 8px 0;
 	align-items: unset;
@@ -37,19 +39,28 @@ const InputFieldContainer = styled.div`
 	margin-bottom: 16px;
 `
 
-function Signup(props) {
-	const { enqueueSnackbar } = props
-	const [email, setEmail] = useState()
-	const [password, setPassword] = useState()
-	const [passwordConfirmation, setPasswordConfirmation] = useState()
+function Login(props) {
+	const { _persistLoggedInUser, loggedInUser } = props
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
 	const [helperText, setHelperText] = useState(null)
 	const [processing, setProcessing] = useState(false)
-	const { signup } = useAuth()
+	const { login, currentUser } = useAuth()
 	const history = useHistory()
 
 	useEffect(()=>{
 		setHelperText(null)
 	},[])
+
+	useEffect(()=>{
+		if(currentUser)
+			_persistLoggedInUser(currentUser)
+	},[currentUser])
+
+	useEffect(()=>{
+		if(loggedInUser)
+			history.push('./')
+	},[loggedInUser])
 
 	const inputFields = [
 		{
@@ -59,7 +70,7 @@ function Signup(props) {
 			type: 'text',
 			_onChange: (email) => setEmail(email),
 			icon: <AccountCircle />,
-			required: true,
+			required: false,
 		},
 		{
 			label: 'Password',
@@ -68,15 +79,7 @@ function Signup(props) {
 			type: 'password',
 			_onChange: (password) => setPassword(password),
 			icon: <Lock />,
-			required: true,
-		},
-		{
-			label: 'Password Confirmation',
-			name: 'passwordConfirmation',
-			value: passwordConfirmation,
-			type: 'password',
-			_onChange: (password) => setPasswordConfirmation(password),
-			required: true,
+			required: false,
 		},
 	]
 
@@ -102,15 +105,11 @@ function Signup(props) {
 
 	const validateForm = () => {
 		if(!email) {
-			setHelperText("Please enter a valid email")
+			setHelperText("Please enter your account email")
 			return false 
 		}
 		if(!password) {
-			setHelperText("Please enter a valid password")
-			return false 
-		}
-		if(password !== passwordConfirmation) {
-			setHelperText("Password confirmation does not match given password.")
+			setHelperText("Please enter your password")
 			return false 
 		}
 		return true
@@ -121,26 +120,27 @@ function Signup(props) {
 		if (!valid)
 			return false
 
+		setHelperText('')
+
 		try {
 			setProcessing(true)
-			await signup(email, password)
 
-			history.push('/login')
-			enqueueSnackbar('Successfully signed up.', { variant: "success" })
+			await login(email, password)
+
 		} catch (error) {
-			setHelperText('Failed to sign up. ' + error.message)
+			setHelperText(error.message)
 		}
 		setProcessing(false)
 	}
 
 	return (
-		<SignupContainer>
-			<SignupCard>
+		<LoginContainer>
+			<LoginCard>
 
-				<StandardTitle style={{ width: '100%', textAlign: 'center' }}>Sign Up</StandardTitle>
+				<StandardTitle style={{ width: '100%', textAlign: 'center' }}>Login</StandardTitle>
 				{ inputFields.map(renderInputField) }
 
-				<SignupActions>
+				<LoginActions>
 					{ 
 						helperText && <HelperTextField helperText={helperText} type={'error'} />								
 					}
@@ -148,27 +148,25 @@ function Signup(props) {
 						fullWidth 
 						variant="contained" 
 						color="primary" 
-						onClick={ !processing && handleSubmit}
+						onClick={ !processing ? handleSubmit : ()=>{}}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress /> : 'Sign Up' } </Button>
+					> { processing ? <CircularProgress /> : 'Login' } </Button>
 
-					<div>Already signed up? <StyledLink to='/login'> Login to your existing account</StyledLink> </div>
-				</SignupActions>
+					<StyledLink to='/reset-password'>Forgot your password?</StyledLink>
+					<div>Don't have an account? <StyledLink to='/signup'> Sign up here.</StyledLink></div>
+				</LoginActions>
 
-			</SignupCard>
-		</SignupContainer>
+			</LoginCard>
+		</LoginContainer>
 	)
 }
 
-const mapState = ({
-}) => ({
-})
-
 const mapDispatchToProps = (dispatch) => ({
+	_persistLoggedInUser: bindActionCreators(appActions._persistLoggedInUser, dispatch),
 })
 
 export default compose(
-	withSnackbar,
-	connect(mapState, mapDispatchToProps),
-)(Signup)
+	WithLoggedInUser,
+	connect(null, mapDispatchToProps),
+)(Login)
