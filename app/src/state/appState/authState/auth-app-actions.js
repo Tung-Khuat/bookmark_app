@@ -3,6 +3,3 @@ export const _persistLoggedInUser = (user) => ({
 	user: user,
 })
 
-export const _logout = () => ({
-	type: 'LOGOUT',
-})

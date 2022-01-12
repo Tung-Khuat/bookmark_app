@@ -7,7 +7,7 @@ import { bindActionCreators, compose } from 'redux'
 import { useAuth } from '../auth/AuthContext'
 import StandardDialog from '../components/dialogs/StandardDialog'
 import { StyledAnchor } from '../components/styledComponents/BasicComponents'
-import * as appUIActions from '../state/appState/authState/auth-app-actions'
+import * as authActions from '../state/firebaseActions/auth-actions'
 
 
 function UserPersonalizedSettingsDialog (props) {
@@ -38,7 +38,7 @@ function UserPersonalizedSettingsDialog (props) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-	_logout: bindActionCreators(appUIActions._logout, dispatch),
+	_logout: bindActionCreators(authActions._logout, dispatch),
 })
 
 export default compose(

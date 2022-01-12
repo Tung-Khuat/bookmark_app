@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { compose } from 'redux'
+import { bindActionCreators, compose } from 'redux'
 import { useHistory } from 'react-router-dom'
-
 import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
-import { useAuth } from './AuthContext'
+import { AccountCircle, Lock } from '@mui/icons-material'
+import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 
+import * as authActions from '../state/firebaseActions/auth-actions'
+import * as appActions from '../state/appState/authState/auth-app-actions'
+
+import { useAuth } from './AuthContext'
+import { getAuth } from "firebase/auth";
 import { withSnackbar } from 'notistack'
 import HelperTextField from '../components/HelperTextField'
-import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
-import { AccountCircle, Lock } from '@mui/icons-material'
 
 const SignupContainer = styled.div`
 	width: 100%;
@@ -38,13 +41,13 @@ const InputFieldContainer = styled.div`
 `
 
 function Signup(props) {
-	const { enqueueSnackbar } = props
+	const { enqueueSnackbar, _createUser, _persistLoggedInUser } = props
 	const [email, setEmail] = useState()
 	const [password, setPassword] = useState()
 	const [passwordConfirmation, setPasswordConfirmation] = useState()
 	const [helperText, setHelperText] = useState(null)
 	const [processing, setProcessing] = useState(false)
-	const { signup } = useAuth()
+	const { signup, login } = useAuth()
 	const history = useHistory()
 
 	useEffect(()=>{
@@ -124,9 +127,21 @@ function Signup(props) {
 		try {
 			setProcessing(true)
 			await signup(email, password)
-
-			history.push('/login')
 			enqueueSnackbar('Successfully signed up.', { variant: "success" })
+			try {
+				await login(email, password)
+				const auth = await getAuth();
+				const user = auth.currentUser
+				if(user){
+					await _createUser(user)
+					_persistLoggedInUser(user)
+				}
+				history.push('./')
+			} catch (error) {
+				console.log(error)
+				enqueueSnackbar('Failed to login.', { variant: "error" })
+			}
+
 		} catch (error) {
 			setHelperText('Failed to sign up. ' + error.message)
 		}
@@ -166,6 +181,8 @@ const mapState = ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
+	_createUser: bindActionCreators(authActions._createUser,dispatch),
+	_persistLoggedInUser: bindActionCreators(appActions._persistLoggedInUser, dispatch),
 })
 
 export default compose(

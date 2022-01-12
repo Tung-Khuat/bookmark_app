@@ -1,14 +1,14 @@
 const initialState = {
-    loggedInUser: null
+    persistedLoginUser: null
 }
 
 export default function authReducer(state = initialState, action) {
     switch (action.type) {
         case 'PERSIST_LOGGED_IN_USER':
-            return { ...state, loggedInUser: action.user}
+            return { ...state, persistedLoginUser: action.user}
 
         case 'LOGOUT':
-            return { ...state, loggedInUser: initialState.loggedInUser}
+            return { ...state, persistedLoginUser: initialState.persistedLoginUser}
             
         default:
             return state;

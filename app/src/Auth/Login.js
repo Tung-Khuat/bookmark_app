@@ -7,11 +7,12 @@ import { useHistory } from 'react-router-dom'
 import * as appActions from '../state/appState/authState/auth-app-actions'
 
 import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
-import { useAuth } from './AuthContext'
+import { AccountCircle, Lock } from '@mui/icons-material'
 import HelperTextField from '../components/HelperTextField'
 import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
-import { AccountCircle, Lock } from '@mui/icons-material'
+import { useAuth } from './AuthContext'
+import { getAuth } from "firebase/auth";
 
 
 const LoginContainer = styled.div`
@@ -40,12 +41,12 @@ const InputFieldContainer = styled.div`
 `
 
 function Login(props) {
-	const { _persistLoggedInUser, loggedInUser } = props
+	const { _persistLoggedInUser, loggedInUser, persistedLoginUser } = props
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [helperText, setHelperText] = useState(null)
 	const [processing, setProcessing] = useState(false)
-	const { login, currentUser } = useAuth()
+	const { login } = useAuth()
 	const history = useHistory()
 
 	useEffect(()=>{
@@ -53,14 +54,11 @@ function Login(props) {
 	},[])
 
 	useEffect(()=>{
-		if(currentUser)
-			_persistLoggedInUser(currentUser)
-	},[currentUser])
-
-	useEffect(()=>{
-		if(loggedInUser)
-			history.push('./')
-	},[loggedInUser])
+		if(loggedInUser && persistedLoginUser && !processing){
+			if(loggedInUser.uid === persistedLoginUser.uid)
+				history.push('./')
+		}
+	},[loggedInUser, persistedLoginUser])
 
 	const inputFields = [
 		{
@@ -126,6 +124,9 @@ function Login(props) {
 			setProcessing(true)
 
 			await login(email, password)
+			const auth = await getAuth();
+			const user = auth.currentUser
+			_persistLoggedInUser(user)
 
 		} catch (error) {
 			setHelperText(error.message)
@@ -162,11 +163,17 @@ function Login(props) {
 	)
 }
 
+const mapState = ({
+	auth: { persistedLoginUser }
+}) => ({ 
+	persistedLoginUser
+ })
+
 const mapDispatchToProps = (dispatch) => ({
 	_persistLoggedInUser: bindActionCreators(appActions._persistLoggedInUser, dispatch),
 })
 
 export default compose(
 	WithLoggedInUser,
-	connect(null, mapDispatchToProps),
+	connect(mapState, mapDispatchToProps),
 )(Login)
