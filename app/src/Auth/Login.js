@@ -55,8 +55,7 @@ function Login(props) {
 
 	useEffect(()=>{
 		if(loggedInUser && persistedLoginUser && !processing){
-			if(loggedInUser.uid === persistedLoginUser.uid)
-				history.push('./')
+			history.push('./')
 		}
 	},[loggedInUser, persistedLoginUser])
 

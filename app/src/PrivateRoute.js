@@ -1,21 +1,27 @@
 import React from 'react'
 import { compose } from 'redux'
 import { Route, Redirect } from 'react-router-dom'
-import WithLoggedInUser from './components/HOC/auth/WithLoggedInUser'
+import { connect } from 'react-redux'
 
 function PrivateRoute (props) {
-	const { component: Component, loggedInUser, ...rest } = props
-	
+	const { component: Component, persistedLoginUser, ...rest } = props
 	return (
 		<Route 
 			{...rest}
 			render={props => {
-				return loggedInUser ? <Component {...props} /> : <Redirect to='/login' />
+				return persistedLoginUser ? <Component {...props} /> : <Redirect to='/login' />
 			}}
 		/>
 	)
 }
 
+const mapState = ({
+	auth: { persistedLoginUser }
+}) => ({ 
+	persistedLoginUser
+})
+
+
 export default compose(
-	WithLoggedInUser,
+	connect(mapState)
 )(PrivateRoute)
