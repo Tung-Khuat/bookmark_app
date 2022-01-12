@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
-import StandardDialog from '../../components/Dialogs/StandardDialog'
+import StandardDialog from '../../components/dialogs/StandardDialog'
 import { useSnackbar } from 'notistack'
 import ImageDropzone from '../../components/ImageDropzone'
-import * as bookmarkActions from '../../state/actions/bookmarkActions'
+import * as bookmarkActions from '../../state/firebaseActions/bookmark-actions'
 
 const DropzoneLoadingPlaceholder = styled.div`
 	width: 100%;

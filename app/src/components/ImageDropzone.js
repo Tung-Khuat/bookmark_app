@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
 import { v4 as uuid } from 'uuid'
-import { StyledAnchor } from './StyledComponents/BasicComponents'
+import { StyledAnchor } from './styledComponents/BasicComponents'
 import { Close } from '@mui/icons-material'
 
 const DropzoneContainer = styled.div`

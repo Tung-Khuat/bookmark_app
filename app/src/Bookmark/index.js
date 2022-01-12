@@ -5,12 +5,13 @@ import { firestoreConnect } from 'react-redux-firebase'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import Card from '@mui/material/Card'
-import { Button, Checkbox, CircularProgress, Tooltip } from '@mui/material'
-import { ContentCopy, Delete } from '@mui/icons-material'
+import { Button, Checkbox, CircularProgress, Fab, Tooltip } from '@mui/material'
+import { Add, ContentCopy, Delete } from '@mui/icons-material'
 import moment from 'moment'
 import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
-import * as bookmarkActions from '../state/actions/bookmarkActions'
+import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
+import RouteHeader from '../components/viewLayouts/RouteHeader'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -213,13 +214,21 @@ function Bookmark ({ bookmarks, _deleteBookmark }) {
 
 	return (
 		<div>
-			<Button onClick={()=>setCreateDialogVisible(true)}>Add Bookmark</Button>
+			<RouteHeader header={"Bookmarks"} subheader={"public bookmarks"} />
 			{
 				renderSelectModePanel()
 			}
 			<BookmarksContainer>
 				{ bookmarks ? bookmarks.map(renderBookmark) : <div>No Bookmarks found</div> }
 			</BookmarksContainer>
+			<Fab 
+				size="medium" color="primary" aria-label="add"
+				style={{ position: 'fixed', bottom: 34, right: 34 }}
+				onClick={()=>setCreateDialogVisible(true)}	
+			>
+				<Add />
+			</Fab>
+
 			<BookmarkCreateDialog visible={createDialogVisible} _setVisible={setCreateDialogVisible} />
 			{
 				bookmarkUUIDForUpdate && updateDialogVisible && (

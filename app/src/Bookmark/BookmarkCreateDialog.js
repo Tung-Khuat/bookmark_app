@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button, CircularProgress, TextField } from '@mui/material'
-import StandardDialog from '../components/Dialogs/StandardDialog'
+import StandardDialog from '../components/dialogs/StandardDialog'
 import ImageDropzone from '../components/ImageDropzone'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import * as bookmarkActions from '../state/actions/bookmarkActions'
+import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
 
 const StyledInputField = styled(TextField)`
