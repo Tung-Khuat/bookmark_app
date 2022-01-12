@@ -7,7 +7,7 @@ import { bindActionCreators, compose } from 'redux'
 import { useAuth } from '../auth/AuthContext'
 import StandardDialog from '../components/dialogs/StandardDialog'
 import { StyledAnchor } from '../components/styledComponents/BasicComponents'
-import * as appUIActions from '../state/ui/authState/app-actions'
+import * as appUIActions from '../state/appState/authState/auth-app-actions'
 
 
 function UserPersonalizedSettingsDialog (props) {

@@ -6,13 +6,11 @@ import 'firebase/compat/firestore'
 import 'firebase/compat/functions'
 import 'firebase/compat/auth'
 import { getStorage } from "firebase/storage";
-import {
-	firebaseReducer
-  } from 'react-redux-firebase'
-  import { firestoreReducer } from 'redux-firestore'
+import { firebaseReducer } from 'react-redux-firebase'
+import { firestoreReducer } from 'redux-firestore'
 
-import appReducer from './ui/authState/app-ui-reducer'
-
+import appReducer from './appState/appReducer'
+import authReducer from './appState/authState/auth-app-reducer'
 
 // Firebase configuration
 const firebaseConfig = {
@@ -39,11 +37,12 @@ if (process.env.REACT_APP_FIREBASE_EMULATORS === 'enabled') {
 
 const reducers =  combineReducers({
 	app: appReducer,
+	auth: authReducer,
 	firebaseReducer,
 	firestoreReducer,
 })
 
-const persistedReducers = ['app', 'ui']
+const persistedReducers = ['app', 'auth']
 const persistedNamespace = 'app'
 
 

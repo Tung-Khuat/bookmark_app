@@ -2,7 +2,7 @@ const initialState = {
     loggedInUser: null
 }
 
-export default function appReducer(state = initialState, action) {
+export default function authReducer(state = initialState, action) {
     switch (action.type) {
         case 'PERSIST_LOGGED_IN_USER':
             return { ...state, loggedInUser: action.user}

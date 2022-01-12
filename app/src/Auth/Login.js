@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { compose, bindActionCreators } from 'redux'
 import { useHistory } from 'react-router-dom'
 
-import * as appActions from '../state/ui/authState/app-actions'
+import * as appActions from '../state/appState/authState/auth-app-actions'
 
 import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
 import { useAuth } from './AuthContext'

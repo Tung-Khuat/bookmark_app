@@ -17,7 +17,7 @@ function PrivateRoute (props) {
 }
 
 const mapState = ({
-	app: { loggedInUser }
+	auth: { loggedInUser }
 }) => ({
 	loggedInUser
 })

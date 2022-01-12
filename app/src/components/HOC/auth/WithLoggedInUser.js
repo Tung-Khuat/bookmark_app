@@ -13,7 +13,7 @@ export default (ComponentToWrap) => {
 		}
 	}
 
-	const mapState = ({ app: {loggedInUser } }) => ({ loggedInUser })
+	const mapState = ({ auth: { loggedInUser } }) => ({ loggedInUser })
 
 	const mapDispatchToProps = () => ({})
 

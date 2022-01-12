@@ -8,7 +8,7 @@ import { ref, deleteObject } from "firebase/storage";
 import { useSnackbar } from 'notistack'
 import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
-import * as bookmarkActions from '../../state/bookmarkState/bookmark-actions'
+import * as bookmarkActions from '../../state/firebaseActions/bookmark-actions'
 
 const PreviewsContainer = styled.div`
 	display: grid;

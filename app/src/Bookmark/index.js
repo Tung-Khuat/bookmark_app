@@ -9,7 +9,7 @@ import { Button, Checkbox, CircularProgress, Fab, Tooltip } from '@mui/material'
 import { Add, ContentCopy, Delete } from '@mui/icons-material'
 import moment from 'moment'
 import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
-import * as bookmarkActions from '../state/bookmarkState/bookmark-actions'
+import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
 import RouteHeader from '../components/viewLayouts/RouteHeader'
 
