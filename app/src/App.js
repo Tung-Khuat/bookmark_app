@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
@@ -9,9 +9,11 @@ import {
 	Link
 } from "react-router-dom";
 
-import AuthProvider from './Auth/AuthContext'
 import routes from './routes'
 import PrivateRoute from './PrivateRoute'
+import FullViewLoading from './components/loadingIndicators/FullViewLoading'
+import UserProfileFAB from './components/viewLayouts/UserProfileFAB'
+import WithLoggedInUser from './components/HOC/auth/WithLoggedInUser'
 
 function App(props) {
 	//Remove react does not recognize prop warnings
@@ -39,14 +41,27 @@ function App(props) {
 	}
 	const routeElements = routes.map(createRouteElement)
 
+	const renderRoute = () => {
+		return (
+			<>
+				{
+					props.loggedInUser && (
+						<UserProfileFAB />
+					)
+				}
+				{routeElements}
+			</>
+		)
+	}
+
 	return (
-		<AuthProvider>
+		<Suspense fallback={<FullViewLoading />}>
 			<Router>
 				<Switch>
-					{routeElements}
+					{renderRoute()}
 				</Switch>
 			</Router>
-		</AuthProvider>
+		</Suspense>
 	)
 }
 
@@ -54,5 +69,6 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 export default compose(
+	WithLoggedInUser,
 	connect(null, mapDispatchToProps)
 )(App)

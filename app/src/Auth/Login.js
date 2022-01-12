@@ -9,7 +9,7 @@ import * as appActions from '../state/ui/authState/app-actions'
 import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
 import { useAuth } from './AuthContext'
 import HelperTextField from '../components/HelperTextField'
-import { StandardTitle, StyledLink } from '../components/StyledComponents/BasicComponents'
+import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import { AccountCircle, Lock } from '@mui/icons-material'
 

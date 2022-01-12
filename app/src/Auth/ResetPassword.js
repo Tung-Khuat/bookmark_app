@@ -6,7 +6,7 @@ import { compose } from 'redux'
 import { Card, CardActions, Button, TextField, CircularProgress } from '@mui/material'
 import { useAuth } from './AuthContext'
 import HelperTextField from '../components/HelperTextField'
-import { StandardTitle, StyledLink } from '../components/StyledComponents/BasicComponents'
+import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 import { AccountCircle } from '@mui/icons-material'
 
 

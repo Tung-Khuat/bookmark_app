@@ -11,6 +11,7 @@ import moment from 'moment'
 import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
 import * as bookmarkActions from '../state/bookmarkState/bookmark-actions'
 import { useSnackbar } from 'notistack'
+import RouteHeader from '../components/viewLayouts/RouteHeader'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -213,6 +214,7 @@ function Bookmark ({ bookmarks, _deleteBookmark }) {
 
 	return (
 		<div>
+			<RouteHeader header={"Bookmarks"} subheader={"public bookmarks"} />
 			<Button onClick={()=>setCreateDialogVisible(true)}>Add Bookmark</Button>
 			{
 				renderSelectModePanel()

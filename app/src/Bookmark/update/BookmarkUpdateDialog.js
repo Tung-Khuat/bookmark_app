@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Button, CircularProgress, IconButton, TextField } from '@mui/material'
-import StandardDialog from '../../components/Dialogs/StandardDialog'
+import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import * as bookmarkActions from '../../state/bookmarkState/bookmark-actions'

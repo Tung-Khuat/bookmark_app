@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Dialog, DialogContent, Button } from '@mui/material'
 import { Close } from '@mui/icons-material';
 import config from './config'
-import { StandardDialogTitle } from '../StyledComponents/BasicComponents'
+import { StandardDialogTitle } from '../styledComponents/BasicComponents'
 
 const DialogTitleWithActions = styled(StandardDialogTitle)`
 	display: grid;
@@ -18,7 +18,7 @@ const ActionContainer = styled.div`
 `
 
 function StandardDialog (props) {
-	const { _setOpen, dialogTitle, leftTitleActions, rightTitleActions, dialogActions, noTitle, children } = props
+	const { _setOpen, dialogTitle, leftTitleActions, rightTitleActions, dialogActions, noTitle, dialogSize, children } = props
 	const defaultCloseButton = <Button onClick={()=>_setOpen(false)}><Close style={{color: '#fff'}} /></Button>
 
 	const renderActionWithKey = (action, index) => {
@@ -48,7 +48,7 @@ function StandardDialog (props) {
 			maxWidth={false}
 		>
 			{renderTitleAction()}
-			<DialogContent style={{ width: config.dialogContentTypeWidth.large }}>
+			<DialogContent style={{ width: config.dialogContentTypeWidth[dialogSize || 'large'] }}>
 				<div style={{ marginTop: '24px' }}>
 					{children}
 				</div>

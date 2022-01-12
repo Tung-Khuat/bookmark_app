@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button, CircularProgress, TextField } from '@mui/material'
-import StandardDialog from '../components/Dialogs/StandardDialog'
+import StandardDialog from '../components/dialogs/StandardDialog'
 import ImageDropzone from '../components/ImageDropzone'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'

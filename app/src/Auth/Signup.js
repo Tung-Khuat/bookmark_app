@@ -9,7 +9,7 @@ import { useAuth } from './AuthContext'
 
 import { withSnackbar } from 'notistack'
 import HelperTextField from '../components/HelperTextField'
-import { StandardTitle, StyledLink } from '../components/StyledComponents/BasicComponents'
+import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 import { AccountCircle, Lock } from '@mui/icons-material'
 
 const SignupContainer = styled.div`

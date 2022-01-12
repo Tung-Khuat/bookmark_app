@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { Provider } from 'react-redux'
@@ -8,7 +8,8 @@ import { createFirestoreInstance } from 'redux-firestore'
 import firebase from 'firebase/compat/app'
 import { SnackbarProvider } from 'notistack';
 import { StyledEngineProvider } from '@mui/material/styles';
-import GlobalStyles from './components/StyledComponents/GlobalStyles'
+import GlobalStyles from './components/styledComponents/GlobalStyles'
+import AuthProvider from './auth/AuthContext'
 
 const rrfProps = {
 	firebase,
@@ -29,7 +30,9 @@ ReactDOM.render(
 				<StyledEngineProvider injectFirst>					
 					<SnackbarProvider maxSnack={3}>
 						<GlobalStyles />
-						<App />
+							<AuthProvider>
+								<App />
+							</AuthProvider> 
 					</SnackbarProvider>
 				</StyledEngineProvider>
 			</ReactReduxFirebaseProvider>

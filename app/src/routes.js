@@ -1,9 +1,9 @@
 import { lazy } from 'react'
 
 const Bookmark = lazy(() => import("./Bookmark"))
-const Login = lazy(() => import("./Auth/Login"))
-const ResetPassword = lazy(() => import("./Auth/ResetPassword"))
-const Signup = lazy(() => import("./Auth/Signup"))
+const Login = lazy(() => import("./auth/Login"))
+const ResetPassword = lazy(() => import("./auth/ResetPassword"))
+const Signup = lazy(() => import("./auth/Signup"))
 
 
 const routes = [
