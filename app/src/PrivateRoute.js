@@ -1,7 +1,7 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { Route, Redirect } from 'react-router-dom'
+import WithLoggedInUser from './components/HOC/auth/WithLoggedInUser'
 
 function PrivateRoute (props) {
 	const { component: Component, loggedInUser, ...rest } = props
@@ -16,12 +16,6 @@ function PrivateRoute (props) {
 	)
 }
 
-const mapState = ({
-	auth: { loggedInUser }
-}) => ({
-	loggedInUser
-})
-
 export default compose(
-	connect(mapState),
+	WithLoggedInUser,
 )(PrivateRoute)
