@@ -43,8 +43,8 @@ const BadgeContainer = styled.div`
 	width: 48px;
 	position: fixed;
 	z-index: 9;
-	top: 4px;
-	right: 4px;
+	top: 8px;
+	right: 12px;
 `
 const AvatarContainer = styled.div`
 	width: 48px;

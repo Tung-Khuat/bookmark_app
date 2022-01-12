@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Subtext } from '../styledComponents/BasicComponents'
 
 const Container = styled.div`
 	width: 100%;
-	padding: 8px 0;
+	padding: 8px 0 16px;
+	position: sticky;
+    top: 0;
+    background: white;
+    z-index: 8;
 `
 const HeaderSection = styled.div`
 	margin: 0 32px;
