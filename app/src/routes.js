@@ -1,7 +1,10 @@
-import Bookmark from "./Bookmark"
-import Login from "./Auth/Login"
-// import ResetPassword from "./ResetPassword"
-import Signup from "./Auth/Signup"
+import { lazy } from 'react'
+
+const Bookmark = lazy(() => import("./Bookmark"))
+const Login = lazy(() => import("./Auth/Login"))
+const ResetPassword = lazy(() => import("./Auth/ResetPassword"))
+const Signup = lazy(() => import("./Auth/Signup"))
+
 
 const routes = [
 		// Auth 
@@ -21,14 +24,14 @@ const routes = [
 			disabled: false,
 			public: true,
 		},
-		// {
-		// 	title: 'Reset Password',
-		// 	component: ResetPassword,
-		// 	path: '/reset-password',
-		// 	category: 'auth',
-		// 	disabled: false,
-		// 	public: true,
-		// },
+		{
+			title: 'Reset Password',
+			component: ResetPassword,
+			path: '/reset-password',
+			category: 'auth',
+			disabled: false,
+			public: true,
+		},
 
 		// Dashboard
 		{
