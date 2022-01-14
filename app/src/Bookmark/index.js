@@ -5,16 +5,18 @@ import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import { push } from 'connected-react-router'
 import { Button, Checkbox, CircularProgress, Fab, Tooltip, Card } from '@mui/material'
-import { Add, ContentCopy, Delete } from '@mui/icons-material'
-import { StyledLink } from '../components/styledComponents/BasicComponents'
+import { Add, ContentCopy, CreateNewFolder, Delete } from '@mui/icons-material'
 import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
 import moment from 'moment'
+import truncate from 'truncate'
 import RouteHeader from '../components/viewLayouts/RouteHeader'
 import BookmarkCreateDialog from './BookmarkCreateDialog'
 import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import WithQueryParams from '../components/HOC/WithQueryParams'
+import DirectoryCreateDialog from './Directory/DirectoryCreateDialog'
+import Directory from './Directory'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -66,7 +68,7 @@ const BookmarkSelectCheckbox = styled(Checkbox)`
 `
 const SelectModePanel = styled.div`
 	display: grid;
-	grid-template-columns: 1fr auto;
+	grid-template-columns: 1fr auto auto;
 	padding: 16px 0;
 	width: 100%;
 	justify-content: end;
@@ -92,7 +94,8 @@ const UnderlineText = styled.span`
 `
 
 function Bookmark ({ bookmarks, loggedInUser, queryParams, _push, _deleteBookmark }) {
-	const [createDialogVisible, setCreateDialogVisible] = useState(false)
+	const [createBookmarkDialogVisible, setCreateBookmarkDialogVisible] = useState(false)
+	const [createDirectoryDialogVisible, setCreateDirectoryDialogVisible] = useState(false)
 	const [updateDialogVisible, setUpdateDialogVisible] = useState(false)
 	const [bookmarkUUIDForUpdate, setBookmarkUUIDForUpdate] = useState(null)
 	const [selectMode, setSelectMode] = useState(false)
@@ -126,6 +129,7 @@ function Bookmark ({ bookmarks, loggedInUser, queryParams, _push, _deleteBookmar
 	const renderSelectModePanel = () => {
 		if(!bookmarks)
 			return null
+			
 		const allBookmarkUUIDs = bookmarks.map((bookmark)=> bookmark.uuid)
 
 		if(selectMode){
@@ -157,6 +161,15 @@ function Bookmark ({ bookmarks, loggedInUser, queryParams, _push, _deleteBookmar
 		}
 		return (
 			<SelectModePanel>
+				<div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+					<Button 
+						style={{ marginLeft: 32 }} 
+						onClick={()=>setCreateDirectoryDialogVisible(true)} 
+						variant="outlined"
+					>
+						<CreateNewFolder style={{ marginRight: 8 }} /> New Folder
+					</Button>
+				</div>
 				<SelectModeLeftContainer>
 					<div>{`${bookmarks.length} bookmarks`}</div>
 				</SelectModeLeftContainer>
@@ -201,7 +214,11 @@ function Bookmark ({ bookmarks, loggedInUser, queryParams, _push, _deleteBookmar
 					}
 				<BookmarkInfo>
 					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Tooltip title={bookmark.link}><BookmarkTitle style={{margin: 0}}>{bookmark.title}</BookmarkTitle></Tooltip>
+						<Tooltip title={bookmark.title}>
+							<BookmarkTitle style={{margin: 0}}>
+								{truncate(bookmark.title, 30)}
+							</BookmarkTitle>
+						</Tooltip>
 						<Tooltip 
 							title={bookmark.link || 'No link provided'} 
 							onClick={(e)=>{
@@ -232,14 +249,14 @@ function Bookmark ({ bookmarks, loggedInUser, queryParams, _push, _deleteBookmar
 		
 		return (
 			<>
-				<StyledLink onClick={ () => pushParentUUID('') }> 
+				<PathLink onClick={ () => pushParentUUID('') }> 
 					<UnderlineText>{displayName || email}</UnderlineText> /
-				</StyledLink>
+				</PathLink>
 				{
 					puuid && (
-						<StyledLink onClick={ () => pushParentUUID(puuid) }>
+						<PathLink onClick={ () => pushParentUUID(puuid) }>
 							<UnderlineText> {`${puuid}`}</UnderlineText> /
-						</StyledLink>
+						</PathLink>
 					)
 				}
 			</>
@@ -251,18 +268,27 @@ function Bookmark ({ bookmarks, loggedInUser, queryParams, _push, _deleteBookmar
 			{
 				renderSelectModePanel()
 			}
+			<Directory />
 			<BookmarksContainer>
 				{ bookmarks ? bookmarks.map(renderBookmark) : <div>No Bookmarks found</div> }
 			</BookmarksContainer>
 			<Fab 
 				size="medium" color="primary" aria-label="add"
 				style={{ position: 'fixed', bottom: 34, right: 34 }}
-				onClick={()=>setCreateDialogVisible(true)}	
+				onClick={()=>setCreateBookmarkDialogVisible(true)}	
 			>
 				<Add />
 			</Fab>
 
-			<BookmarkCreateDialog visible={createDialogVisible} _setVisible={setCreateDialogVisible} />
+			<BookmarkCreateDialog visible={createBookmarkDialogVisible} _setVisible={setCreateBookmarkDialogVisible} />
+			{
+				createDirectoryDialogVisible && (
+					<DirectoryCreateDialog 
+						visible={createDirectoryDialogVisible} 
+						_setVisible={setCreateDirectoryDialogVisible} 
+					/>
+				)
+			}
 			{
 				bookmarkUUIDForUpdate && updateDialogVisible && (
 					<BookmarkUpdateDialog 
@@ -298,7 +324,7 @@ export default compose(
 					collection: 'bookmark',
 					where: [
 						['authorUID', '==', loggedInUser?.uid || ''],
-						puuid && ['parentUUID', '==' , puuid] ,
+						puuid ? ['parentUUID', '==' , puuid] : ['parentUUID', '==' , null ] ,
 					].filter(t=>t),
 					storeAs: 'bookmarks',
 				},

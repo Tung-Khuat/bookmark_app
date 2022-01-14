@@ -12,7 +12,7 @@ const getSanitizedNameFile = (file) => {
 	return new File([file], newFileName);
 }
 
-export const _createBookmark = ({ title, description, link, thumbnail, uploads, tags, folder }) =>
+export const _createBookmark = ({ title, description, link, thumbnail, uploads, tags, parentUUID }) =>
 	async function (dispatch, getState, getFirebase) {
 		try {
 			const createBookmark = functions.httpsCallable(
@@ -25,7 +25,7 @@ export const _createBookmark = ({ title, description, link, thumbnail, uploads, 
 				thumbnail, 
 				uploads,
 				tags,
-				folder,
+				parentUUID,
 			})
 			return result
 		} catch (ex) {
@@ -35,7 +35,7 @@ export const _createBookmark = ({ title, description, link, thumbnail, uploads, 
 		}
 	}
 
-export const _updateBookmark = ({ title, description, link, thumbnail, tags, folder }, uuid) =>
+export const _updateBookmark = ({ title, description, link, thumbnail, tags, parentUUID }, uuid) =>
 	async function (dispatch, getState, getFirebase) {
 		try {
 			const updateBookmark = functions.httpsCallable(
@@ -63,7 +63,7 @@ export const _updateBookmark = ({ title, description, link, thumbnail, tags, fol
 				thumbnail, 
 				uploads,
 				tags,
-				folder,
+				parentUUID,
 				uuid
 			})
 			return result
