@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import BookmarkCreateDialog from './BookmarkCreateDialog'
 import { firestoreConnect } from 'react-redux-firebase'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import Card from '@mui/material/Card'
-import { Button, Checkbox, CircularProgress, Fab, Tooltip } from '@mui/material'
+import { push } from 'connected-react-router'
+import { Button, Checkbox, CircularProgress, Fab, Tooltip, Card } from '@mui/material'
 import { Add, ContentCopy, Delete } from '@mui/icons-material'
-import moment from 'moment'
-import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
+import { StyledLink } from '../components/styledComponents/BasicComponents'
 import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
+import moment from 'moment'
 import RouteHeader from '../components/viewLayouts/RouteHeader'
+import BookmarkCreateDialog from './BookmarkCreateDialog'
+import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
+import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
+import WithQueryParams from '../components/HOC/WithQueryParams'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -80,8 +83,15 @@ const SelectModeLeftContainer = styled.div`
 		place-items: center;
 	}
 `
+const PathLink = styled.span`
+	cursor: pointer;
+  	color: ${(props) => props.theme.primary || '#1976d2'};
+`
+const UnderlineText = styled.span`
+	text-decoration: underline;
+`
 
-function Bookmark ({ bookmarks, _deleteBookmark }) {
+function Bookmark ({ bookmarks, loggedInUser, queryParams, _push, _deleteBookmark }) {
 	const [createDialogVisible, setCreateDialogVisible] = useState(false)
 	const [updateDialogVisible, setUpdateDialogVisible] = useState(false)
 	const [bookmarkUUIDForUpdate, setBookmarkUUIDForUpdate] = useState(null)
@@ -212,9 +222,32 @@ function Bookmark ({ bookmarks, _deleteBookmark }) {
 		)
 	}
 
+	const renderSubheader = () => {
+		if(!loggedInUser || !queryParams)
+			return null
+		
+		const { displayName, email } = loggedInUser
+		const { puuid } = queryParams
+		const pushParentUUID = (puuid) => _push('?puuid=' + puuid )
+		
+		return (
+			<>
+				<StyledLink onClick={ () => pushParentUUID('') }> 
+					<UnderlineText>{displayName || email}</UnderlineText> /
+				</StyledLink>
+				{
+					puuid && (
+						<StyledLink onClick={ () => pushParentUUID(puuid) }>
+							<UnderlineText> {`${puuid}`}</UnderlineText> /
+						</StyledLink>
+					)
+				}
+			</>
+		)
+	}
 	return (
 		<div>
-			<RouteHeader header={"Bookmarks"} subheader={"public bookmarks"} />
+			<RouteHeader header={"Bookmarks"} subheader={renderSubheader()} />
 			{
 				renderSelectModePanel()
 			}
@@ -251,14 +284,26 @@ const mapState = ({
 
 const mapDispatchToProps = (dispatch) => ({
 	_deleteBookmark: bindActionCreators(bookmarkActions._deleteBookmark, dispatch),
+	_push: bindActionCreators(push, dispatch),
 })
 
 export default compose(
-	firestoreConnect(({ authorUUID }) => [
-		{
-			collection: 'bookmark',
-			storeAs: 'bookmarks',
-		},
-	]),
+	WithLoggedInUser,
+	WithQueryParams,
+	firestoreConnect(({ loggedInUser, queryParams }) => {
+		const { puuid } = queryParams
+		return (
+			[
+				{
+					collection: 'bookmark',
+					where: [
+						['authorUID', '==', loggedInUser?.uid || ''],
+						puuid && ['parentUUID', '==' , puuid] ,
+					].filter(t=>t),
+					storeAs: 'bookmarks',
+				},
+			]
+		)
+	}),
 	connect(mapState, mapDispatchToProps)
 )(Bookmark)
