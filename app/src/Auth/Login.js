@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { compose, bindActionCreators } from 'redux'
-import { useHistory } from 'react-router-dom'
+import { push } from 'connected-react-router'
 
 import * as appActions from '../state/appState/authState/auth-app-actions'
 
@@ -41,13 +41,12 @@ const InputFieldContainer = styled.div`
 `
 
 function Login(props) {
-	const { _persistLoggedInUser, loggedInUser, persistedLoginUser } = props
+	const { _persistLoggedInUser, loggedInUser, persistedLoginUser, _push } = props
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [helperText, setHelperText] = useState(null)
 	const [processing, setProcessing] = useState(false)
 	const { login } = useAuth()
-	const history = useHistory()
 
 	useEffect(()=>{
 		setHelperText(null)
@@ -55,7 +54,7 @@ function Login(props) {
 
 	useEffect(()=>{
 		if(loggedInUser && persistedLoginUser && !processing){
-			history.push('./')
+			_push('bookmark')
 		}
 	},[loggedInUser, persistedLoginUser])
 
@@ -170,6 +169,7 @@ const mapState = ({
 
 const mapDispatchToProps = (dispatch) => ({
 	_persistLoggedInUser: bindActionCreators(appActions._persistLoggedInUser, dispatch),
+	_push: bindActionCreators(push, dispatch),
 })
 
 export default compose(
