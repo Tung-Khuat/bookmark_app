@@ -2,7 +2,7 @@ import { Button } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { push } from 'connected-react-router'
 import { bindActionCreators, compose } from 'redux'
 import { useAuth } from '../auth/AuthContext'
 import StandardDialog from '../components/dialogs/StandardDialog'
@@ -11,8 +11,7 @@ import * as authActions from '../state/firebaseActions/auth-actions'
 
 
 function UserPersonalizedSettingsDialog (props) {
-	const { open, _setOpen, _logout } = props
- 	const history = useHistory()
+	const { open, _setOpen, _logout, _push } = props
 	const { logout } = useAuth()
 	const { enqueueSnackbar }= useSnackbar()
 
@@ -20,7 +19,7 @@ function UserPersonalizedSettingsDialog (props) {
 		try {
 			await logout()
 			_logout()
-			history.push('./login')
+			_push('./login')
 		} catch (error) {
 			enqueueSnackbar('Failed to logout. Please try again.', { variant: 'error' })
 		}
@@ -39,6 +38,7 @@ function UserPersonalizedSettingsDialog (props) {
 
 const mapDispatchToProps = (dispatch) => ({
 	_logout: bindActionCreators(authActions._logout, dispatch),
+	_push: bindActionCreators(push, dispatch),
 })
 
 export default compose(

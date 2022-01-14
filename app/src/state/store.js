@@ -8,6 +8,9 @@ import 'firebase/compat/auth'
 import { getStorage } from "firebase/storage";
 import { firebaseReducer } from 'react-redux-firebase'
 import { firestoreReducer } from 'redux-firestore'
+import { connectRouter, routerMiddleware } from 'connected-react-router'
+import { createBrowserHistory } from 'history'
+
 
 import appReducer from './appState/appReducer'
 import authReducer from './appState/authState/auth-app-reducer'
@@ -35,7 +38,12 @@ if (process.env.REACT_APP_FIREBASE_EMULATORS === 'enabled') {
 	firebase.functions() 
 }
 
+export const history = createBrowserHistory()
+// Build the middleware for intercepting and dispatching navigation actions
+const routerMiddleman = routerMiddleware(history)
+
 const reducers =  combineReducers({
+	router: connectRouter(history),
 	app: appReducer,
 	auth: authReducer,
 	firebaseReducer,
@@ -45,7 +53,6 @@ const reducers =  combineReducers({
 const persistedReducers = ['app', 'auth']
 const persistedNamespace = 'app'
 
-
 const store = createStore(
     reducers, 
     load({
@@ -54,7 +61,8 @@ const store = createStore(
         disableWarnings: true,
     }),
     compose(
-        applyMiddleware(thunk),
+		applyMiddleware(thunk),
+		applyMiddleware(routerMiddleman),
         applyMiddleware(
 			save({
 				states: persistedReducers,

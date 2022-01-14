@@ -13,11 +13,19 @@ const handleFunc = async (data, context) => {
 		tags,
 		folder,
 	} = data
-	// const author = context ? {
-	// 	uid: context.auth.uid,
-	// 	name: context.auth.token.name || null,
-	// 	email: context.auth.token.email || null,
-	// } : null
+
+	if (!context.auth) {
+		throw new functions.https.HttpsError('failed-precondition', 
+			'The function must be called while authenticated.')
+	}
+
+
+	const authorData = context ? {
+		uid: context.auth.uid,
+		name: context.auth.token.name || null,
+		email: context.auth.token.email || null,
+	} : null
+
 	const dataUUID = uuid.v4()
 	const ts = Date.parse(new Date())
 
@@ -32,6 +40,8 @@ const handleFunc = async (data, context) => {
 		uploads: uploads || [],
 		folder,
 		createdAt: ts,
+		authorData,
+		authorUID: context.auth.uid,
 	})
 
 	const bookmark = await db.collection('bookmark').doc(dataUUID).get()

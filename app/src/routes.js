@@ -44,6 +44,18 @@ const routes = [
 			exact: true,
 			feature: 'dashboard'
 		},
+
+		//Bookmark
+		{
+			title: 'Bookmark',
+			component: Bookmark,
+			path: '/bookmark',
+			category: 'bookmark',
+			disabled: false,
+			public: false,
+			feature: 'bookmark'
+		},
+
 		// {
 		// 	title: 'Dashboard2',
 		// 	component: Dashboard,
