@@ -6,6 +6,8 @@ import { compose } from 'redux'
 import Avatar from 'react-avatar'
 import styled, { keyframes } from 'styled-components'
 import UserPersonalizedSettingsDialog from '../../UserPersonalizedSettings/UserPersonalizedSettingsDialog'
+import WithLoggedInUser from '../HOC/auth/WithLoggedInUser'
+import { AccountCircle } from '@mui/icons-material'
 
 const pulse = keyframes`
 	0% {
@@ -27,7 +29,7 @@ const pulse = keyframes`
 
 const PulsingBadge = styled(Badge)`
 	.MuiBadge-badge {
-		display: ${({badgeContent}) => !badgeContent ? 'none' : 'block'};
+		display: ${({badgeContent}) => !badgeContent ? 'none' : undefined};
 		transform: translate(-18px, 5px) scale(0.75);
 		pointer-events: none;
 		user-select: none;
@@ -54,7 +56,7 @@ const AvatarContainer = styled.div`
 	user-select: 'none';
 `
 
-function UserProfileFAB() {
+function UserProfileFAB({loggedInUser}) {
 	const [personalizeDialogOpen, setPersonalizeDialogOpen] = useState(false)
 	const notificationCount = 0 //TODO: add notifications/mentions
 
@@ -74,7 +76,11 @@ function UserProfileFAB() {
 							setPersonalizeDialogOpen(true)
 						}}
 					>
-						<Avatar name={'Tung Khuat'} size={32} round />
+						{
+							loggedInUser & loggedInUser.displayName ? (
+								<Avatar name={loggedInUser.displayName} size={32} round />
+							) : <AccountCircle style={{fontSize: 36}}/>
+						}
 					</AvatarContainer>
 				</PulsingBadge>
 			</BadgeContainer>
@@ -94,5 +100,6 @@ const mapStateToProps = ({
 })
 
 export default compose(
+	WithLoggedInUser,
 	connect(mapStateToProps)
 )(UserProfileFAB)
