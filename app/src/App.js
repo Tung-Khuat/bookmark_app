@@ -8,7 +8,8 @@ import {
 	Route,
 	Link
 } from "react-router-dom";
-
+import { ConnectedRouter } from 'connected-react-router'
+import { history } from './state/store'
 import routes from './routes'
 import PrivateRoute from './PrivateRoute'
 import FullViewLoading from './components/loadingIndicators/FullViewLoading'
@@ -56,11 +57,13 @@ function App(props) {
 
 	return (
 		<Suspense fallback={<FullViewLoading />}>
-			<Router>
-				<Switch>
-					{renderRoute()}
-				</Switch>
-			</Router>
+			<ConnectedRouter history={history}>
+				<Router>
+					<Switch>
+						{renderRoute()}
+					</Switch>
+				</Router>
+			</ConnectedRouter>
 		</Suspense>
 	)
 }
