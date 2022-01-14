@@ -63,7 +63,7 @@ const AccordionSummaryTitle = styled.div`
 
 function Directory (props) {
 	const { directories, currentDirectory, _push } = props
-	
+
 	const pushParentUUID = (puuid) => _push('?puuid=' + puuid )
 
 	const renderDirectory = (directory) => {
@@ -143,7 +143,7 @@ export default compose(
 					collection: 'directory',
 					where: [
 						['authorUID', '==', loggedInUser?.uid || ''],
-						puuid ? ['parentUUID', '==' , puuid] : ['parentUUID', '==' , null] ,
+						puuid ? ['parentUUID', '==' , puuid] : ['parentUUID', '==' , null],
 					].filter(t=>t),
 					storeAs: 'directories',
 				},
@@ -157,7 +157,7 @@ export default compose(
 				{
 					collection: 'directory',
 					where: [
-						['uuid', '==' , puuid],
+						puuid ? ['uuid', '==' , puuid] : ['uuid', '==' , null],
 					].filter(t=>t),
 					storeAs: 'currentDirectory',
 				},
