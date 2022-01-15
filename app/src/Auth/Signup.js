@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
-import { push } from 'connected-react-router'
 import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
 import { AccountCircle, Lock } from '@mui/icons-material'
 import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
@@ -14,6 +13,7 @@ import { useAuth } from './AuthContext'
 import { getAuth } from "firebase/auth";
 import { withSnackbar } from 'notistack'
 import HelperTextField from '../components/HelperTextField'
+import { useHistory } from 'react-router-dom'
 
 const SignupContainer = styled.div`
 	width: 100%;
@@ -41,13 +41,14 @@ const InputFieldContainer = styled.div`
 `
 
 function Signup(props) {
-	const { enqueueSnackbar, _push, _createUser, _persistLoggedInUser } = props
+	const { enqueueSnackbar, _createUser, _persistLoggedInUser } = props
 	const [email, setEmail] = useState()
 	const [password, setPassword] = useState()
 	const [passwordConfirmation, setPasswordConfirmation] = useState()
 	const [helperText, setHelperText] = useState(null)
 	const [processing, setProcessing] = useState(false)
 	const { signup, login } = useAuth()
+	const history = useHistory()
 
 	useEffect(()=>{
 		setHelperText(null)
@@ -135,7 +136,7 @@ function Signup(props) {
 					await _createUser(user)
 					_persistLoggedInUser(user)
 				}
-				_push('./')
+				history.push('/')
 			} catch (error) {
 				console.log(error)
 				enqueueSnackbar('Failed to login.', { variant: "error" })
@@ -182,7 +183,6 @@ const mapState = ({
 const mapDispatchToProps = (dispatch) => ({
 	_createUser: bindActionCreators(authActions._createUser,dispatch),
 	_persistLoggedInUser: bindActionCreators(appActions._persistLoggedInUser, dispatch),
-	_push: bindActionCreators(push, dispatch),
 })
 
 export default compose(

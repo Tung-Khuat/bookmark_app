@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { compose, bindActionCreators } from 'redux'
-import { push } from 'connected-react-router'
 
 import * as appActions from '../state/appState/authState/auth-app-actions'
 
@@ -13,6 +12,7 @@ import { StandardTitle, StyledLink } from '../components/styledComponents/BasicC
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import { useAuth } from './AuthContext'
 import { getAuth } from "firebase/auth";
+import { useHistory } from 'react-router-dom'
 
 
 const LoginContainer = styled.div`
@@ -41,12 +41,13 @@ const InputFieldContainer = styled.div`
 `
 
 function Login(props) {
-	const { _persistLoggedInUser, loggedInUser, persistedLoginUser, _push } = props
+	const { _persistLoggedInUser, loggedInUser, persistedLoginUser } = props
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [helperText, setHelperText] = useState(null)
 	const [processing, setProcessing] = useState(false)
 	const { login } = useAuth()
+	const history = useHistory()
 
 	useEffect(()=>{
 		setHelperText(null)
@@ -54,7 +55,7 @@ function Login(props) {
 
 	useEffect(()=>{
 		if(loggedInUser && persistedLoginUser && !processing){
-			_push('bookmark')
+			history.push('/')
 		}
 	},[loggedInUser, persistedLoginUser])
 
@@ -169,7 +170,6 @@ const mapState = ({
 
 const mapDispatchToProps = (dispatch) => ({
 	_persistLoggedInUser: bindActionCreators(appActions._persistLoggedInUser, dispatch),
-	_push: bindActionCreators(push, dispatch),
 })
 
 export default compose(

@@ -11,7 +11,7 @@ const handleFunc = async (data, context) => {
 		thumbnail, //object
 		uploads, //array of objects
 		tags,// array of tag objects
-		folder, // string
+		parentUUID, // string
 		uuid // string
 	} = data
 
@@ -58,7 +58,7 @@ const handleFunc = async (data, context) => {
 		)
 	}
 
-	if (data.folder && typeof data.folder !== 'string') {
+	if (data.parentUUID && typeof data.parentUUID !== 'string') {
 		// Throwing an HttpsError so that the client gets the error details.
 		throw new functions.https.HttpsError(
 			'failed-precondition',
@@ -75,11 +75,6 @@ const handleFunc = async (data, context) => {
 	}
 	const bookmarkData = bookmark.data()
 
-	// const author = {
-	// 	uid: context.auth.uid,
-	// 	name: context.auth.token.name || null,
-	// 	email: context.auth.token.email || null,
-	// }
 	const update = {
 		modifiedAt: Date.parse(new Date()),
 	}
@@ -95,7 +90,7 @@ const handleFunc = async (data, context) => {
 		}
 	}
 	if (data.tags) update.tags = tags
-	if (data.folder) update.folder = folder
+	if (data.parentUUID) update.parentUUID = parentUUID
 	
 	await db.collection('bookmark').doc(bookmarkData.uuid).update(update)
 

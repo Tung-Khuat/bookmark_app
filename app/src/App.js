@@ -1,12 +1,10 @@
 import React, { Suspense } from 'react'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { push } from 'react-router-redux'
 import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
-	Link
 } from "react-router-dom";
 import { ConnectedRouter } from 'connected-react-router'
 import { history } from './state/store'
