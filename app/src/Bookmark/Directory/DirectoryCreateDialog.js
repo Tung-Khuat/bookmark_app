@@ -40,6 +40,7 @@ function DirectoryCreateDialog (props) {
 
 		if (response) {
 			enqueueSnackbar('Successfully created a directory', {variant: 'success'})
+			_setDirectory(initialDirectoryState)
 		} else {
 			enqueueSnackbar('An error occurred. Please try again later.', {variant: 'error'})
 		}
@@ -57,7 +58,7 @@ function DirectoryCreateDialog (props) {
 			]}
 		>
 			<StyledInputField
-				label="Title" 
+				label="Name" 
 				variant="outlined" 
 				value={directory.name} 
 				onChange={(event) => updateInputValue({name: event.target.value})} />
