@@ -40,7 +40,7 @@ function DirectoryCreateDialog (props) {
 
 		if (response) {
 			enqueueSnackbar('Successfully created a directory', {variant: 'success'})
-			_setDirectory(initialDirectoryState)
+			setDirectory(initialDirectoryState)
 		} else {
 			enqueueSnackbar('An error occurred. Please try again later.', {variant: 'error'})
 		}
