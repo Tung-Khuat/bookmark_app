@@ -32,6 +32,7 @@ export const _update = ({ name, description, parentUUID }, uuid) =>
 				name,
 				description,
 				parentUUID,
+				uuid,
 			})
 			return result
 		} catch (ex) {

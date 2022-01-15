@@ -12,6 +12,7 @@ import { push } from 'react-router-redux'
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } from '@mui/material'
 import { withStyles } from "@material-ui/core/styles";
 import { Subtext } from '../../components/styledComponents/BasicComponents'
+import DirectoryUpdateDrawer from './DirectoryUpdateDrawer'
 
 const StyledAccordion = withStyles({
 	root: {
@@ -62,6 +63,8 @@ const AccordionSummaryTitle = styled.div`
 `
 
 function Directory (props) {
+	const [openEditDrawer, setOpenEditDrawer] = useState(true)
+	const [directoryInEdit, setDirectoryInEdit] = useState(null)
 	const { directories, currentDirectory, _push } = props
 
 	const pushParentUUID = (puuid) => _push('?puuid=' + puuid )
@@ -79,7 +82,8 @@ function Directory (props) {
 					onClick={(e)=>{
 						e.preventDefault()
 						e.stopPropagation()
-						console.log('Edit soon')
+						setOpenEditDrawer(true)
+						setDirectoryInEdit(directory)
 					}}
 				>
 					<MoreVert/>
@@ -117,6 +121,7 @@ function Directory (props) {
 					</ListContainer>
 				</AccordionDetails>
 			</StyledAccordion>
+			<DirectoryUpdateDrawer open={openEditDrawer} _setOpen={setOpenEditDrawer} directory={directoryInEdit}/>
 		</div>
 	)
 }
