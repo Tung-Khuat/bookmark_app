@@ -190,18 +190,5 @@ export default compose(
 			]
 		)
 	}),
-	firestoreConnect(({ directoryUUID }) => {
-		return (
-			[
-				{
-					collection: 'directory',
-					where: [
-						directoryUUID ? ['uuid', '==' , directoryUUID] : ['uuid', '==' , null],
-					].filter(t=>t),
-					storeAs: 'currentDirectory',
-				},
-			]
-		)
-	}),
 	connect(mapState, mapDispatchToProps)
 )(Directory)
