@@ -3,21 +3,19 @@ import styled from 'styled-components'
 import { firestoreConnect } from 'react-redux-firebase'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import { Button, Checkbox, CircularProgress, Fab, Tooltip, Card } from '@mui/material'
-import { Add, ContentCopy, CreateNewFolder, Delete } from '@mui/icons-material'
+import { Button, Checkbox, CircularProgress, Fab } from '@mui/material'
+import { Add, CreateNewFolder, Delete, Lock } from '@mui/icons-material'
 import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
-import moment from 'moment'
-import truncate from 'truncate'
 import RouteHeader from '../components/viewLayouts/RouteHeader'
 import BookmarkCreateDialog from './BookmarkCreateDialog'
-import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import DirectoryCreateDialog from './Directory/DirectoryCreateDialog'
 import Directory from './Directory'
 import WithRouterHooks  from '../components/HOC/WithRouterHooks'
 import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 import { cacheDirectory } from '../state/appState/appActions'
+import BookmarkCard from './BookmarkCard'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -25,48 +23,7 @@ const BookmarksContainer = styled.div`
 	grid-gap: 16px;
 	justify-content: center;
 `
-const BookmarkTitle = styled.div`
-	font-weight: 400;
-	font-size: 1.2em;
-`
-const BookmarkCard = styled(Card)`
-	margin: 0 16px 16px 0;
-	width: 320px;
-	height: 275px;
-	box-shadow: 0 20px 10px -15px rgb(197 192 249 / 20%);
-	position: relative;
-	cursor: pointer;
-	&:hover {
-		box-shadow: 0 20px 10px -15px rgb(95 98 214 / 20%);
-		transform: scale(1.03);
-		transition: all 0.3s ease-in-out;
-	}
-`
-const Thumbnail = styled.div`
-	width: 100%;
-	height: 170px;
-	background: url(${({url}) => url});
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center;
-`
-const BookmarkInfo = styled.div`
-	padding: 0 16px;
-	margin-top: 8px;
-	display: grid;
-`
-const BookmarkSelectCheckbox = styled(Checkbox)`
-	position: absolute;
-	top: 0;
-	right: 0;
-	z-index: 2;
-	background-color: #ffffff94;
-    padding: 4px;
-    border-radius: 0 0 0 8px;
-	&:hover {
-		background-color: #fff;
-	}
-`
+
 const SelectModePanel = styled.div`
 	display: grid;
 	grid-template-columns: 1fr auto auto;
@@ -98,12 +55,11 @@ function Bookmark (props) {
 	const { bookmarks, loggedInUser, router, paramList, directoriesCached, _deleteBookmark } = props
 	const [createBookmarkDialogVisible, setCreateBookmarkDialogVisible] = useState(false)
 	const [createDirectoryDialogVisible, setCreateDirectoryDialogVisible] = useState(false)
-	const [updateDialogVisible, setUpdateDialogVisible] = useState(false)
-	const [bookmarkUUIDForUpdate, setBookmarkUUIDForUpdate] = useState(null)
 	const [selectMode, setSelectMode] = useState(false)
 	const [selectedBookmarkUUIDs, setSelectedBookmarkUUIDs] = useState([])
 	const [processing, setProcessing] = useState(false)
 	const { enqueueSnackbar } = useSnackbar();
+	const { puuid } = queryParams
 
 	const handleDeleteSelected = async () => {
 		const confirm = window.confirm(`Are you sure you want to delete these (${selectedBookmarkUUIDs.length})bookmarks`)
@@ -123,11 +79,6 @@ function Bookmark (props) {
 		}
 	}
 
-	const renderTags = (tag) => {
-		return (
-			<div>{tag.label}</div>
-		)
-	}
 	const renderSelectModePanel = () => {
 		if(!bookmarks)
 			return null
@@ -183,63 +134,6 @@ function Bookmark (props) {
 			</SelectModePanel>
 		)
 	}
-	const renderBookmark = (bookmark) => {
-		const isBookmarkChecked = Boolean(selectedBookmarkUUIDs.find(uuid => uuid === bookmark.uuid))
-		const handleCheckboxClick = (e) => {
-			e.preventDefault()
-			e.stopPropagation()
-			const matchingUUID = selectedBookmarkUUIDs.find(uuid => uuid === bookmark.uuid)
-			if(matchingUUID){
-				const filteredSelected = [...selectedBookmarkUUIDs].filter( uuid => uuid !== bookmark.uuid)
-				setSelectedBookmarkUUIDs(filteredSelected)
-			} else {
-				setSelectedBookmarkUUIDs([...selectedBookmarkUUIDs, bookmark.uuid])
-			}
-
-		}
-		return (
-			<BookmarkCard 
-				key={bookmark.uuid}
-				onClick={()=>{setBookmarkUUIDForUpdate(bookmark.uuid); setUpdateDialogVisible(true)}}>
-					{
-						selectMode && (
-							<BookmarkSelectCheckbox 
-								onClick={handleCheckboxClick}
-								checked={isBookmarkChecked}
-							/>
-						)
-					}
-					{
-						bookmark.thumbnail ? (
-							<Thumbnail url={bookmark.thumbnail.url} />
-						) : <div style={{height: 180}} />
-					}
-				<BookmarkInfo>
-					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-						<Tooltip title={bookmark.title}>
-							<BookmarkTitle style={{margin: 0}}>
-								{truncate(bookmark.title, 30)}
-							</BookmarkTitle>
-						</Tooltip>
-						<Tooltip 
-							title={bookmark.link || 'No link provided'} 
-							onClick={(e)=>{
-								e.preventDefault()
-								e.stopPropagation()
-								navigator.clipboard.writeText(bookmark.link)
-							}}
-							style={{
-								cursor: 'pointer',
-								fontSize: '1.1em',
-							}}
-						><ContentCopy/></Tooltip>
-					</div>
-					<div style={{ opacity: 0.8, fontSize: '0.8em' }}>{moment(bookmark.createdAt).fromNow()}</div>
-					<div>{bookmark.tags && bookmark.tags.map(renderTags)}</div>
-				</BookmarkInfo>
-			</BookmarkCard>
-		)
-	}
 
 	const renderSubheader = () => {
 		if(!loggedInUser)
@@ -281,15 +175,43 @@ function Bookmark (props) {
 			</>
 		)
 	}
+
+	if(puuid && !currentDirectory){
+		return (
+			<>
+				<RouteHeader header={"Bookmarks"} subheader={renderSubheader()} />
+				<div style={{
+					display: 'grid',
+					placeItems: 'center',
+					height: 'calc(100vh - 100px)',
+				}}>
+					<div style={{ display: 'grid', placeItems: 'center' }}>
+						<Lock style={{ fontSize: 80, marginBottom: 16 }}/>
+						<div>You do not have permission to view this directory</div>
+					</div>
+				</div>
+			</>
+		)
+	}
+
 	return (
 		<div>
 			<RouteHeader header={"Bookmarks"} subheader={renderSubheader()} />
 			{
 				renderSelectModePanel()
 			}
-			<Directory />
+			<Directory currentDirectory={currentDirectory} />
 			<BookmarksContainer>
-				{ bookmarks ? bookmarks.map(renderBookmark) : <div>No Bookmarks found</div> }
+				{bookmarks 
+					? bookmarks.map((bookmark)=>(
+						<BookmarkCard 
+							bookmark={bookmark} 
+							selectedBookmarkUUIDs={selectedBookmarkUUIDs}
+							_setSelectedBookmarkUUIDs={setSelectedBookmarkUUIDs} 
+							selectMode={selectMode} 
+						/>
+					)) 
+					: <div>No Bookmarks found</div> }
 			</BookmarksContainer>
 			<Fab 
 				size="medium" color="primary" aria-label="add"
@@ -308,25 +230,17 @@ function Bookmark (props) {
 					/>
 				)
 			}
-			{
-				bookmarkUUIDForUpdate && updateDialogVisible && (
-					<BookmarkUpdateDialog 
-						bookmarkUUID={bookmarkUUIDForUpdate} 
-						visible={updateDialogVisible} 
-						_setVisible={setUpdateDialogVisible} 
-					/>
-				)
-			}
 		</div>
 	)
 }
 
 const mapState = ({
-	firestoreReducer: { ordered: { bookmarks } },
+	firestoreReducer: { ordered: { bookmarks, currentDirectory } },
 	app: { directoriesCached },
 }) => ({
 	bookmarks,
 	directoriesCached,
+	currentDirectory: currentDirectory && currentDirectory[0]
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -347,6 +261,21 @@ export default compose(
 						directoryUUID ? ['parentUUID', '==' , directoryUUID] : ['parentUUID', '==' , null ] ,
 					].filter(t=>t),
 					storeAs: 'bookmarks',
+				},
+			]
+		)
+	}),
+	firestoreConnect(({ loggedInUser, queryParams }) => {
+		const { puuid } = queryParams
+		return (
+			[
+				{
+					collection: 'directory',
+					where: [
+						['authorUID', '==', loggedInUser?.uid || ''],
+						puuid ? ['uuid', '==' , puuid] : ['uuid', '==' , null],
+					].filter(t=>t),
+					storeAs: 'currentDirectory',
 				},
 			]
 		)
