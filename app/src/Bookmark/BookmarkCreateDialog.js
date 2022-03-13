@@ -7,7 +7,7 @@ import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
-import WithQueryParams from '../components/HOC/WithQueryParams'
+import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 
 const StyledInputField = styled(TextField)`
 	width: 100%;
@@ -36,7 +36,7 @@ const initialBookmarkState =  {
 
 
 function BookmarkCreateDialog (props) {
-	const { visible, queryParams, _setVisible, _createBookmark, _updateBookmark, _upload } = props
+	const { visible, directoryUUID, _setVisible, _createBookmark, _updateBookmark, _upload } = props
 	const [bookmark, setBookmark ] = useState(initialBookmarkState)
 	const [uploadFiles, setUploadFiles ] = useState([])
 	const [processing, setProcessing ] = useState(false)
@@ -54,8 +54,7 @@ function BookmarkCreateDialog (props) {
 		setProcessing(true)
 
 		// create bookmark without uploads first
-		const { puuid } = queryParams
-		const newBookmark = { ...bookmark, parentUUID: puuid || null }
+		const newBookmark = { ...bookmark, parentUUID: directoryUUID || null }
 		const response = await _createBookmark(newBookmark)
 
 		if (response) {
@@ -130,6 +129,6 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 export default compose(
-	WithQueryParams,
+	WithDirectoryParentUUID,
 	connect(null, mapDispatchToProps)
 )(BookmarkCreateDialog)

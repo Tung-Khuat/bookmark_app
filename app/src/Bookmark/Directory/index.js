@@ -2,9 +2,8 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import { useSnackbar } from 'notistack'
 import truncate from 'truncate'
-import WithQueryParams from '../../components/HOC/WithQueryParams'
+import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
 import WithLoggedInUser from '../../components/HOC/auth/WithLoggedInUser'
 import { ArrowBackIos, ExpandMore, Folder, MoreVert } from '@mui/icons-material'
 import { firestoreConnect } from 'react-redux-firebase'
@@ -65,9 +64,9 @@ const AccordionSummaryTitle = styled.div`
 function Directory (props) {
 	const [openEditDrawer, setOpenEditDrawer] = useState(true)
 	const [directoryInEdit, setDirectoryInEdit] = useState(null)
-	const { directories, currentDirectory, _push } = props
+	const { directories, currentDirectory, router } = props
 
-	const pushParentUUID = (puuid) => _push('?puuid=' + puuid )
+	const pushParentUUID = (puuid) => router.navigate(puuid)
 
 	const renderDirectory = (directory) => {
 		return (
@@ -95,8 +94,8 @@ function Directory (props) {
 	const handleBackPush = (e) => {
 		e.preventDefault()
 		e.stopPropagation()
-		const backPUUID = currentDirectory.parentUUID ? `${currentDirectory.parentUUID}` : ''
-		_push(`?puuid=${backPUUID}`)
+		const backUUID = currentDirectory.parentUUID ? `${currentDirectory.parentUUID}` : ''
+		router.navigate(`${backUUID}`)
 	}
 
 	return (
@@ -133,41 +132,35 @@ const mapState = ({
 	currentDirectory: currentDirectory && currentDirectory[0]
 })
 
-const mapDispatchToProps = (dispatch) => ({
-	_push: bindActionCreators(push, dispatch),
-})
-
 export default compose(
 	WithLoggedInUser,
-	WithQueryParams,
-	firestoreConnect(({ loggedInUser, queryParams }) => {
-		const { puuid } = queryParams
+	WithDirectoryParentUUID,
+	firestoreConnect(({ loggedInUser, directoryUUID }) => {
 		return (
 			[
 				{
 					collection: 'directory',
 					where: [
 						['authorUID', '==', loggedInUser?.uid || ''],
-						puuid ? ['parentUUID', '==' , puuid] : ['parentUUID', '==' , null],
+						directoryUUID ? ['parentUUID', '==' , directoryUUID] : ['parentUUID', '==' , null],
 					].filter(t=>t),
 					storeAs: 'directories',
 				},
 			]
 		)
 	}),
-	firestoreConnect(({ queryParams }) => {
-		const { puuid } = queryParams
+	firestoreConnect(({ directoryUUID }) => {
 		return (
 			[
 				{
 					collection: 'directory',
 					where: [
-						puuid ? ['uuid', '==' , puuid] : ['uuid', '==' , null],
+						directoryUUID ? ['uuid', '==' , directoryUUID] : ['uuid', '==' , null],
 					].filter(t=>t),
 					storeAs: 'currentDirectory',
 				},
 			]
 		)
 	}),
-	connect(mapState, mapDispatchToProps)
+	connect(mapState)
 )(Directory)

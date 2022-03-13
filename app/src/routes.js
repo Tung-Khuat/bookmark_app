@@ -49,13 +49,12 @@ const routes = [
 		{
 			title: 'Bookmark',
 			component: <Bookmark />,
-			path: '/bookmark',
+			path: '/bookmark/*',
 			category: 'bookmark',
 			disabled: false,
 			public: false,
 			feature: 'bookmark'
 		},
-
 		// {
 		// 	title: 'Dashboard2',
 		// 	component: Dashboard,

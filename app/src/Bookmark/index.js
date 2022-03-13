@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { firestoreConnect } from 'react-redux-firebase'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import { push } from 'connected-react-router'
 import { Button, Checkbox, CircularProgress, Fab, Tooltip, Card } from '@mui/material'
 import { Add, ContentCopy, CreateNewFolder, Delete } from '@mui/icons-material'
 import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
@@ -14,9 +13,10 @@ import RouteHeader from '../components/viewLayouts/RouteHeader'
 import BookmarkCreateDialog from './BookmarkCreateDialog'
 import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
-import WithQueryParams from '../components/HOC/WithQueryParams'
 import DirectoryCreateDialog from './Directory/DirectoryCreateDialog'
 import Directory from './Directory'
+import WithRouterHooks  from '../components/HOC/WithRouterHooks'
+import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -93,7 +93,7 @@ const UnderlineText = styled.span`
 	text-decoration: underline;
 `
 
-function Bookmark ({ bookmarks, loggedInUser, queryParams, _push, _deleteBookmark }) {
+function Bookmark ({ bookmarks, loggedInUser, router, paramList, _deleteBookmark }) {
 	const [createBookmarkDialogVisible, setCreateBookmarkDialogVisible] = useState(false)
 	const [createDirectoryDialogVisible, setCreateDirectoryDialogVisible] = useState(false)
 	const [updateDialogVisible, setUpdateDialogVisible] = useState(false)
@@ -240,24 +240,25 @@ function Bookmark ({ bookmarks, loggedInUser, queryParams, _push, _deleteBookmar
 	}
 
 	const renderSubheader = () => {
-		if(!loggedInUser || !queryParams)
+		if(!loggedInUser)
 			return null
 		
 		const { displayName, email } = loggedInUser
-		const { puuid } = queryParams
-		const pushParentUUID = (puuid) => _push('?puuid=' + puuid )
+		// const pushParentUUID = (puuid) => _push('?puuid=' + puuid )
+
+		const navigateToPath = (puuid) => router.navigate(puuid)
 		
 		return (
 			<>
-				<PathLink onClick={ () => pushParentUUID('') }> 
+				<PathLink onClick={ () => navigateToPath('') }> 
 					<UnderlineText>{displayName || email}</UnderlineText> /
 				</PathLink>
 				{
-					puuid && (
-						<PathLink onClick={ () => pushParentUUID(puuid) }>
-							<UnderlineText> {`${puuid}`}</UnderlineText> /
+					paramList && paramList.map((uuid)=>(
+						<PathLink key={uuid} onClick={ () => navigateToPath(uuid) }>
+							<UnderlineText> {`${uuid}`}</UnderlineText> /
 						</PathLink>
-					)
+					)) 
 				}
 			</>
 		)
@@ -310,21 +311,20 @@ const mapState = ({
 
 const mapDispatchToProps = (dispatch) => ({
 	_deleteBookmark: bindActionCreators(bookmarkActions._deleteBookmark, dispatch),
-	_push: bindActionCreators(push, dispatch),
 })
 
 export default compose(
 	WithLoggedInUser,
-	WithQueryParams,
-	firestoreConnect(({ loggedInUser, queryParams }) => {
-		const { puuid } = queryParams
+	WithRouterHooks,
+	WithDirectoryParentUUID,
+	firestoreConnect(({ loggedInUser, directoryUUID }) => {
 		return (
 			[
 				{
 					collection: 'bookmark',
 					where: [
 						['authorUID', '==', loggedInUser?.uid || ''],
-						puuid ? ['parentUUID', '==' , puuid] : ['parentUUID', '==' , null ] ,
+						directoryUUID ? ['parentUUID', '==' , directoryUUID] : ['parentUUID', '==' , null ] ,
 					].filter(t=>t),
 					storeAs: 'bookmarks',
 				},
