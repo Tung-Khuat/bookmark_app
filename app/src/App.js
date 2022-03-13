@@ -3,16 +3,16 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import {
 	BrowserRouter as Router,
-	Switch,
+	Routes,
 	Route,
 } from "react-router-dom";
 import { ConnectedRouter } from 'connected-react-router'
 import { history } from './state/store'
 import routes from './routes'
-import PrivateRoute from './PrivateRoute'
 import FullViewLoading from './components/loadingIndicators/FullViewLoading'
 import UserProfileFAB from './components/viewLayouts/UserProfileFAB'
 import WithLoggedInUser from './components/HOC/auth/WithLoggedInUser'
+import PrivateRoute from './PrivateRoute'
 
 function App(props) {
 	//Remove react does not recognize prop warnings
@@ -31,16 +31,19 @@ function App(props) {
 			key: route.path,
 			exact: route.exact,
 			path: route.path,
-			component: route.component,
+			element: route.component,
 		}
-		if(!route.public)
-			return <PrivateRoute {...routeProps} />
+
+		if(!route.public){
+			return <Route {...routeProps} element={<PrivateRoute element={route.component} />}/>
+		}
 		
 		return <Route {...routeProps} />
 	}
 	const routeElements = routes.map(createRouteElement)
 
 	const renderRoute = () => {
+		console.log(props.loggedInUser)
 		return (
 			<>
 				{
@@ -48,7 +51,9 @@ function App(props) {
 						<UserProfileFAB />
 					)
 				}
-				{routeElements}
+				<Routes>
+					{routeElements}
+				</Routes>
 			</>
 		)
 	}
@@ -57,19 +62,23 @@ function App(props) {
 		<Suspense fallback={<FullViewLoading />}>
 			<ConnectedRouter history={history}>
 				<Router>
-					<Switch>
 						{renderRoute()}
-					</Switch>
 				</Router>
 			</ConnectedRouter>
 		</Suspense>
 	)
 }
 
+const mapState = ({
+	auth: { persistedLoginUser }
+}) => ({ 
+	persistedLoginUser
+})
+
 const mapDispatchToProps = (dispatch) => ({
 })
 
 export default compose(
 	WithLoggedInUser,
-	connect(null, mapDispatchToProps)
+	connect(mapState, mapDispatchToProps)
 )(App)

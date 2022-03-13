@@ -13,7 +13,7 @@ import { useAuth } from './AuthContext'
 import { getAuth } from "firebase/auth";
 import { withSnackbar } from 'notistack'
 import HelperTextField from '../components/HelperTextField'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const SignupContainer = styled.div`
 	width: 100%;
@@ -48,7 +48,7 @@ function Signup(props) {
 	const [helperText, setHelperText] = useState(null)
 	const [processing, setProcessing] = useState(false)
 	const { signup, login } = useAuth()
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	useEffect(()=>{
 		setHelperText(null)
@@ -133,10 +133,11 @@ function Signup(props) {
 				const auth = await getAuth();
 				const user = auth.currentUser
 				if(user){
-					await _createUser(user)
+					const  result = await _createUser(user)
 					_persistLoggedInUser(user)
+					if(result)
+						navigate('/')
 				}
-				history.push('/')
 			} catch (error) {
 				console.log(error)
 				enqueueSnackbar('Failed to login.', { variant: "error" })
