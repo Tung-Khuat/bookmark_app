@@ -244,9 +244,11 @@ function Bookmark ({ bookmarks, loggedInUser, router, paramList, _deleteBookmark
 			return null
 		
 		const { displayName, email } = loggedInUser
-		// const pushParentUUID = (puuid) => _push('?puuid=' + puuid )
-
-		const navigateToPath = (puuid) => router.navigate(puuid)
+		const navigateToPath = (puuid) => {
+			const currentPath = router.location.pathname
+			const newPath = currentPath.substr(0, currentPath.indexOf(`${puuid}`) + puuid.length);
+			router.navigate(newPath)
+		}
 		
 		return (
 			<>

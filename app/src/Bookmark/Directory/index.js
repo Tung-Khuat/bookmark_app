@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { bindActionCreators, compose } from 'redux'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import truncate from 'truncate'
 import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
 import WithLoggedInUser from '../../components/HOC/auth/WithLoggedInUser'
 import { ArrowBackIos, ExpandMore, Folder, MoreVert } from '@mui/icons-material'
 import { firestoreConnect } from 'react-redux-firebase'
-import { push } from 'react-router-redux'
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } from '@mui/material'
 import { withStyles } from "@material-ui/core/styles";
 import { Subtext } from '../../components/styledComponents/BasicComponents'
 import DirectoryUpdateDrawer from './DirectoryUpdateDrawer'
+import WithRouterHooks from '../../components/HOC/WithRouterHooks'
 
 const StyledAccordion = withStyles({
 	root: {
@@ -66,11 +66,18 @@ function Directory (props) {
 	const [directoryInEdit, setDirectoryInEdit] = useState(null)
 	const { directories, currentDirectory, router } = props
 
-	const pushParentUUID = (puuid) => router.navigate(puuid)
+	const navigateToDirectory = (directoryUUID) => {
+		const currentPath = router.location?.pathname !== '/' ? router.location.pathname : '/bookmark'
+		const directoryPath = `${currentPath}/${directoryUUID}`
+		router.navigate(directoryPath)
+	}
 
 	const renderDirectory = (directory) => {
 		return (
-			<DirectoryItem key={directory.uuid} onClick={()=>pushParentUUID(directory.uuid)}>
+			<DirectoryItem 
+				key={directory.uuid} 
+				onClick={()=>navigateToDirectory(directory.uuid)}
+			>
 				<Folder style={{ fontSize: 32 }} />
 				<div style={{width: '100%'}}>
 					<Tooltip title={directory.name || 'Untitled'} enterDelay={2000}>
@@ -94,8 +101,9 @@ function Directory (props) {
 	const handleBackPush = (e) => {
 		e.preventDefault()
 		e.stopPropagation()
-		const backUUID = currentDirectory.parentUUID ? `${currentDirectory.parentUUID}` : ''
-		router.navigate(`${backUUID}`)
+		const currentPath = router.location.pathname
+		const previousPath = currentPath.substr(0, currentPath.lastIndexOf("/"));
+		router.navigate(`${previousPath}`)
 	}
 
 	return (

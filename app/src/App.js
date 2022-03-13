@@ -43,7 +43,6 @@ function App(props) {
 	const routeElements = routes.map(createRouteElement)
 
 	const renderRoute = () => {
-		console.log(props.loggedInUser)
 		return (
 			<>
 				{
