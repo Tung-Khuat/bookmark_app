@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { compose } from 'redux'
+import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import truncate from 'truncate'
 import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
@@ -11,7 +11,7 @@ import { Accordion, AccordionDetails, AccordionSummary, IconButton, Tooltip } fr
 import { withStyles } from "@material-ui/core/styles";
 import { Subtext } from '../../components/styledComponents/BasicComponents'
 import DirectoryUpdateDrawer from './DirectoryUpdateDrawer'
-import WithRouterHooks from '../../components/HOC/WithRouterHooks'
+import * as appActions from '../../state/appState/appActions'
 
 const StyledAccordion = withStyles({
 	root: {
@@ -64,7 +64,23 @@ const AccordionSummaryTitle = styled.div`
 function Directory (props) {
 	const [openEditDrawer, setOpenEditDrawer] = useState(true)
 	const [directoryInEdit, setDirectoryInEdit] = useState(null)
-	const { directories, currentDirectory, router } = props
+	const { directories, currentDirectory, router, app, _cacheDirectory, _clearCacheDirectory } = props
+
+	useEffect(()=>{
+		if(currentDirectory){
+			const { directoriesCached } = app
+			const currentPath = router.location.pathname
+			const cached =  directoriesCached?.length !== 0 
+				&& directoriesCached.find((d) => d?.uuid === currentDirectory.uuid)
+			if(!cached){
+				_cacheDirectory(currentDirectory)
+			}
+			if(currentPath === "/" || currentPath === "/bookmark"){
+				if(directoriesCached?.length > 20)
+					_clearCacheDirectory(currentDirectory)
+			}
+		}
+	},[currentDirectory, router.location])
 
 	const navigateToDirectory = (directoryUUID) => {
 		const currentPath = router.location?.pathname !== '/' ? router.location.pathname : '/bookmark'
@@ -134,10 +150,17 @@ function Directory (props) {
 }
 
 const mapState = ({
-	firestoreReducer: { ordered: { directories, currentDirectory } }
+	firestoreReducer: { ordered: { directories, currentDirectory } },
+	app,
 }) => ({
 	directories, 
+	app,
 	currentDirectory: currentDirectory && currentDirectory[0]
+})
+
+const mapDispatchToProps = (dispatch) => ({
+	_cacheDirectory: bindActionCreators(appActions.cacheDirectory, dispatch),
+	_clearCacheDirectory: bindActionCreators(appActions.clearCacheDirectory, dispatch),
 })
 
 export default compose(
@@ -170,5 +193,5 @@ export default compose(
 			]
 		)
 	}),
-	connect(mapState)
+	connect(mapState, mapDispatchToProps)
 )(Directory)

@@ -17,6 +17,7 @@ import DirectoryCreateDialog from './Directory/DirectoryCreateDialog'
 import Directory from './Directory'
 import WithRouterHooks  from '../components/HOC/WithRouterHooks'
 import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
+import { cacheDirectory } from '../state/appState/appActions'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -93,7 +94,8 @@ const UnderlineText = styled.span`
 	text-decoration: underline;
 `
 
-function Bookmark ({ bookmarks, loggedInUser, router, paramList, _deleteBookmark }) {
+function Bookmark (props) {
+	const { bookmarks, loggedInUser, router, paramList, directoriesCached, _deleteBookmark } = props
 	const [createBookmarkDialogVisible, setCreateBookmarkDialogVisible] = useState(false)
 	const [createDirectoryDialogVisible, setCreateDirectoryDialogVisible] = useState(false)
 	const [updateDialogVisible, setUpdateDialogVisible] = useState(false)
@@ -244,10 +246,17 @@ function Bookmark ({ bookmarks, loggedInUser, router, paramList, _deleteBookmark
 			return null
 		
 		const { displayName, email } = loggedInUser
-		const navigateToPath = (puuid) => {
+		const navigateToPath = (directoryUUID) => {
 			const currentPath = router.location.pathname
-			const newPath = currentPath.substr(0, currentPath.indexOf(`${puuid}`) + puuid.length);
+			const newPath = currentPath.substr(0, currentPath.indexOf(`${directoryUUID}`) + directoryUUID.length);
 			router.navigate(newPath)
+		}
+		const getDirectoryName = (directoryUUID) => {
+			const matchingDirectory = directoriesCached && directoriesCached.find(d => d.uuid === directoryUUID)
+			if (matchingDirectory){
+				return matchingDirectory.name
+			}
+			return directoryUUID
 		}
 		
 		return (
@@ -258,7 +267,7 @@ function Bookmark ({ bookmarks, loggedInUser, router, paramList, _deleteBookmark
 				{
 					paramList && paramList.map((uuid)=>(
 						<PathLink key={uuid} onClick={ () => navigateToPath(uuid) }>
-							<UnderlineText> {`${uuid}`}</UnderlineText> /
+							<UnderlineText> {getDirectoryName(uuid)}</UnderlineText> /
 						</PathLink>
 					)) 
 				}
@@ -306,9 +315,11 @@ function Bookmark ({ bookmarks, loggedInUser, router, paramList, _deleteBookmark
 }
 
 const mapState = ({
-	firestoreReducer: { ordered: { bookmarks } }
+	firestoreReducer: { ordered: { bookmarks } },
+	app: { directoriesCached },
 }) => ({
-	bookmarks
+	bookmarks,
+	directoriesCached,
 })
 
 const mapDispatchToProps = (dispatch) => ({
