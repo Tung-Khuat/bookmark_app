@@ -12,7 +12,7 @@ import { StandardTitle, StyledLink } from '../components/styledComponents/BasicC
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import { useAuth } from './AuthContext'
 import { getAuth } from "firebase/auth";
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 const LoginContainer = styled.div`
@@ -47,7 +47,7 @@ function Login(props) {
 	const [helperText, setHelperText] = useState(null)
 	const [processing, setProcessing] = useState(false)
 	const { login } = useAuth()
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	useEffect(()=>{
 		setHelperText(null)
@@ -55,7 +55,7 @@ function Login(props) {
 
 	useEffect(()=>{
 		if(loggedInUser && persistedLoginUser && !processing){
-			history.push('/')
+			navigate('/')
 		}
 	},[loggedInUser, persistedLoginUser])
 

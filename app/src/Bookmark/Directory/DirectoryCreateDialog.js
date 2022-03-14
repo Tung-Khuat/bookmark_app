@@ -6,7 +6,7 @@ import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import * as directoryActions from '../../state/firebaseActions/directory-actions'
 import { useSnackbar } from 'notistack'
-import WithQueryParams from '../../components/HOC/WithQueryParams'
+import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
 
 const StyledInputField = styled(TextField)`
 	width: 100%;
@@ -19,7 +19,7 @@ const initialDirectoryState =  {
 }
 
 function DirectoryCreateDialog (props) {
-	const { visible, queryParams, _setVisible, _create } = props
+	const { visible, directoryUUID, _setVisible, _create } = props
 	const [directory, setDirectory ] = useState(initialDirectoryState)
 	const [processing, setProcessing ] = useState(false)
 	const { enqueueSnackbar } = useSnackbar();
@@ -34,8 +34,7 @@ function DirectoryCreateDialog (props) {
 
 		setProcessing(true)
 
-		const { puuid } = queryParams
-		const newDirectory = { ...directory, parentUUID: puuid || null }
+		const newDirectory = { ...directory, parentUUID: directoryUUID || null }
 		const response = await _create(newDirectory)
 
 		if (response) {
@@ -78,6 +77,6 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 export default compose(
-	WithQueryParams,
+	WithDirectoryParentUUID,
 	connect(null, mapDispatchToProps)
 )(DirectoryCreateDialog)

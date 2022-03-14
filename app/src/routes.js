@@ -1,4 +1,4 @@
-import { lazy } from 'react'
+import React, { lazy } from 'react'
 
 const Bookmark = lazy(() => import("./Bookmark"))
 const Login = lazy(() => import("./auth/Login"))
@@ -10,7 +10,7 @@ const routes = [
 		// Auth 
 		{
 			title: 'Sign Up',
-			component: Signup,
+			component: <Signup />,
 			path: '/signup',
 			category: 'auth',
 			disabled: false,
@@ -18,7 +18,7 @@ const routes = [
 		},
 		{
 			title: 'Login',
-			component: Login,
+			component: <Login />,
 			path: '/login',
 			category: 'auth',
 			disabled: false,
@@ -26,7 +26,7 @@ const routes = [
 		},
 		{
 			title: 'Reset Password',
-			component: ResetPassword,
+			component: <ResetPassword />,
 			path: '/reset-password',
 			category: 'auth',
 			disabled: false,
@@ -36,7 +36,7 @@ const routes = [
 		// Dashboard
 		{
 			title: 'Dashboard',
-			component: Bookmark,
+			component: <Bookmark />,
 			path: '/',
 			category: 'dashboard',
 			disabled: false,
@@ -48,14 +48,13 @@ const routes = [
 		//Bookmark
 		{
 			title: 'Bookmark',
-			component: Bookmark,
-			path: '/bookmark',
+			component: <Bookmark />,
+			path: '/bookmark/*',
 			category: 'bookmark',
 			disabled: false,
 			public: false,
 			feature: 'bookmark'
 		},
-
 		// {
 		// 	title: 'Dashboard2',
 		// 	component: Dashboard,
