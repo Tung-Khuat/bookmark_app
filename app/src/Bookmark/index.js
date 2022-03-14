@@ -258,6 +258,10 @@ function Bookmark (props) {
 			}
 			return directoryUUID
 		}
+
+		// only render last n links
+		const maxNumberOfLinks = 7
+		const linksToRender = paramList.slice(Math.max(paramList.length - maxNumberOfLinks, 0))
 		
 		return (
 			<>
@@ -265,7 +269,10 @@ function Bookmark (props) {
 					<UnderlineText>{displayName || email}</UnderlineText> /
 				</PathLink>
 				{
-					paramList && paramList.map((uuid)=>(
+					paramList.length > maxNumberOfLinks && '.../'
+				}
+				{
+					linksToRender && linksToRender.map((uuid)=>(
 						<PathLink key={uuid} onClick={ () => navigateToPath(uuid) }>
 							<UnderlineText> {getDirectoryName(uuid)}</UnderlineText> /
 						</PathLink>
