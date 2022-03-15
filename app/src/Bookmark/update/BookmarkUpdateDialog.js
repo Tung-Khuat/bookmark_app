@@ -89,16 +89,19 @@ function BookmarkUpdateDialog (props) {
 			]}
 		>
 			<StyledInputField
+				autoComplete='off'
 				label="Title" 
 				variant="outlined" 
 				value={updatedBookmark.title} 
 				onChange={(event) => updateInputValue({title: event.target.value})} />
 			<StyledInputField 
+				autoComplete='off'
 				label="Link" 
 				variant="outlined" 
 				value={updatedBookmark.link} 
 				onChange={(event) => updateInputValue({link: event.target.value})} />
 			<StyledInputField 
+				autoComplete='off'
 				label="Description" 
 				variant="outlined" 
 				value={updatedBookmark.description}
