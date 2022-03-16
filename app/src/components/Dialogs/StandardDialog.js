@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Dialog, DialogContent, Button } from '@mui/material'
+import { Dialog, DialogContent } from '@mui/material'
 import { Close } from '@mui/icons-material';
 import config from './config'
 import { StandardDialogTitle } from '../styledComponents/BasicComponents'
@@ -19,7 +19,13 @@ const ActionContainer = styled.div`
 
 function StandardDialog (props) {
 	const { _setOpen, dialogTitle, leftTitleActions, rightTitleActions, dialogActions, noTitle, dialogSize, children } = props
-	const defaultCloseButton = <Button onClick={()=>_setOpen(false)}><Close style={{color: '#fff'}} /></Button>
+	const defaultCloseButton = (
+		<div 
+			style={{ padding: '8px 16px', cursor: 'pointer', display: 'flex', placeItems: 'center' }} 
+			onClick={()=>_setOpen(false)}
+		>
+			<Close style={{color: '#fff'}} />
+		</div>)
 
 	const renderActionWithKey = (action, index) => {
 		return (

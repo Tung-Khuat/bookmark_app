@@ -44,7 +44,7 @@ const PulsingBadge = styled(Badge)`
 const BadgeContainer = styled.div`
 	width: 48px;
 	position: fixed;
-	z-index: 9;
+	z-index: 29;
 	top: 8px;
 	right: 12px;
 `

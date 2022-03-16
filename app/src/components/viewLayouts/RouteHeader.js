@@ -8,7 +8,7 @@ const Container = styled.div`
 	position: sticky;
     top: 0;
     background: white;
-    z-index: 8;
+    z-index: 20;
 `
 const HeaderSection = styled.div`
 	margin: 0 32px;

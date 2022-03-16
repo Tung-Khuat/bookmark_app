@@ -40,7 +40,7 @@ function BookmarkUpdateDialog (props) {
 		return null
 
 	const updateInputValue = (value) => {
-		setUpdatedBookmark({...bookmark, ...value})
+		setUpdatedBookmark({...updatedBookmark, ...value})
 	}
 
 	const onBookmarkUpdate = async () => {

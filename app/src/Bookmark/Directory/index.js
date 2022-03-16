@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -64,6 +64,7 @@ const AccordionSummaryTitle = styled.div`
 function Directory (props) {
 	const [openEditDrawer, setOpenEditDrawer] = useState(true)
 	const [directoryInEdit, setDirectoryInEdit] = useState(null)
+	const [accordionExpanded, setAccordionExpanded] = useState(false)
 	const { directories, currentDirectory, router, app, _cacheDirectory, _clearCacheDirectory } = props
 
 	useEffect(()=>{
@@ -87,6 +88,12 @@ function Directory (props) {
 		const directoryPath = `${currentPath}/${directoryUUID}`
 		router.navigate(directoryPath)
 	}
+
+	useEffect(()=>{
+		if(directories && directories.length < 1){
+			setAccordionExpanded(false)
+		}
+	},[directories])
 
 	const renderDirectory = (directory) => {
 		return (
@@ -124,7 +131,10 @@ function Directory (props) {
 
 	return (
 		<div style={{display: 'block', height: 80}}>
-			<StyledAccordion>
+			<StyledAccordion 
+				expanded={accordionExpanded}
+				onChange={()=>setAccordionExpanded(!accordionExpanded)}	
+			>
 				<AccordionSummary
 					expandIcon={<ExpandMore />}
 				>
@@ -176,19 +186,6 @@ export default compose(
 						directoryUUID ? ['parentUUID', '==' , directoryUUID] : ['parentUUID', '==' , null],
 					].filter(t=>t),
 					storeAs: 'directories',
-				},
-			]
-		)
-	}),
-	firestoreConnect(({ directoryUUID }) => {
-		return (
-			[
-				{
-					collection: 'directory',
-					where: [
-						directoryUUID ? ['uuid', '==' , directoryUUID] : ['uuid', '==' , null],
-					].filter(t=>t),
-					storeAs: 'currentDirectory',
 				},
 			]
 		)
