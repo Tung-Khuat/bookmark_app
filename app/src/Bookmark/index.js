@@ -23,7 +23,6 @@ const BookmarksContainer = styled.div`
 	grid-gap: 16px;
 	justify-content: center;
 `
-
 const SelectModePanel = styled.div`
 	display: grid;
 	grid-template-columns: 1fr auto auto;
@@ -203,12 +202,14 @@ function Bookmark (props) {
 			<BookmarksContainer>
 				{bookmarks 
 					? bookmarks.map((bookmark)=>(
-						<BookmarkCard 
-							bookmark={bookmark} 
-							selectedBookmarkUUIDs={selectedBookmarkUUIDs}
-							_setSelectedBookmarkUUIDs={setSelectedBookmarkUUIDs} 
-							selectMode={selectMode} 
-						/>
+						<div key={bookmark.uuid}>
+							<BookmarkCard 
+								bookmark={bookmark} 
+								selectedBookmarkUUIDs={selectedBookmarkUUIDs}
+								_setSelectedBookmarkUUIDs={setSelectedBookmarkUUIDs} 
+								selectMode={selectMode} 
+							/>
+						</div>
 					)) 
 					: <div>No Bookmarks found</div> }
 			</BookmarksContainer>
