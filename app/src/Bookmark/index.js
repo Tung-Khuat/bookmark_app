@@ -52,14 +52,13 @@ const UnderlineText = styled.span`
 `
 
 function Bookmark (props) {
-	const { bookmarks, loggedInUser, router, paramList, directoriesCached, _deleteBookmark } = props
+	const { bookmarks, loggedInUser, router, paramList, directoryUUID, directoriesCached, currentDirectory, _deleteBookmark } = props
 	const [createBookmarkDialogVisible, setCreateBookmarkDialogVisible] = useState(false)
 	const [createDirectoryDialogVisible, setCreateDirectoryDialogVisible] = useState(false)
 	const [selectMode, setSelectMode] = useState(false)
 	const [selectedBookmarkUUIDs, setSelectedBookmarkUUIDs] = useState([])
 	const [processing, setProcessing] = useState(false)
 	const { enqueueSnackbar } = useSnackbar();
-	const { puuid } = queryParams
 
 	const handleDeleteSelected = async () => {
 		const confirm = window.confirm(`Are you sure you want to delete these (${selectedBookmarkUUIDs.length})bookmarks`)
@@ -176,7 +175,7 @@ function Bookmark (props) {
 		)
 	}
 
-	if(puuid && !currentDirectory){
+	if(directoryUUID && !currentDirectory){
 		return (
 			<>
 				<RouteHeader header={"Bookmarks"} subheader={renderSubheader()} />
@@ -265,15 +264,14 @@ export default compose(
 			]
 		)
 	}),
-	firestoreConnect(({ loggedInUser, queryParams }) => {
-		const { puuid } = queryParams
+	firestoreConnect(({ loggedInUser, directoryUUID }) => {
 		return (
 			[
 				{
 					collection: 'directory',
 					where: [
 						['authorUID', '==', loggedInUser?.uid || ''],
-						puuid ? ['uuid', '==' , puuid] : ['uuid', '==' , null],
+						directoryUUID ? ['uuid', '==' , directoryUUID] : ['uuid', '==' , null],
 					].filter(t=>t),
 					storeAs: 'currentDirectory',
 				},
