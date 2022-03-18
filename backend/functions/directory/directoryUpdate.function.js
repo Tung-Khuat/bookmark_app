@@ -54,7 +54,7 @@ const handleFunc = async (data, context) => {
 
 	if (data.name) update.name = name
 	if (typeof data.description === 'string') update.description = description
-	if (data.parentUUID) update.parentUUID = parentUUID
+	if (data.parentUUID) update.parentUUID = data.parentUUID
 	
 	await db.collection('directory').doc(directoryData.uuid).update(update)
 
