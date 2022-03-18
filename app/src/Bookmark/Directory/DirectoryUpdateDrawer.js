@@ -100,11 +100,13 @@ function DirectoryUpdateDrawer ({open, directory, _setOpen, _update, _delete}) {
 				</DrawerToolbar>
 				<div>
 					<StandardInputField
+						autoComplete='off'
 						label="Name" 
 						variant="outlined" 
 						value={updatedDirectory.name} 
 						onChange={(event) => updateInputValue({name: event.target.value})} />
 					<StandardInputField
+						autoComplete='off'
 						label="Description" 
 						variant="outlined" 
 						rows={3} 

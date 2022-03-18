@@ -2,18 +2,22 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Card } from '@material-ui/core'
 import BookmarkUpdateDialog from './update/BookmarkUpdateDialog'
-import { Button, Checkbox, Tooltip } from '@mui/material'
+import { Button, Checkbox, Icon, Tooltip } from '@mui/material'
 import truncate from 'truncate'
 import moment from 'moment'
-import { ContentCopy, Edit, MoreVert } from '@mui/icons-material'
+import { Subtext } from '../components/styledComponents/BasicComponents'
+import { TagItem } from './TagAddDialog'
 
 const imageHeight = 170
-const cardHeight = 340
+const cardHeight = 365
 const contentHeight = cardHeight - imageHeight
 
 const BookmarkTitle = styled.div`
 	font-weight: 400;
-	font-size: 1.2em;
+	font-size: 1.3em;
+	max-width: 290px;
+    word-break: break-all;
+	margin-bottom: 4px;
 `
 const BookmarkCardContainer = styled(Card)`
 	margin: 0 16px 16px 0;
@@ -43,7 +47,31 @@ const BookmarkContent = styled.div`
 	height: ${contentHeight + 'px'};
 `
 const BookmarkInfo = styled.div`
-	margin: 8px 0;
+	margin-top: 8px;
+`
+const TagList = styled.div`
+	display: flex;
+	place-items: center;
+	margin: 4px 0;
+	max-width: 288px;
+	overflow: hidden;
+`
+const AuthorTag = styled(TagItem)`
+	padding: 4px;
+	margin-right: 4px;
+	font-size: 0.7em;
+	color: #fff;
+	background-color: #be1d29;
+	border: none;
+`
+const BookmarkTag = styled(TagItem)`
+	padding: 4px;
+	margin-right: 4px;
+	font-size: 0.7em;
+`
+const TagIcon = styled(Icon)`
+	margin-right: 4px;
+	font-size: 1em;
 `
 const BookmarkActionsContainer = styled.div`
 	display: flex;
@@ -80,9 +108,54 @@ export default function BookmarkCard({bookmark, selectMode, selectedBookmarkUUID
 		}
 	}
 
-	const renderTags = (tag) => {
+	const getHostnameFromLink = () => {
+		if(!bookmark.link) {
+			return <Subtext>No link provided</Subtext>
+		}
+		try {
+			const { hostname } = new URL(bookmark.link)
+			return <div>{hostname}</div>
+		} catch (error) {
+			return <Subtext>Invalid Link</Subtext>
+		}		
+	}
+
+	const renderTagLists = () => {
+		const authorTags = bookmark.tags?.filter((tag) => tag.type?.name === 'Author')
+		const siteTags = bookmark.tags?.filter((tag) => tag.type?.name === 'Site')
+		
 		return (
-			<div key={tag.label}>{tag.label}</div>
+			<div>
+				<TagList>
+					<Icon style={{ marginRight: 4, fontSize: '1em' }}>person</Icon>
+					{
+						authorTags.length > 0 
+							? authorTags.map((tag)=><AuthorTag tagColor={"#98121b"} key={tag.uuid}>{tag.name}</AuthorTag>) 
+							: <Subtext>Unknown</Subtext>
+					}		
+				</TagList>
+				<TagList>
+					<TagIcon>language</TagIcon>
+					{
+						siteTags.length > 0 
+							? siteTags.map((tag)=><div key={tag.uuid}>{tag.name}</div>)
+							: getHostnameFromLink()
+					}	
+				</TagList>
+			</div>
+		)
+	}
+
+	const renderTags = (tag) => {
+		const tagTypeName = tag.type?.name
+		if( tagTypeName && (tagTypeName === "Site" || tagTypeName === "Author")){
+			return null
+		}
+		return (
+			<BookmarkTag key={tag.uuid} tagColor={tag.color}>
+				<TagIcon>{tag.type.icon}</TagIcon>
+				{tag.name}
+			</BookmarkTag>
 		)
 	}
 
@@ -93,14 +166,13 @@ export default function BookmarkCard({bookmark, selectMode, selectedBookmarkUUID
 
 	const LinkWrapper = ({children}) => {
 		const { link } = bookmark
-		const copyToClipboard = navigator.clipboard.writeText(bookmark.link)
 		if(link) {
 			let validLink = link
 			if(!link.includes('https://') && !link.includes('http://')) {
 				validLink = `http://${link}`
 			}
 			return (
-				<a href={validLink} target="_blank" key={bookmark.uuid}>
+				<a href={validLink} target="_blank" rel="noopener noreferrer" key={bookmark.uuid}>
 					{children}
 				</a>
 			)
@@ -136,14 +208,19 @@ export default function BookmarkCard({bookmark, selectMode, selectedBookmarkUUID
 					}
 					<BookmarkContent>
 						<BookmarkInfo>
-							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
 								<Tooltip title={bookmark.title}>
-									<BookmarkTitle style={{margin: 0}}>
-										{truncate(bookmark.title, 30)}
+									<BookmarkTitle>
+										{bookmark.title ? truncate(bookmark.title, 30) : truncate(bookmark.link, 20)}
 									</BookmarkTitle>
 								</Tooltip>
 							</div>
-							<div>{bookmark.tags && bookmark.tags.map(renderTags)}</div>
+							{
+								renderTagLists()
+							}
+							<TagList>
+								{bookmark.tags && bookmark.tags.map(renderTags)}
+							</TagList>
 						</BookmarkInfo>
 						<BookmarkActionsContainer>
 							<Button
@@ -153,9 +230,11 @@ export default function BookmarkCard({bookmark, selectMode, selectedBookmarkUUID
 									handleUpdateOpenClick()
 								}}
 							>
-								<Edit style={{ marginRight: 8 }} /> Edit
+								<Icon style={{ marginRight: 8 }}>edit_note</Icon> More details
 							</Button>
-							<div style={{ opacity: 0.8, fontSize: '0.8em' }}>{moment(bookmark.createdAt).fromNow()}</div>
+							<div style={{ opacity: 0.8, fontSize: '0.8em' }}>
+								<Tooltip title={'Created at'}><span>{moment(bookmark.createdAt).fromNow()}</span></Tooltip>
+							</div>
 						</BookmarkActionsContainer>
 					</BookmarkContent>
 				</BookmarkCardContainer>

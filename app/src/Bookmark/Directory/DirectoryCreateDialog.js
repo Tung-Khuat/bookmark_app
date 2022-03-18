@@ -57,11 +57,13 @@ function DirectoryCreateDialog (props) {
 			]}
 		>
 			<StyledInputField
+				autoComplete='off'
 				label="Name" 
 				variant="outlined" 
 				value={directory.name} 
 				onChange={(event) => updateInputValue({name: event.target.value})} />
 			<StyledInputField 
+				autoComplete='off'
 				label="Description" 
 				variant="outlined" 
 				value={directory.description}
