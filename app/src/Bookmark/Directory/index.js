@@ -64,21 +64,16 @@ const AccordionSummaryTitle = styled.div`
 function Directory (props) {
 	const [openEditDrawer, setOpenEditDrawer] = useState(true)
 	const [directoryInEdit, setDirectoryInEdit] = useState(null)
-	const [accordionExpanded, setAccordionExpanded] = useState(false)
-	const { directories, currentDirectory, router, app, _cacheDirectory, _clearCacheDirectory } = props
+	const [accordionExpanded, setAccordionExpanded] = useState(true)
+	const { directories, currentDirectory, router, app, _cacheDirectory } = props
 
 	useEffect(()=>{
 		if(currentDirectory){
 			const { directoriesCached } = app
-			const currentPath = router.location.pathname
 			const cached =  directoriesCached?.length !== 0 
 				&& directoriesCached.find((d) => d?.uuid === currentDirectory.uuid)
 			if(!cached){
 				_cacheDirectory(currentDirectory)
-			}
-			if(currentPath === "/" || currentPath === "/bookmark"){
-				if(directoriesCached?.length > 20)
-					_clearCacheDirectory(currentDirectory)
 			}
 		}
 	},[currentDirectory, router.location])
@@ -170,7 +165,6 @@ const mapState = ({
 
 const mapDispatchToProps = (dispatch) => ({
 	_cacheDirectory: bindActionCreators(appActions.cacheDirectory, dispatch),
-	_clearCacheDirectory: bindActionCreators(appActions.clearCacheDirectory, dispatch),
 })
 
 export default compose(

@@ -1,3 +1,5 @@
+const maxDirectoryCache = 7
+
 const initialState = {
     directoriesCached: [],
     directoryPathCached: ''
@@ -6,7 +8,9 @@ const initialState = {
 export default function appReducer(state = initialState, action) {
     switch (action.type) {
         case 'CACHE_DIRECTORY':
-            return { ...state, directoriesCached: [...state.directoriesCached, action.directory] }
+            const updated = [...state.directoriesCached, action.directory]
+        
+            return { ...state, directoriesCached: updated.slice(Math.max( updated.length - maxDirectoryCache, 0)) }
 
         case 'CLEAR_CACHE_DIRECTORY':
             return { ...state, directoriesCached: initialState.directoriesCached }
