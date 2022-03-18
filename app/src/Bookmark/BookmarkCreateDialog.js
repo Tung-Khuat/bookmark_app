@@ -10,11 +10,8 @@ import { useSnackbar } from 'notistack'
 import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 import { Subtext } from '../components/styledComponents/BasicComponents'
 import TagAddDialog, { TagItem, TagsSelectedContainer } from './TagAddDialog'
+import StandardInputField from '../components/inputs/StandardInputField'
 
-const StyledInputField = styled(TextField)`
-	width: 100%;
-	margin-bottom: 16px;
-`
 const DropzoneLoadingPlaceholder = styled.div`
 	width: 100%;
 	height: 200px;
@@ -126,24 +123,21 @@ function BookmarkCreateDialog (props) {
 				<Button onClick={onBookmarkCreate}>{processing ? <CircularProgress size={20} /> : 'Create'}</Button>
 			]}
 		>
-			<StyledInputField
-				autoComplete='off'
+			<StandardInputField
 				label="Title" 
-				variant="outlined" 
+				inputMaxLength={300}
 				value={bookmark.title} 
 				onChange={(event) => updateInputValue({title: event.target.value})} />
-			<StyledInputField 
-				autoComplete='off'
+			<StandardInputField 
 				label="Link" 
-				variant="outlined" 
+				inputMaxLength={700}
 				value={bookmark.link} 
 				onChange={(event) => updateInputValue({link: event.target.value})} />
-			<StyledInputField 
-				autoComplete='off'
+			<StandardInputField 
 				label="Description" 
-				variant="outlined" 
 				value={bookmark.description}
 				rows={3} 
+				inputMaxLength={1500}
 				multiline
 				onChange={(event) => updateInputValue({description: event.target.value})} />
 

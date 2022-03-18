@@ -7,11 +7,7 @@ import { connect } from 'react-redux'
 import * as directoryActions from '../../state/firebaseActions/directory-actions'
 import { useSnackbar } from 'notistack'
 import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
-
-const StyledInputField = styled(TextField)`
-	width: 100%;
-	margin-bottom: 16px;
-`
+import StandardInputField from '../../components/inputs/StandardInputField'
 
 const initialDirectoryState =  {
 	name: "",
@@ -56,19 +52,16 @@ function DirectoryCreateDialog (props) {
 				<Button onClick={onDirectoryCreate}>{processing ? <CircularProgress size={20} /> : 'Create'}</Button>
 			]}
 		>
-			<StyledInputField
-				autoComplete='off'
+			<StandardInputField
 				label="Name" 
-				variant="outlined" 
 				value={directory.name} 
 				onChange={(event) => updateInputValue({name: event.target.value})} />
-			<StyledInputField 
-				autoComplete='off'
+			<StandardInputField 
 				label="Description" 
-				variant="outlined" 
 				value={directory.description}
-				rows={3} 
 				multiline
+				rows={3}
+				inputMaxLength={1500} 
 				onChange={(event) => updateInputValue({description: event.target.value})} />
 		</StandardDialog>
 	)

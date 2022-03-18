@@ -1,11 +1,7 @@
 import styled, { keyframes } from 'styled-components'
-import { DialogTitle, TextField } from '@mui/material'
+import { DialogTitle } from '@mui/material'
 import { Link } from 'react-router-dom'
 
-export const StandardInputField = styled(TextField)`
-  width: 100%;
-  margin-bottom: 16px;
-`
 export const StandardDialogTitle = styled(DialogTitle)`
   background-color: ${(props) => props.theme.primary};
 	padding: 12px 4px;

@@ -11,6 +11,7 @@ import { firestoreConnect } from 'react-redux-firebase'
 import { ContentCopy, Delete, Launch } from '@mui/icons-material'
 import TagAddDialog, { TagItem, TagsSelectedContainer } from '../TagAddDialog'
 import { Subtext } from '../../components/styledComponents/BasicComponents'
+import StandardInputField from '../../components/inputs/StandardInputField'
 
 const TagSection = styled.div`
 	border: 1px solid #dbdbdb;
@@ -34,11 +35,6 @@ const TagSectionHeader = styled.div`
 const TagsAddedContainer = styled(TagsSelectedContainer)`
 	height: 64px;
 	margin: 8px 0;
-`
-
-const StyledInputField = styled(TextField)`
-	width: 100%;
-	margin-bottom: 16px;
 `
 
 function BookmarkUpdateDialog (props) {
@@ -121,16 +117,15 @@ function BookmarkUpdateDialog (props) {
 				<IconButton onClick={onBookmarkDelete}>{processing ? <CircularProgress size={20}/> : <Delete style={{ color:'#fff' }}/>}</IconButton>
 			]}
 		>
-			<StyledInputField
-				autoComplete='off'
+
+			<StandardInputField
 				label="Title" 
-				variant="outlined" 
+				inputMaxLength={300}
 				value={updatedBookmark.title} 
 				onChange={(event) => updateInputValue({title: event.target.value})} />
-			<StyledInputField 
-				autoComplete='off'
+			<StandardInputField 
 				label="Link" 
-				variant="outlined" 
+				inputMaxLength={700}
 				InputProps={{
 					endAdornment: (
 					  <InputAdornment position="end">
@@ -141,13 +136,12 @@ function BookmarkUpdateDialog (props) {
 				  }}		  
 				value={updatedBookmark.link} 
 				onChange={(event) => updateInputValue({link: event.target.value})} />
-			<StyledInputField 
-				autoComplete='off'
+			<StandardInputField 
 				label="Description" 
-				variant="outlined" 
 				value={updatedBookmark.description}
-				rows={3} 
 				multiline
+				rows={3}
+				inputMaxLength={1500} 
 				onChange={(event) => updateInputValue({description: event.target.value})} />
 
 			<TagSection>

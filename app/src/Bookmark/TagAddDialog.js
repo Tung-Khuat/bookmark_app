@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button, Icon, InputAdornment, InputLabel, MenuItem, TextField } from '@mui/material'
+import { Button, Icon, InputAdornment, InputLabel, MenuItem } from '@mui/material'
 import StandardDialog from '../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -10,6 +10,7 @@ import { Cancel, Tag } from '@mui/icons-material'
 import { v4 as uuid } from 'uuid'
 import { Subtext } from '../components/styledComponents/BasicComponents'
 import { Select } from '@material-ui/core'
+import StandardInputField from '../components/inputs/StandardInputField'
 
 const maxTagNameLength = 30
 const defaultTagColor = "#3f62b5"
@@ -41,10 +42,6 @@ const tagTypes = [
 	},
 ]
 
-const StyledInputField = styled(TextField)`
-	width: 100%;
-	margin-bottom: 16px;
-`
 const StyledSelect = styled(Select)`
 	width: 100%;
 	margin-bottom: 16px;
@@ -240,11 +237,9 @@ function TagAddDialog (props) {
 				<div style={{ fontSize: 20, marginBottom: 16 }} >New Tag</div>
 				<NewTagCreateContainer>
 					<LeftSideTagCreate>
-						<StyledInputField
-							autoComplete='off'
+						<StandardInputField
 							required
 							label="Tag Name" 
-							variant="outlined" 
 							inputProps={{ maxLength: maxTagNameLength }}
 							value={newTag.name} 
 							onChange={(event) => updateInputValue({name: event.target.value})} />
@@ -254,7 +249,6 @@ function TagAddDialog (props) {
 							label={<InputLabel>Type</InputLabel>}
 							value={newTag.type}
 							onChange={(event)=>onTypeSelect(event.target.value)}
-							variant="outlined"
 							style={{ width: '100%' }}
 							SelectDisplayProps={{ style: { display: 'flex', placeItems:'center' } }}
 						>
@@ -270,10 +264,9 @@ function TagAddDialog (props) {
 								))
 							}
 						</StyledSelect>
-						<StyledInputField 
-							autoComplete='off'
+						
+						<StandardInputField 
 							label="Hex color code" 
-							variant="outlined" 
 							value={hexColorInputValue} 
 							onChange={(event) => onHexColorInputChange(event.target.value)}
 							InputProps={{
