@@ -246,7 +246,7 @@ function TagEditDialog (props) {
 				listHeader={"Choose from existing tags"} 
 				emptyStateText={"No tags available."}
 				_onTagClick={(tag) => onSelectAvailableTag(tag)}
-				_onTagDeleteClick={(tag) => onRemoveSelected(tag)} 
+				_onTagDeleteClick={(tag) => onDeleteAvailable(tag)} 
 			/>
 			<SelectedTagsContainer>
 				<TagListDisplay 

@@ -133,13 +133,9 @@ function ResetPassword() {
 	)
 }
 
-const mapState = ({
-}) => ({
-})
-
 const mapDispatchToProps = (dispatch) => ({
 })
 
 export default compose(
-	connect(mapState, mapDispatchToProps),
+	connect(null, mapDispatchToProps),
 )(ResetPassword)

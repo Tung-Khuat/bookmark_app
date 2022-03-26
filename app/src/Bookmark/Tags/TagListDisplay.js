@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Subtext } from '../../components/styledComponents/BasicComponents'
-import { Button, Icon } from '@mui/material'
+import { Icon } from '@mui/material'
 import { Cancel } from '@mui/icons-material'
 
 const defaultTagColor = "#3f62b5"

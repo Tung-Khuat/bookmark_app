@@ -1,6 +1,6 @@
 import React from 'react'
 import { compose } from 'redux'
-import { Route, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 function PrivateRoute (props) {
