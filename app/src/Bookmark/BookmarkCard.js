@@ -48,6 +48,9 @@ const BookmarkContent = styled.div`
 `
 const BookmarkInfo = styled.div`
 	margin-top: 8px;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
 `
 const TagList = styled.div`
 	display: flex;
@@ -215,12 +218,14 @@ export default function BookmarkCard({bookmark, selectMode, selectedBookmarkUUID
 									</BookmarkTitle>
 								</Tooltip>
 							</div>
-							{
-								renderTagLists()
-							}
-							<TagList>
-								{bookmark.tags && bookmark.tags.map(renderTags)}
-							</TagList>
+							<div>
+								{
+									renderTagLists()
+								}
+								<TagList>
+									{bookmark.tags && bookmark.tags.map(renderTags)}
+								</TagList>
+							</div>
 						</BookmarkInfo>
 						<BookmarkActionsContainer>
 							<Button
