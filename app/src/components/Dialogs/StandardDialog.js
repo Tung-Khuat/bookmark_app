@@ -15,6 +15,11 @@ const DialogTitleWithActions = styled(StandardDialogTitle)`
 const ActionContainer = styled.div`
 	display: grid;
     grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+	button {
+		padding: 8px;
+		font-size: 16px;
+		border-radius: 0;
+	}
 `
 
 function StandardDialog (props) {
