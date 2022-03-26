@@ -177,10 +177,6 @@ function Signup(props) {
 	)
 }
 
-const mapState = ({
-}) => ({
-})
-
 const mapDispatchToProps = (dispatch) => ({
 	_createUser: bindActionCreators(authActions._createUser,dispatch),
 	_persistLoggedInUser: bindActionCreators(appActions._persistLoggedInUser, dispatch),
@@ -188,5 +184,5 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default compose(
 	withSnackbar,
-	connect(mapState, mapDispatchToProps),
+	connect(null, mapDispatchToProps),
 )(Signup)

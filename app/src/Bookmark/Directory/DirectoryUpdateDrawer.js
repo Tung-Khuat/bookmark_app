@@ -3,10 +3,10 @@ import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { Button, CircularProgress, Drawer } from '@mui/material'
-import { StandardInputField } from '../../components/styledComponents/BasicComponents'
 import { Close, Delete, DriveFileMove } from '@mui/icons-material'
 import * as directoryActions from '../../state/firebaseActions/directory-actions'
 import { useSnackbar } from 'notistack'
+import StandardInputField from '../../components/inputs/StandardInputField'
 
 const DRAWER_WIDTH = '40vw'
 
@@ -100,16 +100,13 @@ function DirectoryUpdateDrawer ({open, directory, _setOpen, _update, _delete}) {
 				</DrawerToolbar>
 				<div>
 					<StandardInputField
-						autoComplete='off'
 						label="Name" 
-						variant="outlined" 
 						value={updatedDirectory.name} 
 						onChange={(event) => updateInputValue({name: event.target.value})} />
 					<StandardInputField
-						autoComplete='off'
 						label="Description" 
-						variant="outlined" 
 						rows={3} 
+						inputMaxLength={1500}
 						multiline
 						value={updatedDirectory.description} 
 						onChange={(event) => updateInputValue({description: event.target.value})} />

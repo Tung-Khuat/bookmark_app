@@ -14,7 +14,6 @@ import DirectoryCreateDialog from './Directory/DirectoryCreateDialog'
 import Directory from './Directory'
 import WithRouterHooks  from '../components/HOC/WithRouterHooks'
 import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
-import { cacheDirectory } from '../state/appState/appActions'
 import BookmarkCard from './BookmarkCard'
 
 const BookmarksContainer = styled.div`

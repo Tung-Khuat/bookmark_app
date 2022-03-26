@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button, Icon, InputAdornment, InputLabel, MenuItem, TextField } from '@mui/material'
-import StandardDialog from '../components/dialogs/StandardDialog'
+import { Button, FormControl, Icon, InputAdornment, InputLabel, MenuItem, Select } from '@mui/material'
+import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
-import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
-import { Cancel, Tag } from '@mui/icons-material'
+import * as bookmarkActions from '../../state/firebaseActions/bookmark-actions'
+import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
+import { Tag } from '@mui/icons-material'
 import { v4 as uuid } from 'uuid'
-import { Subtext } from '../components/styledComponents/BasicComponents'
-import { Select } from '@material-ui/core'
+import StandardInputField from '../../components/inputs/StandardInputField'
+import TagListDisplay, { TagItem } from './TagListDisplay'
 
 const maxTagNameLength = 30
-const defaultTagColor = "#3f62b5"
 const presetColors = ["#3f62b5", "#579a4a", "#a72c4e", "#ff951b", "#292929"]
 const tagTypes = [
 	{
@@ -41,28 +40,9 @@ const tagTypes = [
 	},
 ]
 
-const StyledInputField = styled(TextField)`
-	width: 100%;
-	margin-bottom: 16px;
-`
 const StyledSelect = styled(Select)`
 	width: 100%;
 	margin-bottom: 16px;
-`
-export const TagsSelectedContainer = styled.div`
-	width: 100%;
-	max-height: 70px;
-	display: flex;
-	place-items: center;
-	flex-wrap: nowrap;
-	overflow-y: hidden;
-	overflow-x: scroll;
-`
-const TagsAvailableContainer = styled(TagsSelectedContainer)`
-	max-height: 110px;
-	flex-wrap: wrap;
-	overflow: scroll;
-	padding: 8px;
 `
 const NewTagCreateContainer = styled.div`
 	display: grid;
@@ -76,22 +56,6 @@ const RightSideTagCreate = styled.div`
 	display: grid;
 	grid-template-rows: 1fr 1fr;
 	place-items: center;
-`
-export const TagItem = styled.div`
-	display: flex;
-	place-items: center;
-	max-height: 48px;
-	padding: 8px 16px;
-	border-radius: 4px;
-	background-color: ${({tagColor})=> tagColor ? `${tagColor}40` :  `${defaultTagColor}40`};
-	color: ${({tagColor})=> tagColor ? tagColor : defaultTagColor};
-	border: 1px solid ${({tagColor})=> tagColor ? tagColor : defaultTagColor};
-	white-space: nowrap;
-	div {
-		white-space: nowrap;
-		place-items: center;
-		display: flex;
-	}
 `
 const ColorButton = styled.div`
 	border-radius: 50%;
@@ -113,7 +77,7 @@ const initialNewTagState =  {
 	type: tagTypes[0],
 }
 
-function TagAddDialog (props) {
+function TagEditDialog (props) {
 	const { visible, tagsInBookmark, bookmarks, _setVisible, _updateTagsInBookmark  } = props
 	const [newTag, setNewTag] = useState(initialNewTagState)
 	const [tagsToAdd, setTagsToAdd] = useState([])
@@ -175,7 +139,7 @@ function TagAddDialog (props) {
 	const onRemoveSelected = (removedTag) => {
 		const updatedTagsToAdd = [...tagsToAdd].filter(tag => tag.uuid !== removedTag.uuid)
 		setTagsToAdd(updatedTagsToAdd)
-		setUnselectedTags([...unselectedTags, removedTag])
+		setUnselectedTags([removedTag, ...unselectedTags])
 	}
 
 	const onTypeSelect = (typeSelected) => {
@@ -195,38 +159,6 @@ function TagAddDialog (props) {
 		}
 	}
 
-	const renderUnselectedTag = (tag) => {
-		return (
-			<TagItem 
-				key={tag.uuid} 
-				tagColor={tag.color} 
-				style={{ marginRight: 8, marginBottom: 8, cursor: 'pointer' }}
-				onClick={()=>onSelectAvailableTag(tag)}
-			>
-				<Icon style={{ marginRight: 8 }}>{tag.type.icon}</Icon>
-				<div>{tag.name}</div>
-				<Cancel 
-					style={{ cursor: 'pointer', marginLeft: 8 }} 
-					onClick={(e)=>{
-						e.preventDefault()
-						e.stopPropagation()
-						onDeleteAvailable(tag)
-					}}
-				/>
-			</TagItem>
-		)
-	}
-
-	const renderSelectedTag = (tag) => {
-		return (
-			<TagItem key={tag.uuid} tagColor={tag.color} style={{ marginRight: 8, marginBottom: 8 }}>
-				<Icon style={{ marginRight: 8 }}>{tag.type.icon}</Icon>
-				<div>{tag.name}</div>
-				<Cancel style={{ cursor: 'pointer', marginLeft: 8 }} onClick={()=>onRemoveSelected(tag)} />
-			</TagItem>
-		)
-	}
-
 	return (
 		<StandardDialog
 			open={visible}
@@ -240,40 +172,41 @@ function TagAddDialog (props) {
 				<div style={{ fontSize: 20, marginBottom: 16 }} >New Tag</div>
 				<NewTagCreateContainer>
 					<LeftSideTagCreate>
-						<StyledInputField
-							autoComplete='off'
+						<StandardInputField
 							required
 							label="Tag Name" 
-							variant="outlined" 
-							inputProps={{ maxLength: maxTagNameLength }}
+							inputProps={{ maxLength: maxTagNameLength, style: { height: 40 } }}
 							value={newTag.name} 
-							onChange={(event) => updateInputValue({name: event.target.value})} />
+							onChange={(event) => updateInputValue({name: event.target.value})} 
+						/>
 						
-						<StyledSelect
-							labelId="Type"
-							label={<InputLabel>Type</InputLabel>}
-							value={newTag.type}
-							onChange={(event)=>onTypeSelect(event.target.value)}
-							variant="outlined"
-							style={{ width: '100%' }}
-							SelectDisplayProps={{ style: { display: 'flex', placeItems:'center' } }}
-						>
-							{
-								tagTypes.map((type, index)=>(
-									<MenuItem 
-										key={index} 
-										value={type} 
-										style={{ display: 'flex', placeItems: 'center', padding: '16px' }}
-									>
-										<Icon style={{ marginRight: 8 }}>{type.icon}</Icon> {type.name}
-									</MenuItem>
-								))
-							}
-						</StyledSelect>
-						<StyledInputField 
-							autoComplete='off'
+						<FormControl fullWidth>
+							<InputLabel id="tag-type">Type</InputLabel>
+							<StyledSelect
+								id="tag-select"
+								labelId="tag-type"
+								label="Type"
+								value={newTag.type}
+								onChange={(event)=>onTypeSelect(event.target.value)}
+								style={{ width: '100%' }}
+								SelectDisplayProps={{ style: { display: 'flex', placeItems:'center' } }}
+							>
+								{
+									tagTypes.map((type, index)=>(
+										<MenuItem 
+											key={index} 
+											value={type} 
+											style={{ display: 'flex', placeItems: 'center', padding: '16px' }}
+										>
+											<Icon style={{ marginRight: 8 }}>{type.icon}</Icon> {type.name}
+										</MenuItem>
+									))
+								}
+							</StyledSelect>
+						</FormControl>
+					
+						<StandardInputField 
 							label="Hex color code" 
-							variant="outlined" 
 							value={hexColorInputValue} 
 							onChange={(event) => onHexColorInputChange(event.target.value)}
 							InputProps={{
@@ -284,6 +217,7 @@ function TagAddDialog (props) {
 								),
 							}} 
 						/>
+						
 						<div style={{ display: 'flex' }}>
 							{
 								presetColors.map((color, index) => (
@@ -299,6 +233,7 @@ function TagAddDialog (props) {
 						</TagItem>
 					</RightSideTagCreate>
 				</NewTagCreateContainer>
+				
 				<Button 
 					disabled={!newTag.name} 
 					variant="outlined"
@@ -306,25 +241,19 @@ function TagAddDialog (props) {
 					onClick={onTagCreate}
 				>Add New Tag</Button>
 			</div>
-			<div>
-				<div style={{ fontSize: 20 }} >Choose from existing tags</div>
-				<TagsAvailableContainer>
-					{
-						unselectedTags.length > 0 
-							? unselectedTags.reverse().map(renderUnselectedTag) 
-							: <Subtext style={{ fontSize: '0.8em', fontStyle: 'italic' }}>No tags available.</Subtext>
-					}
-				</TagsAvailableContainer>
-			</div>
+			<TagListDisplay 
+				tags={unselectedTags} 
+				listHeader={"Choose from existing tags"} 
+				emptyStateText={"No tags available."}
+				_onTagClick={(tag) => onSelectAvailableTag(tag)}
+				_onTagDeleteClick={(tag) => onDeleteAvailable(tag)} 
+			/>
 			<SelectedTagsContainer>
-				<div style={{ fontSize: 20 }} >Selected tags</div>
-				<TagsSelectedContainer>
-					{
-						tagsToAdd.length > 0 
-							? tagsToAdd.reverse().map(renderSelectedTag) 
-							: <Subtext style={{ fontSize: '0.8em', fontStyle: 'italic' }}>No tags selected.</Subtext>
-					}
-				</TagsSelectedContainer>
+				<TagListDisplay 
+					tags={tagsToAdd} 
+					listHeader={"Selected Tags"} 
+					_onTagDeleteClick={(tag)=>onRemoveSelected(tag)} 
+				/>
 			</SelectedTagsContainer>
 		</StandardDialog>
 	)
@@ -345,4 +274,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default compose(
 	WithDirectoryParentUUID,
 	connect(mapState, mapDispatchToProps)
-)(TagAddDialog)
+)(TagEditDialog)

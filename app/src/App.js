@@ -18,9 +18,9 @@ function App(props) {
 	//Remove react does not recognize prop warnings
 	const backup = console.error;
 	console.error = function filterWarnings(msg) {
-		const supressedWarnings = ['Warning: React does not recognize'];
+		const suppressedWarnings = ['Warning: React does not recognize', 'Warning: Using UNSAFE_componentWillReceiveProps'];
 
-		if (!supressedWarnings.some(entry => msg.includes(entry))) {
+		if (!suppressedWarnings.some(entry => msg.includes(entry))) {
 			backup.apply(console, arguments);
 		}
 	}

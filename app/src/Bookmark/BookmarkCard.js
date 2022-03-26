@@ -6,7 +6,7 @@ import { Button, Checkbox, Icon, Tooltip } from '@mui/material'
 import truncate from 'truncate'
 import moment from 'moment'
 import { Subtext } from '../components/styledComponents/BasicComponents'
-import { TagItem } from './TagAddDialog'
+import { TagItem } from './Tags/TagListDisplay'
 
 const imageHeight = 170
 const cardHeight = 365
@@ -48,6 +48,9 @@ const BookmarkContent = styled.div`
 `
 const BookmarkInfo = styled.div`
 	margin-top: 8px;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
 `
 const TagList = styled.div`
 	display: flex;
@@ -215,12 +218,14 @@ export default function BookmarkCard({bookmark, selectMode, selectedBookmarkUUID
 									</BookmarkTitle>
 								</Tooltip>
 							</div>
-							{
-								renderTagLists()
-							}
-							<TagList>
-								{bookmark.tags && bookmark.tags.map(renderTags)}
-							</TagList>
+							<div>
+								{
+									renderTagLists()
+								}
+								<TagList>
+									{bookmark.tags && bookmark.tags.map(renderTags)}
+								</TagList>
+							</div>
 						</BookmarkInfo>
 						<BookmarkActionsContainer>
 							<Button

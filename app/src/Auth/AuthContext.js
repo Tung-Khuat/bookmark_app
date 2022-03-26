@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
 import { auth } from '../state/store'
 
 const AuthContext = React.createContext()
@@ -9,7 +7,7 @@ export function useAuth() {
 	return useContext(AuthContext)
 }
 
-function AuthProvider(props) {
+export default function AuthProvider(props) {
 	const { children } = props
 	const [currentUser, setCurrentUser] = useState(null)
 
@@ -51,14 +49,3 @@ function AuthProvider(props) {
 		</AuthContext.Provider>
 	)
 }
-
-const mapState = ({
-}) => ({
-})
-
-const mapDispatchToProps = (dispatch) => ({
-})
-
-export default compose(
-	connect(mapState, mapDispatchToProps),
-)(AuthProvider)
