@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button, Icon, InputAdornment, InputLabel, MenuItem } from '@mui/material'
+import { Box, Button, FormControl, Icon, InputAdornment, InputLabel, MenuItem, Select } from '@mui/material'
 import StandardDialog from '../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -9,7 +9,6 @@ import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 import { Cancel, Tag } from '@mui/icons-material'
 import { v4 as uuid } from 'uuid'
 import { Subtext } from '../components/styledComponents/BasicComponents'
-import { Select } from '@material-ui/core'
 import StandardInputField from '../components/inputs/StandardInputField'
 
 const maxTagNameLength = 30
@@ -240,31 +239,36 @@ function TagAddDialog (props) {
 						<StandardInputField
 							required
 							label="Tag Name" 
-							inputProps={{ maxLength: maxTagNameLength }}
+							inputProps={{ maxLength: maxTagNameLength, style: { height: 40 } }}
 							value={newTag.name} 
-							onChange={(event) => updateInputValue({name: event.target.value})} />
+							onChange={(event) => updateInputValue({name: event.target.value})} 
+						/>
 						
-						<StyledSelect
-							labelId="Type"
-							label={<InputLabel>Type</InputLabel>}
-							value={newTag.type}
-							onChange={(event)=>onTypeSelect(event.target.value)}
-							style={{ width: '100%' }}
-							SelectDisplayProps={{ style: { display: 'flex', placeItems:'center' } }}
-						>
-							{
-								tagTypes.map((type, index)=>(
-									<MenuItem 
-										key={index} 
-										value={type} 
-										style={{ display: 'flex', placeItems: 'center', padding: '16px' }}
-									>
-										<Icon style={{ marginRight: 8 }}>{type.icon}</Icon> {type.name}
-									</MenuItem>
-								))
-							}
-						</StyledSelect>
-						
+						<FormControl fullWidth>
+							<InputLabel id="tag-type">Type</InputLabel>
+							<StyledSelect
+								id="tag-select"
+								labelId="tag-type"
+								label="Type"
+								value={newTag.type}
+								onChange={(event)=>onTypeSelect(event.target.value)}
+								style={{ width: '100%' }}
+								SelectDisplayProps={{ style: { display: 'flex', placeItems:'center' } }}
+							>
+								{
+									tagTypes.map((type, index)=>(
+										<MenuItem 
+											key={index} 
+											value={type} 
+											style={{ display: 'flex', placeItems: 'center', padding: '16px' }}
+										>
+											<Icon style={{ marginRight: 8 }}>{type.icon}</Icon> {type.name}
+										</MenuItem>
+									))
+								}
+							</StyledSelect>
+						</FormControl>
+					
 						<StandardInputField 
 							label="Hex color code" 
 							value={hexColorInputValue} 
@@ -277,6 +281,7 @@ function TagAddDialog (props) {
 								),
 							}} 
 						/>
+						
 						<div style={{ display: 'flex' }}>
 							{
 								presetColors.map((color, index) => (
@@ -292,6 +297,7 @@ function TagAddDialog (props) {
 						</TagItem>
 					</RightSideTagCreate>
 				</NewTagCreateContainer>
+				
 				<Button 
 					disabled={!newTag.name} 
 					variant="outlined"
