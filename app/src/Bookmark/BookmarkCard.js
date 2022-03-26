@@ -6,7 +6,7 @@ import { Button, Checkbox, Icon, Tooltip } from '@mui/material'
 import truncate from 'truncate'
 import moment from 'moment'
 import { Subtext } from '../components/styledComponents/BasicComponents'
-import { TagItem } from './TagAddDialog'
+import { TagItem } from './Tags/TagListDisplay'
 
 const imageHeight = 170
 const cardHeight = 365

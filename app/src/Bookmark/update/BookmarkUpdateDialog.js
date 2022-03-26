@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { Button, CircularProgress, Icon, IconButton, InputAdornment, TextField } from '@mui/material'
+import { Button, CircularProgress, IconButton, InputAdornment } from '@mui/material'
 import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -9,38 +8,12 @@ import { useSnackbar } from 'notistack'
 import ManageUploadsAndThumbnailPanel from './ManageUploadsAndThumbnailPanel'
 import { firestoreConnect } from 'react-redux-firebase'
 import { ContentCopy, Delete, Launch } from '@mui/icons-material'
-import TagAddDialog, { TagItem, TagsSelectedContainer } from '../TagAddDialog'
-import { Subtext } from '../../components/styledComponents/BasicComponents'
 import StandardInputField from '../../components/inputs/StandardInputField'
-
-const TagSection = styled.div`
-	border: 1px solid #dbdbdb;
-	border-radius: 8px;
-	padding: 16px;
-	padding-top: 8px;
-	margin-bottom: 16px;
-`
-const TagSectionHeader = styled.div`
-	display: flex;
-	width: 100%;
-	justify-content: space-between;
-	place-items: center;
-	cursor: pointer;
-	button {
-		width: 200px;
-		display: flex;
-		place-items: center;
-	}
-`
-const TagsAddedContainer = styled(TagsSelectedContainer)`
-	height: 64px;
-	margin: 8px 0;
-`
+import BookmarkTagsEditor from '../Tags/BookmarkTagsEditor'
 
 function BookmarkUpdateDialog (props) {
 	const { visible, bookmarkUUID, ordered, _setVisible, _updateBookmark, _deleteBookmark } = props
 	const [updatedBookmark, setUpdatedBookmark ] = useState(null)
-	const [tagAddDialogVisible, setTagAddDialogVisible] = useState(false)
 	const [processing, setProcessing ] = useState(false)
 	const { enqueueSnackbar } = useSnackbar();
 	const fsBookmark = ordered[`bookmarkToUpdate-${bookmarkUUID}`]
@@ -96,15 +69,6 @@ function BookmarkUpdateDialog (props) {
 		setProcessing(false)
 	}
 
-	const renderTag = (tag) => {
-		return (
-			<TagItem tagColor={tag.color} style={{ marginRight: 8 }}>
-				<Icon style={{ marginRight: 8 }}>{tag.type.icon}</Icon>
-				<div>{tag.name}</div>
-			</TagItem>
-		)
-	}
-
 	return (
 		<StandardDialog
 			open={visible}
@@ -144,24 +108,7 @@ function BookmarkUpdateDialog (props) {
 				inputMaxLength={1500} 
 				onChange={(event) => updateInputValue({description: event.target.value})} />
 
-			<TagSection>
-				<TagSectionHeader onClick={()=>setTagAddDialogVisible(true)}>
-						<div style={{ fontSize: 20, width: '100%' }}>Tags</div>
-						<Button 
-							variant="outlined"
-							onClick={()=>setTagAddDialogVisible(true)}
-						>
-							<Icon style={{ marginRight: 8 }}>app_registration</Icon> Modify List
-						</Button>
-				</TagSectionHeader>
-				<TagsAddedContainer>
-					{
-						updatedBookmark?.tags && updatedBookmark.tags.length > 0 
-							? updatedBookmark.tags.map(renderTag) 
-							: <Subtext style={{ fontSize: '0.8em', fontStyle: 'italic' }}>No tags added yet.</Subtext>
-					}	
-				</TagsAddedContainer>
-			</TagSection>
+			<BookmarkTagsEditor tags={updatedBookmark.tags} _updateTags={(value)=>updateInputValue({ tags: value })} />
 
 			<ManageUploadsAndThumbnailPanel 
 				bookmarkUUID={bookmark.uuid}
@@ -169,16 +116,6 @@ function BookmarkUpdateDialog (props) {
 				bookmarkThumbnail={updatedBookmark.thumbnail}
 				_setThumbnail={(thumbnail)=>setUpdatedBookmark({ ...updatedBookmark, thumbnail })}
 			/>
-			{
-				tagAddDialogVisible && (
-					<TagAddDialog
-						visible={tagAddDialogVisible}
-						_setVisible={setTagAddDialogVisible}
-						tagsInBookmark={updatedBookmark.tags}
-						_updateTagsInBookmark={(value)=>updateInputValue({ tags: value })}
-					/>
-				)
-			}
 		</StandardDialog>
 	)
 }
