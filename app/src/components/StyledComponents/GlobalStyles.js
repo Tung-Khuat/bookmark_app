@@ -23,5 +23,27 @@ const GlobalStyles = createGlobalStyle`
 			outline: none;
 		}
 	}
+
+	// Custom scroll bar
+	::-webkit-scrollbar {
+		width: 12px;
+		height: 12px;
+	}
+	::-webkit-scrollbar-track {
+		&:hover {
+			opacity: 0.2;
+			background:  #e8e8e8;
+		}
+	}
+	::-webkit-scrollbar-thumb {
+		background:  #14141475;
+		border: 2px solid rgba(0, 0, 0, 0);
+		background-clip: padding-box;
+		border-radius: 8px;
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+
 `
 export default GlobalStyles;
