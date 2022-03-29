@@ -6,7 +6,7 @@ import TagListDisplay from './TagListDisplay'
 import { ThemeButton } from '../../components/styledComponents/Buttons'
 
 const TagSection = styled.div`
-	border: 1px solid #dbdbdb;
+	border: 1px solid ${(props) => props.theme.themeColors.primaryContrastA};
 	border-radius: 8px;
 	padding: 16px;
 	padding-top: 8px;

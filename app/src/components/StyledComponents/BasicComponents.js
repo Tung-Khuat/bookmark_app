@@ -40,7 +40,7 @@ export const StandardLabel = styled.p`
 `
 export const Subtext = styled.span`
 	font-size: 0.7em;
-	color: rgba(0,0,0,0.5);
+	color: ${(props) => props.color ? props.color : props.theme.themeColors.primaryContrastB} + '4c';
 `
 export const StyledAnchor = styled.a`
 	cursor: pointer;

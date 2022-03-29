@@ -12,6 +12,10 @@ const Base = styled(Button)`
 `
 const Flat = styled(Base)`
 `
+const Disabled = styled(Base)`
+	color: ${(props) => props.theme.themeColors.primaryContrastA + '4c'} !important;
+	border-color: ${(props) => props.theme.themeColors.primaryContrastA + '4c'} !important;
+`
 const Raised = styled(Base)`
 	background: ${(props) => props.theme.themeColors.highlight};
 	color: ${(props) => props.theme.themeColors.primaryContrastB};
@@ -30,6 +34,10 @@ const Outlined = styled(Base)`
 `
 
 export const ThemeButton = (props) => {
+
+	if (props.disabled) {
+		return <Disabled {...props}>{props.children}</Disabled>
+	}
 
 	if (props.variant === 'contained') {
 		return <Raised {...props}>{props.children}</Raised>
