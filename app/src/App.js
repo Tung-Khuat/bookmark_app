@@ -27,11 +27,14 @@ function App(props) {
 			if(darkMode) {
 				updatedThemeColors = reverseContrastColors(updatedThemeColors)
 			}
-			const { primaryContrastA, primaryContrastB } = updatedThemeColors
+			const { primaryContrastA, primaryContrastB, highlight } = updatedThemeColors
 			const updatedTheme = {
 				...storedTheme,
-				backgroundColor: primaryContrastA,
-				fontColor: primaryContrastB,
+				fixedColors: storedTheme.themeColors, 
+				themeColors: updatedThemeColors,
+				fontColor: primaryContrastA,
+				backgroundColor: primaryContrastB,
+				linkColor: highlight,
 			}
 			setTheme(updatedTheme)
 		}
@@ -79,9 +82,13 @@ function App(props) {
 		)
 	}
 
+	if(!theme){
+		return null
+	}
+	console.log(theme)
 	return (
 		<Suspense fallback={<FullViewLoading />}>
-			<ThemeProvider theme={theme || {}}>
+			<ThemeProvider theme={theme}>
 				<GlobalStyles theme={theme} />
 				<ConnectedRouter history={history}>
 					<Router>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import TagEditDialog from './TagEditDialog'
-import { Button, Icon } from '@mui/material'
+import { Icon } from '@mui/material'
 import TagListDisplay from './TagListDisplay'
+import { ThemeButton } from '../../components/styledComponents/Buttons'
 
 const TagSection = styled.div`
 	border: 1px solid #dbdbdb;
@@ -32,12 +33,12 @@ export default function BookmarkTagsEditor({tags, _updateTags}) {
 			<TagSection>
 				<TagSectionHeader onClick={()=>setTagEditDialogVisible(true)}>
 						<div style={{ fontSize: 20, width: '100%' }}>Tags</div>
-						<Button
+						<ThemeButton
 							variant="outlined"
 							onClick={()=>setTagEditDialogVisible(true)}
 						>
 							<Icon style={{ marginRight: 8 }}>app_registration</Icon> Modify List
-						</Button>
+						</ThemeButton>
 				</TagSectionHeader>
 				<TagListDisplay tags={tags} />
 			</TagSection>

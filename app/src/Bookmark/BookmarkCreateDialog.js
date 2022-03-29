@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Button, CircularProgress } from '@mui/material'
+import { CircularProgress } from '@mui/material'
 import StandardDialog from '../components/dialogs/StandardDialog'
 import ImageDropzone from '../components/ImageDropzone'
 import { bindActionCreators, compose } from 'redux'
@@ -10,6 +10,7 @@ import { useSnackbar } from 'notistack'
 import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 import StandardInputField from '../components/inputs/StandardInputField'
 import BookmarkTagsEditor from './Tags/BookmarkTagsEditor'
+import { ThemeButton } from '../components/styledComponents/Buttons'
 
 const DropzoneLoadingPlaceholder = styled.div`
 	width: 100%;
@@ -85,7 +86,7 @@ function BookmarkCreateDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Bookmark create"}
 			dialogActions={[
-				<Button variant="contained" onClick={onBookmarkCreate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={20} /> : 'Create'}</Button>
+				<ThemeButton variant="contained" onClick={onBookmarkCreate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={20} /> : 'Create'}</ThemeButton>
 			]}
 		>
 			<StandardInputField

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, CircularProgress, IconButton, InputAdornment } from '@mui/material'
+import { CircularProgress, IconButton, InputAdornment } from '@mui/material'
 import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -10,6 +10,8 @@ import { firestoreConnect } from 'react-redux-firebase'
 import { ContentCopy, Delete, Launch } from '@mui/icons-material'
 import StandardInputField from '../../components/inputs/StandardInputField'
 import BookmarkTagsEditor from '../Tags/BookmarkTagsEditor'
+import { ThemeButton } from '../../components/styledComponents/Buttons'
+import { ThemeIcon } from '../../components/styledComponents/Icons'
 
 function BookmarkUpdateDialog (props) {
 	const { visible, bookmarkUUID, ordered, _setVisible, _updateBookmark, _deleteBookmark } = props
@@ -75,10 +77,14 @@ function BookmarkUpdateDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Bookmark update"}
 			dialogActions={[
-				<Button variant="contained" onClick={onBookmarkUpdate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={20} /> : 'Update'}</Button>
+				<ThemeButton variant="contained" onClick={onBookmarkUpdate}>
+					{processing ? <CircularProgress style={{ color: '#fff' }} size={20} /> : 'Update'}
+				</ThemeButton>
 			]}
 			rightTitleActions={[
-				<IconButton onClick={onBookmarkDelete}>{processing ? <CircularProgress size={20}/> : <Delete style={{ color:'#fff' }}/>}</IconButton>
+				<div style={{ padding: 8, cursor: 'pointer', display: 'flex', placeItems: 'center' }} onClick={onBookmarkDelete}>
+					{processing ? <CircularProgress size={20}/> : <ThemeIcon invertColor>delete</ThemeIcon>}
+				</div>
 			]}
 		>
 
@@ -93,7 +99,7 @@ function BookmarkUpdateDialog (props) {
 				InputProps={{
 					endAdornment: (
 					  <InputAdornment position="end">
-						<ContentCopy style={{ cursor: 'pointer', marginRight: 8 }} onClick={() => navigator.clipboard.writeText(bookmark.link)} />
+						<ThemeIcon linkColor onClick={() => navigator.clipboard.writeText(bookmark.link)}>content_copy</ThemeIcon>
 						<a target='_blank' rel="noopener noreferrer" href={bookmark.link} style={{ display: 'flex', placeItems: 'center' }}><Launch /></a>
 					  </InputAdornment>
 					),

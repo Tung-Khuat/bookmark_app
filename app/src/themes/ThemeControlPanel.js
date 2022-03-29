@@ -81,7 +81,7 @@ function ThemeControlPanel({ storedTheme, darkMode, _setAppTheme, _toggleDarkMod
                 </PanelButton>
                 <div>
                     <DarkModeSwitch
-                        checked={darkMode}
+                        checked={!darkMode}
                         value={darkMode}
                         onClick={_toggleDarkMode}
                     />

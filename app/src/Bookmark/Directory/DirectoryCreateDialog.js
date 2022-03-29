@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, CircularProgress } from '@mui/material'
+import { CircularProgress } from '@mui/material'
 import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -7,6 +7,7 @@ import * as directoryActions from '../../state/firebaseActions/directory-actions
 import { useSnackbar } from 'notistack'
 import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
 import StandardInputField from '../../components/inputs/StandardInputField'
+import { ThemeButton } from '../../components/styledComponents/Buttons'
 
 const initialDirectoryState =  {
 	name: "",
@@ -48,7 +49,7 @@ function DirectoryCreateDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Directory create"}
 			dialogActions={[
-				<Button variant="contained" onClick={onDirectoryCreate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={20} /> : 'Create'}</Button>
+				<ThemeButton variant="contained" onClick={onDirectoryCreate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={20} /> : 'Create'}</ThemeButton>
 			]}
 		>
 			<StandardInputField

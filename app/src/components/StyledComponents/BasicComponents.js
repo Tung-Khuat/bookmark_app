@@ -31,7 +31,7 @@ export const StandardDialogContent = styled.section`
 `
 export const StandardTitle = styled.p`
 	font-size: 2em;
-	color: ${(props) => props.color ? props.color : props.theme.darkest};
+	color: ${(props) => props.color ? props.color : props.theme.themeColors.primaryContrastB};
 	margin-bottom: 16px;
 `
 export const StandardLabel = styled.p`
@@ -44,11 +44,11 @@ export const Subtext = styled.span`
 `
 export const StyledAnchor = styled.a`
 	cursor: pointer;
-	color: ${(props) => props.theme.primary || '#1976d2'};
+	color: ${(props) => props.theme.linkColor};
 `
 export const StyledLink = styled(Link)`
 	cursor: pointer;
-	color: ${(props) => props.theme.primary || '#1976d2'};
+	color: ${(props) => props.theme.linkColor};
 `
 const slideIn = keyframes`
 	from {

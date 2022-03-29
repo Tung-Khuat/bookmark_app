@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
-import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
+import { Card, CardActions, TextField, CircularProgress } from '@material-ui/core'
 import { AccountCircle, Lock } from '@mui/icons-material'
 import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 
@@ -14,6 +14,7 @@ import { getAuth } from "firebase/auth";
 import { withSnackbar } from 'notistack'
 import HelperTextField from '../components/HelperTextField'
 import { useNavigate } from 'react-router-dom'
+import { ThemeButton } from '../components/styledComponents/Buttons'
 
 const SignupContainer = styled.div`
 	width: 100%;
@@ -160,14 +161,14 @@ function Signup(props) {
 					{ 
 						helperText && <HelperTextField helperText={helperText} type={'error'} />								
 					}
-					<Button 
+					<ThemeButton
 						fullWidth 
 						variant="contained" 
 						color="primary" 
 						onClick={ !processing && handleSubmit}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress /> : 'Sign Up' } </Button>
+					> { processing ? <CircularProgress /> : 'Sign Up' } </ThemeButton>
 
 					<div>Already signed up? <StyledLink to='/login'> Login to your existing account</StyledLink> </div>
 				</SignupActions>

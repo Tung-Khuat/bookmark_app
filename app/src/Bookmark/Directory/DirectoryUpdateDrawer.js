@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { Button, CircularProgress, Drawer } from '@mui/material'
+import { CircularProgress, Drawer } from '@mui/material'
 import { Close, Delete, DriveFileMove } from '@mui/icons-material'
 import * as directoryActions from '../../state/firebaseActions/directory-actions'
 import { useSnackbar } from 'notistack'
 import StandardInputField from '../../components/inputs/StandardInputField'
+import { ThemeButton } from '../../components/styledComponents/Buttons'
 
 const DRAWER_WIDTH = '40vw'
 
@@ -112,19 +113,19 @@ function DirectoryUpdateDrawer ({open, directory, _setOpen, _update, _delete}) {
 						onChange={(event) => updateInputValue({description: event.target.value})} />
 				</div>
 				<DrawerActions>
-					<Button disabled onClick={()=>console.log('coming soon')}>
+					<ThemeButton disabled onClick={()=>console.log('coming soon')}>
 						<DriveFileMove style={{marginRight: 8}}/> Move
-					</Button>
-					<Button disabled={processing} color="error" onClick={handleDelete}>
+					</ThemeButton>
+					<ThemeButton disabled={processing} color="error" onClick={handleDelete}>
 						{processing 
 							? <CircularProgress size={20} /> 
 							: (<><Delete style={{marginRight: 8}}/> Delete</>)}
-					</Button>
-					<Button disabled={processing} variant="contained" onClick={handleUpdate}>
+					</ThemeButton>
+					<ThemeButton disabled={processing} variant="contained" onClick={handleUpdate}>
 						{processing 
 							? <CircularProgress size={20} /> 
 							: 'Update'}
-					</Button>
+					</ThemeButton>
 				</DrawerActions>
 			</DrawerContent>
 		</Drawer>

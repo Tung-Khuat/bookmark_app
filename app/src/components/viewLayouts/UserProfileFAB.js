@@ -7,7 +7,7 @@ import Avatar from 'react-avatar'
 import styled, { keyframes } from 'styled-components'
 import UserPersonalizedSettingsDialog from '../../UserPersonalizedSettings/UserPersonalizedSettingsDialog'
 import WithLoggedInUser from '../HOC/auth/WithLoggedInUser'
-import { AccountCircle } from '@mui/icons-material'
+import { ThemeIcon } from '../styledComponents/Icons'
 
 const pulse = keyframes`
 	0% {
@@ -55,6 +55,10 @@ const AvatarContainer = styled.div`
 	padding: 8px;
 	user-select: 'none';
 `
+const StyledIcon = styled(ThemeIcon)`
+	font-size: 36px;
+	color: ${(props) => props.theme.fixedColors.primaryContrastA};
+`
 
 function UserProfileFAB({loggedInUser}) {
 	const [personalizeDialogOpen, setPersonalizeDialogOpen] = useState(false)
@@ -79,7 +83,7 @@ function UserProfileFAB({loggedInUser}) {
 						{
 							loggedInUser & loggedInUser.displayName ? (
 								<Avatar name={loggedInUser.displayName} size={32} round />
-							) : <AccountCircle style={{fontSize: 36}}/>
+							) : <StyledIcon>account_circle</StyledIcon>
 						}
 					</AvatarContainer>
 				</PulsingBadge>

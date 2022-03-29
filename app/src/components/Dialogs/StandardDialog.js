@@ -8,8 +8,8 @@ import { StandardDialogTitle } from '../styledComponents/BasicComponents'
 const DialogTitleWithActions = styled(StandardDialogTitle)`
 	display: grid;
 	grid-template-columns: auto minmax(80px, 1fr) auto;
-	background-color:  #273b6b;
-	color: #fff;
+	background-color:  ${(props) => props.theme.fixedColors.secondaryContrastB};
+	color: ${(props) => props.theme.fixedColors.primaryContrastA};
 	align-items: center;
 `
 const ActionContainer = styled.div`
@@ -21,6 +21,10 @@ const ActionContainer = styled.div`
 		border-radius: 0;
 	}
 `
+const ThemedDialogContent = styled(DialogContent)`
+	color: ${(props) => props.theme.themeColors.primaryContrastA};
+	background-color:  ${(props) => props.theme.themeColors.primaryContrastB};
+`
 
 function StandardDialog (props) {
 	const { _setOpen, dialogTitle, leftTitleActions, rightTitleActions, dialogActions, noTitle, dialogSize, children } = props
@@ -29,7 +33,7 @@ function StandardDialog (props) {
 			style={{ padding: '8px 16px', cursor: 'pointer', display: 'flex', placeItems: 'center' }} 
 			onClick={()=>_setOpen(false)}
 		>
-			<Close style={{color: '#fff'}} />
+			<Close />
 		</div>)
 
 	const renderActionWithKey = (action, index) => {
@@ -59,11 +63,11 @@ function StandardDialog (props) {
 			maxWidth={false}
 		>
 			{renderTitleAction()}
-			<DialogContent style={{ width: config.dialogContentTypeWidth[dialogSize || 'large'] }}>
+			<ThemedDialogContent style={{ width: config.dialogContentTypeWidth[dialogSize || 'large'] }}>
 				<div style={{ marginTop: '24px' }}>
 					{children}
 				</div>
-			</DialogContent>
+			</ThemedDialogContent>
 			{
 				dialogActions?.map(renderActionWithKey)
 			}

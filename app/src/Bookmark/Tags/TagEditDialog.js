@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button, FormControl, Icon, InputAdornment, InputLabel, MenuItem, Select } from '@mui/material'
+import { FormControl, Icon, InputAdornment, InputLabel, MenuItem, Select } from '@mui/material'
 import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -10,6 +10,7 @@ import { Tag } from '@mui/icons-material'
 import { v4 as uuid } from 'uuid'
 import StandardInputField from '../../components/inputs/StandardInputField'
 import TagListDisplay, { TagItem } from './TagListDisplay'
+import { ThemeButton } from '../../components/styledComponents/Buttons'
 
 const maxTagNameLength = 30
 const presetColors = ["#3f62b5", "#579a4a", "#a72c4e", "#ff951b", "#292929"]
@@ -165,7 +166,7 @@ function TagEditDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Tag Select"}
 			dialogActions={[
-				<Button onClick={onTagAddSubmit}>Update Tag List</Button>
+				<ThemeButton onClick={onTagAddSubmit}>Update Tag List</ThemeButton>
 			]}
 		>
 			<div>
@@ -234,12 +235,12 @@ function TagEditDialog (props) {
 					</RightSideTagCreate>
 				</NewTagCreateContainer>
 				
-				<Button 
+				<ThemeButton 
 					disabled={!newTag.name} 
 					variant="outlined"
 					style={{ margin: '16px 0', width: '100%' }}
 					onClick={onTagCreate}
-				>Add New Tag</Button>
+				>Add New Tag</ThemeButton>
 			</div>
 			<TagListDisplay 
 				tags={unselectedTags} 

@@ -5,7 +5,7 @@ import { compose, bindActionCreators } from 'redux'
 
 import * as appActions from '../state/appState/authState/auth-app-actions'
 
-import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
+import { Card, CardActions, TextField, CircularProgress } from '@material-ui/core'
 import { AccountCircle, Lock } from '@mui/icons-material'
 import HelperTextField from '../components/HelperTextField'
 import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
@@ -13,6 +13,7 @@ import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import { useAuth } from './AuthContext'
 import { getAuth } from "firebase/auth";
 import { useNavigate } from 'react-router-dom'
+import { ThemeButton } from '../components/styledComponents/Buttons'
 
 
 const LoginContainer = styled.div`
@@ -144,14 +145,14 @@ function Login(props) {
 					{ 
 						helperText && <HelperTextField helperText={helperText} type={'error'} />								
 					}
-					<Button 
+					<ThemeButton 
 						fullWidth 
 						variant="contained" 
 						color="primary" 
 						onClick={ !processing ? handleSubmit : ()=>{}}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress /> : 'Login' } </Button>
+					> { processing ? <CircularProgress /> : 'Login' } </ThemeButton>
 
 					<StyledLink to='/reset-password'>Forgot your password?</StyledLink>
 					<div>Don't have an account? <StyledLink to='/signup'> Sign up here.</StyledLink></div>

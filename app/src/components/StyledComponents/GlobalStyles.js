@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalStyles = createGlobalStyle`
 	a {
 		text-decoration: none;
-		color: inherit;
+		color: ${props => props.theme.themeColors.highlight};
 	}
 	
 	html {
@@ -11,9 +11,10 @@ const GlobalStyles = createGlobalStyle`
 	}
 
 	body {
-		color: #242E4C;
+		/* color: #242E4C; */
+		color: ${props => props.theme.fontColor};
 		font-family: "Muli", sans-serif;
-		background: #fcfcff;
+		background: ${props => props.theme.backgroundColor};
 	}
 
 	* {
@@ -32,11 +33,11 @@ const GlobalStyles = createGlobalStyle`
 	::-webkit-scrollbar-track {
 		&:hover {
 			opacity: 0.2;
-			background:  #e8e8e8;
+			background: ${props => props.theme.themeColors.secondaryContrastA};
 		}
 	}
 	::-webkit-scrollbar-thumb {
-		background:  #14141475;
+		background: ${props => props.theme.themeColors.secondaryContrastB + 'CC'};
 		border: 2px solid rgba(0, 0, 0, 0);
 		background-clip: padding-box;
 		border-radius: 8px;
@@ -45,5 +46,28 @@ const GlobalStyles = createGlobalStyle`
 		}
 	}
 
+	//MUI styles 
+
+	// Inputs and TextFields
+	input, label, .Mui-focused, .MuiOutlinedInput-input, .MuiInputLabel-root  {
+		color: ${props => props.theme.themeColors.primaryContrastA} !important;
+		&:focus {
+			color: ${props => props.theme.themeColors.primaryContrastA} !important;
+		}
+	}
+	fieldset {
+		border-color: ${props => props.theme.themeColors.primaryContrastA} !important;
+		&:focus {
+			border-color: ${props => props.theme.themeColors.primaryContrastA} !important;
+		}
+	}
+
+	&:hover fieldset {
+		border-color: ${props => props.theme.themeColors.secondaryContrastA} !important;
+	}
+
+	.Mui-focused fieldset{
+		border-color: ${props => props.theme.themeColors.highlight} !important;
+	}
 `
 export default GlobalStyles;

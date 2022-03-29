@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 
-import { Card, CardActions, Button, TextField, CircularProgress } from '@mui/material'
+import { Card, CardActions, TextField, CircularProgress } from '@mui/material'
 import { useAuth } from './AuthContext'
 import HelperTextField from '../components/HelperTextField'
 import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 import { AccountCircle } from '@mui/icons-material'
+import { ThemeButton } from '../components/styledComponents/Buttons'
 
 
 const ResetPasswordContainer = styled.div`
@@ -116,14 +117,14 @@ function ResetPassword() {
 
 				<ResetPasswordActions>
 					{ renderHelperText() }
-					<Button 
+					<ThemeButton
 						fullWidth 
 						variant="contained" 
 						color="primary" 
 						onClick={ !processing && handleSubmit}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress /> : 'Reset Password' } </Button>
+					> { processing ? <CircularProgress /> : 'Reset Password' } </ThemeButton>
 
 					<StyledLink to='/login'> Back to login.</StyledLink>
 				</ResetPasswordActions>

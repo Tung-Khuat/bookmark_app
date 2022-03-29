@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { firestoreConnect } from 'react-redux-firebase'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import { Button, Checkbox, CircularProgress, Fab } from '@mui/material'
+import { Checkbox, CircularProgress, Fab } from '@mui/material'
 import { Add, CreateNewFolder, Delete, Lock } from '@mui/icons-material'
 import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
@@ -15,6 +15,7 @@ import Directory from './Directory'
 import WithRouterHooks  from '../components/HOC/WithRouterHooks'
 import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 import BookmarkCard from './BookmarkCard'
+import { ThemeButton } from '../components/styledComponents/Buttons'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -43,7 +44,7 @@ const SelectModeLeftContainer = styled.div`
 `
 const PathLink = styled.span`
 	cursor: pointer;
-  	color: ${(props) => props.theme.primary || '#1976d2'};
+  	color: ${(props) => props.theme.themeColors.highlight};
 `
 const UnderlineText = styled.span`
 	text-decoration: underline;
@@ -87,11 +88,11 @@ function Bookmark (props) {
 				<SelectModePanel>
 					<SelectModeLeftContainer>
 						<div>
-							<Button 
+							<ThemeButton
 								disabled={!selectedBookmarkUUIDs.length || processing}
 								variant='outlined' 
 								color='error' 
-								onClick={handleDeleteSelected}>{processing ? <CircularProgress size={20} /> : (<><Delete />  Delete selected</>)} </Button>
+								onClick={handleDeleteSelected}>{processing ? <CircularProgress size={20} /> : (<><Delete />  Delete selected</>)} </ThemeButton>
 						</div>
 						<div style={{ marginRight: 16 }}>
 							<Checkbox 
@@ -101,33 +102,33 @@ function Bookmark (props) {
 						</div>
 						<div>{`${selectedBookmarkUUIDs?.length} selected`}</div>
 					</SelectModeLeftContainer>
-					<Button 
+					<ThemeButton 
 						style={{ marginRight: 16 }}
 						onClick={()=>setSelectMode(false)}
 						variant="contained"
-					>Cancel select mode</Button>
+					>Cancel select mode</ThemeButton>
 				</SelectModePanel>
 			)
 		}
 		return (
 			<SelectModePanel>
 				<div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
-					<Button 
+					<ThemeButton 
 						style={{ marginLeft: 32 }} 
 						onClick={()=>setCreateDirectoryDialogVisible(true)} 
 						variant="outlined"
 					>
 						<CreateNewFolder style={{ marginRight: 8 }} /> New Folder
-					</Button>
+					</ThemeButton>
 				</div>
 				<SelectModeLeftContainer>
 					<div>{`${bookmarks.length} bookmarks`}</div>
 				</SelectModeLeftContainer>
-				<Button 
+				<ThemeButton 
 					style={{ marginRight: 16 }}
 					onClick={()=>setSelectMode(true)}
 					variant="outlined"
-				>Select mode</Button>
+				>Select mode</ThemeButton>
 			</SelectModePanel>
 		)
 	}

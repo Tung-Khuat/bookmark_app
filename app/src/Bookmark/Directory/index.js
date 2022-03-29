@@ -25,6 +25,12 @@ const StyledAccordion = withStyles({
 	expanded: {},
   })(Accordion);
 
+const ThemedAccordionDetails = styled(AccordionDetails)`
+	background: ${(props) => props.theme.themeColors.neutral + '4f'} ;
+`
+const ThemedAccordionSummary = styled(AccordionSummary)`
+	background: ${(props) => props.theme.themeColors.neutral + '4f'} ;
+`
 const ListContainer = styled.div`
 	width: calc(100% - 64px);
 	margin: 16px 0;
@@ -130,7 +136,7 @@ function Directory (props) {
 				expanded={accordionExpanded}
 				onChange={()=>setAccordionExpanded(!accordionExpanded)}	
 			>
-				<AccordionSummary
+				<ThemedAccordionSummary
 					expandIcon={<ExpandMore />}
 				>
 					{currentDirectory ? (
@@ -142,12 +148,12 @@ function Directory (props) {
 							</BackNavContainer>
 						) : <AccordionSummaryTitle>Directories</AccordionSummaryTitle>
 					}
-				</AccordionSummary>
-				<AccordionDetails>
+				</ThemedAccordionSummary>
+				<ThemedAccordionDetails>
 					<ListContainer>
 						{directories && directories.length > 0 ? directories.map(renderDirectory) : <Subtext>No folders found under this directory.</Subtext>}
 					</ListContainer>
-				</AccordionDetails>
+				</ThemedAccordionDetails>
 			</StyledAccordion>
 			<DirectoryUpdateDrawer open={openEditDrawer} _setOpen={setOpenEditDrawer} directory={directoryInEdit}/>
 		</div>

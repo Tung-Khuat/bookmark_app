@@ -1,17 +1,43 @@
+import React from 'react'
 import styled from 'styled-components'
-import {
-  Button,
-} from 'react-md'
+import { Button } from '@mui/material'
 
-export const DestructiveButton = styled(Button)`
-	color: ${(props) => props.color ? props.color : props.theme.destructive};
+const Base = styled(Button)`
+	color: ${(props) => props.theme.themeColors.primaryContrastA};
+	background: ${(props) => props.theme.themeColors.primaryContrastB};
+	&:hover {
+		background: ${(props) => props.theme.themeColors.primaryContrastB};
+		opacity: 0.9;
+	}
 `
-export const PrimaryButton = styled(Button)`
-	${(props) => props.flat ? 'color: var(--color-primary);' : ''}
-	${(props) => !props.flat ? 'background: var(--color-primary);' : ''}
+const Flat = styled(Base)`
+`
+const Raised = styled(Base)`
+	background: ${(props) => props.theme.themeColors.highlight};
+	color: ${(props) => props.theme.themeColors.primaryContrastB};
+	&:hover {
+		background: ${(props) => props.theme.themeColors.highlight};
+		opacity: 0.9;
+	}
+`
+const Outlined = styled(Base)`
+	border: 1px solid ${(props) => props.theme.themeColors.primaryContrastA};
+	color: ${(props) => props.theme.themeColors.primaryContrastA};
+	&:hover {
+		opacity: 0.9;
+		border: 1px solid ${(props) => props.theme.themeColors.primaryContrastA};
+	}
 `
 
-export const SecondaryButton = styled(Button)`
-	${(props) => props.flat ? 'color: var(--color-secondary);' : ''}
-	${(props) => !props.flat ? 'background: var(--color-secondary);' : ''}
-`
+export const ThemeButton = (props) => {
+
+	if (props.variant === 'contained') {
+		return <Raised {...props}>{props.children}</Raised>
+	}
+
+	if (props.variant === 'outlined') {
+		return <Outlined {...props}>{props.children}</Outlined>
+	}
+
+	return <Flat {...props}>{props.children}</Flat>
+}
