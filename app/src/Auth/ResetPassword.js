@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 
-import { Card, CardActions, TextField, CircularProgress } from '@mui/material'
+import { Card, CardActions, CircularProgress } from '@mui/material'
 import { useAuth } from './AuthContext'
 import HelperTextField from '../components/HelperTextField'
-import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
+import { LoginStyleInputField, StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 import { AccountCircle } from '@mui/icons-material'
 import { ThemeButton } from '../components/styledComponents/Buttons'
 
@@ -62,7 +62,7 @@ function ResetPassword() {
 				{
 					icon ? icon : <div/>
 				}
-				<TextField  
+				<LoginStyleInputField  
 					label={label}
 					value={value} 
 					onChange={(e) => _onChange(e.target.value)}
@@ -112,7 +112,7 @@ function ResetPassword() {
 		<ResetPasswordContainer>
 			<ResetPasswordCard>
 
-				<StandardTitle style={{ width: '100%', textAlign: 'center' }}>Password Reset</StandardTitle>
+				<StandardTitle color={'rgba(0, 0, 0, 0.87)'} style={{ width: '100%', textAlign: 'center' }}>Password Reset</StandardTitle>
 				{ inputFields.map(renderInputField) }
 
 				<ResetPasswordActions>

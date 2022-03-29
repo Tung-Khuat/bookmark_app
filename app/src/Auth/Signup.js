@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
-import { Card, CardActions, TextField, CircularProgress } from '@material-ui/core'
+import { Card, CardActions, CircularProgress } from '@material-ui/core'
 import { AccountCircle, Lock } from '@mui/icons-material'
-import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
+import { LoginStyleInputField, StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 
 import * as authActions from '../state/firebaseActions/auth-actions'
 import * as appActions from '../state/appState/authState/auth-app-actions'
@@ -91,7 +91,7 @@ function Signup(props) {
 				{
 					icon ? icon : <div/>
 				}
-				<TextField  
+				<LoginStyleInputField  
 					label={label}
 					value={value} 
 					onChange={(e) => _onChange(e.target.value)}
@@ -154,7 +154,7 @@ function Signup(props) {
 		<SignupContainer>
 			<SignupCard>
 
-				<StandardTitle style={{ width: '100%', textAlign: 'center' }}>Sign Up</StandardTitle>
+				<StandardTitle color={'rgba(0, 0, 0, 0.87)'} style={{ width: '100%', textAlign: 'center' }}>Sign Up</StandardTitle>
 				{ inputFields.map(renderInputField) }
 
 				<SignupActions>

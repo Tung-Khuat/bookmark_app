@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components'
 import { DialogTitle } from '@mui/material'
 import { Link } from 'react-router-dom'
+import StandardInputField from '../inputs/StandardInputField'
 
 export const StandardDialogTitle = styled(DialogTitle)`
 	background-color: ${(props) => props.theme.primary};
@@ -49,6 +50,16 @@ export const StyledAnchor = styled.a`
 export const StyledLink = styled(Link)`
 	cursor: pointer;
 	color: ${(props) => props.theme.linkColor};
+`
+export const LoginStyleInputField = styled(StandardInputField)`
+	margin: 0;
+	color: rgba(0, 0, 0, 0.87) !important;
+	input, label {
+		color: rgba(0, 0, 0, 0.87) !important;
+		&:focus {
+			color: rgba(0, 0, 0, 0.87) !important;
+		}
+	}
 `
 const slideIn = keyframes`
 	from {

@@ -5,15 +5,16 @@ import { compose, bindActionCreators } from 'redux'
 
 import * as appActions from '../state/appState/authState/auth-app-actions'
 
-import { Card, CardActions, TextField, CircularProgress } from '@material-ui/core'
+import { Card, CardActions, CircularProgress } from '@material-ui/core'
 import { AccountCircle, Lock } from '@mui/icons-material'
 import HelperTextField from '../components/HelperTextField'
-import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
+import { LoginStyleInputField, StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import { useAuth } from './AuthContext'
 import { getAuth } from "firebase/auth";
 import { useNavigate } from 'react-router-dom'
 import { ThemeButton } from '../components/styledComponents/Buttons'
+import StandardInputField from '../components/inputs/StandardInputField'
 
 
 const LoginContainer = styled.div`
@@ -88,7 +89,7 @@ function Login(props) {
 				{
 					icon ? icon : <div/>
 				}
-				<TextField  
+				<LoginStyleInputField 
 					label={label}
 					value={value} 
 					onChange={(e) => _onChange(e.target.value)}
@@ -138,7 +139,7 @@ function Login(props) {
 		<LoginContainer>
 			<LoginCard>
 
-				<StandardTitle style={{ width: '100%', textAlign: 'center' }}>Login</StandardTitle>
+				<StandardTitle color={'rgba(0, 0, 0, 0.87)'} style={{ width: '100%', textAlign: 'center' }}>Login</StandardTitle>
 				{ inputFields.map(renderInputField) }
 
 				<LoginActions>
