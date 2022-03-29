@@ -83,7 +83,7 @@ function BookmarkUpdateDialog (props) {
 			]}
 			rightTitleActions={[
 				<div style={{ padding: 8, cursor: 'pointer', display: 'flex', placeItems: 'center' }} onClick={onBookmarkDelete}>
-					{processing ? <CircularProgress size={20}/> : <ThemeIcon invertColor>delete</ThemeIcon>}
+					{processing ? <CircularProgress size={20}/> : <ThemeIcon staticThemeA>delete</ThemeIcon>}
 				</div>
 			]}
 		>

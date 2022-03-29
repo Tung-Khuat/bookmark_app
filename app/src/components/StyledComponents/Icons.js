@@ -14,7 +14,14 @@ const LinkIcon = styled(Base)`
 	}
 `
 const InvertColorIcon = styled(Base)`
-	color: ${(props) => props.theme.themeColors.PrimaryContrastB};
+	color: ${(props) => props.theme.themeColors.primaryContrastB};
+`
+
+const StaticThemeAIcon = styled(Base)`
+	color: ${(props) => props.theme.fixedColors.primaryContrastA};
+`
+const StaticThemeBIcon = styled(Base)`
+	color: ${(props) => props.theme.fixedColors.primaryContrastB};
 `
 
 
@@ -22,6 +29,14 @@ export const ThemeIcon = (props) => {
 
 	if (props.linkColor) {
 		return <LinkIcon {...props}>{props.children}</LinkIcon>
+	}
+
+	if (props.staticThemeA) {
+		return <StaticThemeAIcon {...props}>{props.children}</StaticThemeAIcon>
+	}
+
+	if (props.staticThemeB) {
+		return <StaticThemeBIcon {...props}>{props.children}</StaticThemeBIcon>
 	}
 
 	if (props.invertColor) {
