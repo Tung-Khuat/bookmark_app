@@ -32,12 +32,11 @@ const GlobalStyles = createGlobalStyle`
 	}
 	::-webkit-scrollbar-track {
 		&:hover {
-			opacity: 0.2;
-			background: ${props => props.theme.themeColors.secondaryContrastA};
+			background: ${props => props.theme.fixedColors.secondaryContrastA};
 		}
 	}
 	::-webkit-scrollbar-thumb {
-		background: ${props => props.theme.themeColors.secondaryContrastB + 'CC'};
+		background: ${props => props.theme.fixedColors.secondaryContrastB + 'd4'};
 		border: 2px solid rgba(0, 0, 0, 0);
 		background-clip: padding-box;
 		border-radius: 8px;
