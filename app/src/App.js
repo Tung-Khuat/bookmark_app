@@ -85,7 +85,7 @@ function App(props) {
 	if(!theme){
 		return null
 	}
-	console.log(theme)
+
 	return (
 		<Suspense fallback={<FullViewLoading />}>
 			<ThemeProvider theme={theme}>

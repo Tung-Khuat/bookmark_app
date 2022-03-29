@@ -50,14 +50,18 @@ export default function TagListDisplay({tags, listHeader, emptyStateText, _onTag
 			>
 				<Icon style={{ marginRight: 8 }}>{tag.type.icon}</Icon>
 				<div>{tag.name}</div>
-				<Cancel 
-					style={{ cursor: 'pointer', marginLeft: 8 }} 
-					onClick={(e)=>{
-						e.preventDefault()
-						e.stopPropagation()
-						_onTagDeleteClick && _onTagDeleteClick(tag)
-					}}
-				/>
+				{
+					_onTagDeleteClick && (
+						<Cancel 
+							style={{ cursor: 'pointer', marginLeft: 8 }} 
+							onClick={(e)=>{
+								e.preventDefault()
+								e.stopPropagation()
+								_onTagDeleteClick && _onTagDeleteClick(tag)
+							}}
+						/>
+					)
+				}
 			</TagItem>
 		)
 	}
