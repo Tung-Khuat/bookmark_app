@@ -17,7 +17,10 @@ const PanelWrapper = styled.div`
 const ColorPaletteContainer = styled.div`
     display: flex;
     cursor: pointer;
-    margin-block: 8px;
+    margin: 8px auto;
+    width: fit-content;
+    border-radius: 3px;
+    box-shadow: 3px 3px 4px 2px rgba(0,0,0,0.75);
     div {
         width: 16px;
         height: 30px;
@@ -28,11 +31,6 @@ const ColorPaletteContainer = styled.div`
             border-radius: 0 3px 3px 0;
         }
     }
-`
-const PanelButtonContainer = styled.div`
-    position: relative;
-    width: 40px;
-    height: 40px;
 `
 const PanelButton = styled.div`
 `
@@ -81,7 +79,7 @@ function ThemeControlPanel({ storedTheme, darkMode, _setAppTheme, _toggleDarkMod
                 </PanelButton>
                 <div>
                     <DarkModeSwitch
-                        checked={!darkMode}
+                        checked={darkMode}
                         value={darkMode}
                         onClick={_toggleDarkMode}
                     />

@@ -6,11 +6,11 @@ import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import * as bookmarkActions from '../../state/firebaseActions/bookmark-actions'
 import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
-import { Tag } from '@mui/icons-material'
 import { v4 as uuid } from 'uuid'
 import StandardInputField from '../../components/inputs/StandardInputField'
-import TagListDisplay, { TagItem } from './TagListDisplay'
+import TagListDisplay, { TagItem, TagItemWhiteBackgroundContainer } from './TagListDisplay'
 import { ThemeButton } from '../../components/styledComponents/Buttons'
+import { ThemeIcon } from '../../components/styledComponents/Icons'
 
 const maxTagNameLength = 30
 const presetColors = ["#3f62b5", "#579a4a", "#a72c4e", "#ff951b", "#292929"]
@@ -213,7 +213,7 @@ function TagEditDialog (props) {
 							InputProps={{
 								startAdornment: (
 									<InputAdornment position="start">
-										<Tag />
+										<ThemeIcon >tag</ThemeIcon>
 									</InputAdornment>
 								),
 							}} 
@@ -228,10 +228,12 @@ function TagEditDialog (props) {
 						</div>
 					</LeftSideTagCreate>
 					<RightSideTagCreate>
-						<TagItem tagColor={newTag.color}>
-							<Icon style={{ marginRight: 8 }}>{newTag.type.icon}</Icon>
-							{newTag.name || 'Placeholder'}
-						</TagItem>
+						<TagItemWhiteBackgroundContainer>
+							<TagItem tagColor={newTag.color}>
+								<Icon style={{ marginRight: 8 }}>{newTag.type.icon}</Icon>
+								{newTag.name || 'Placeholder'}
+							</TagItem>
+						</TagItemWhiteBackgroundContainer>
 					</RightSideTagCreate>
 				</NewTagCreateContainer>
 				

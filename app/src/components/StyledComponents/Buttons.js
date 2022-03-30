@@ -10,6 +10,12 @@ const Base = styled(Button)`
 		opacity: 0.9;
 	}
 `
+const Transparent = styled(Base)`
+	background: transparent;
+	&:hover {
+		background: ${(props) => props.theme.themeColors.primaryContrastB + 'd4'};
+	}
+`
 const Flat = styled(Base)`
 `
 const Disabled = styled(Base)`
@@ -45,6 +51,10 @@ export const ThemeButton = (props) => {
 
 	if (props.variant === 'outlined') {
 		return <Outlined {...props}>{props.children}</Outlined>
+	}
+
+	if (props.transparentBg) {
+		return <Transparent {...props}>{props.children}</Transparent>
 	}
 
 	return <Flat {...props}>{props.children}</Flat>

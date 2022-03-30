@@ -118,12 +118,12 @@ function DirectoryUpdateDrawer ({open, directory, _setOpen, _update, _delete}) {
 					</ThemeButton>
 					<ThemeButton disabled={processing} color="error" onClick={handleDelete}>
 						{processing 
-							? <CircularProgress size={20} /> 
+							? <CircularProgress size={24} /> 
 							: (<><Delete style={{marginRight: 8}}/> Delete</>)}
 					</ThemeButton>
 					<ThemeButton disabled={processing} variant="contained" onClick={handleUpdate}>
 						{processing 
-							? <CircularProgress size={20} /> 
+							? <CircularProgress size={24} /> 
 							: 'Update'}
 					</ThemeButton>
 				</DrawerActions>

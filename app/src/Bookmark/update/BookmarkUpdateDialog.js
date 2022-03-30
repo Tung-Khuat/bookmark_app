@@ -78,12 +78,12 @@ function BookmarkUpdateDialog (props) {
 			dialogTitle={"Bookmark update"}
 			dialogActions={[
 				<ThemeButton variant="contained" onClick={onBookmarkUpdate}>
-					{processing ? <CircularProgress style={{ color: '#fff' }} size={20} /> : 'Update'}
+					{processing ? <CircularProgress style={{ color: '#fff' }} size={24} /> : 'Update'}
 				</ThemeButton>
 			]}
 			rightTitleActions={[
 				<div style={{ padding: 8, cursor: 'pointer', display: 'flex', placeItems: 'center' }} onClick={onBookmarkDelete}>
-					{processing ? <CircularProgress size={20}/> : <ThemeIcon staticThemeA>delete</ThemeIcon>}
+					{processing ? <CircularProgress size={24}/> : <ThemeIcon staticThemeA>delete</ThemeIcon>}
 				</div>
 			]}
 		>

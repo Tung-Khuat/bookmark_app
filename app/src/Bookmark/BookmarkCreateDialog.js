@@ -86,7 +86,7 @@ function BookmarkCreateDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Bookmark create"}
 			dialogActions={[
-				<ThemeButton variant="contained" onClick={onBookmarkCreate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={20} /> : 'Create'}</ThemeButton>
+				<ThemeButton variant="contained" onClick={onBookmarkCreate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={24} /> : 'Create'}</ThemeButton>
 			]}
 		>
 			<StandardInputField

@@ -49,7 +49,7 @@ function DirectoryCreateDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Directory create"}
 			dialogActions={[
-				<ThemeButton variant="contained" onClick={onDirectoryCreate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={20} /> : 'Create'}</ThemeButton>
+				<ThemeButton variant="contained" onClick={onDirectoryCreate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={24} /> : 'Create'}</ThemeButton>
 			]}
 		>
 			<StandardInputField

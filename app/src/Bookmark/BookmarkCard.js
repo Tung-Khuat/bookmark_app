@@ -6,11 +6,11 @@ import { Checkbox, Icon, Tooltip } from '@mui/material'
 import truncate from 'truncate'
 import moment from 'moment'
 import { Subtext } from '../components/styledComponents/BasicComponents'
-import { TagItem } from './Tags/TagListDisplay'
+import { TagItem, TagItemWhiteBackgroundContainer } from './Tags/TagListDisplay'
 import { ThemeButton } from '../components/styledComponents/Buttons'
 
 const imageHeight = 170
-const cardHeight = 380
+const cardHeight = 375
 const contentHeight = cardHeight - imageHeight
 
 const BookmarkTitle = styled.div`
@@ -44,8 +44,10 @@ const Thumbnail = styled.div`
 `
 const BookmarkContent = styled.div`
 	padding: 0 16px;
-	display: grid;
-	grid-template-rows: 1fr auto;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+	color: ${(props) => props.theme.themeColors.primaryContrastA};
 	height: ${contentHeight + 'px'};
 `
 const BookmarkInfo = styled.div`
@@ -69,9 +71,11 @@ const AuthorTag = styled(TagItem)`
 	background-color: ${(props) => props.theme.themeColors.highlight};
 	border: none;
 `
+const BookmarkTagItemWhiteBackgroundContainer = styled(TagItemWhiteBackgroundContainer)`
+	margin-right: 4px;
+`
 const BookmarkTag = styled(TagItem)`
 	padding: 4px;
-	margin-right: 4px;
 	font-size: 0.7em;
 `
 const TagIcon = styled(Icon)`
@@ -157,10 +161,12 @@ export default function BookmarkCard({bookmark, selectMode, selectedBookmarkUUID
 			return null
 		}
 		return (
-			<BookmarkTag key={tag.uuid} tagColor={tag.color}>
-				<TagIcon>{tag.type.icon}</TagIcon>
-				{tag.name}
-			</BookmarkTag>
+			<BookmarkTagItemWhiteBackgroundContainer key={tag.uuid}>
+				<BookmarkTag tagColor={tag.color}>
+					<TagIcon>{tag.type.icon}</TagIcon>
+					{tag.name}
+				</BookmarkTag>
+			</BookmarkTagItemWhiteBackgroundContainer>
 		)
 	}
 
@@ -213,7 +219,7 @@ export default function BookmarkCard({bookmark, selectMode, selectedBookmarkUUID
 					}
 					<BookmarkContent>
 						<BookmarkInfo>
-							<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+							<div style={{ marginBottom: 8, minHeight: 48, display: 'flex', placeItems: 'center' }}>
 								<Tooltip title={bookmark.title}>
 									<BookmarkTitle>
 										{bookmark.title ? truncate(bookmark.title, 30) : truncate(bookmark.link, 20)}
@@ -231,6 +237,7 @@ export default function BookmarkCard({bookmark, selectMode, selectedBookmarkUUID
 						</BookmarkInfo>
 						<BookmarkActionsContainer>
 							<ThemeButton
+								transparentBg
 								onClick={(e) => {
 									e.stopPropagation()
 									e.preventDefault()

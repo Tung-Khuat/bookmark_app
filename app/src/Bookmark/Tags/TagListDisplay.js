@@ -22,6 +22,10 @@ const TagListContainer = styled.div`
 	overflow-y: hidden;
 	overflow-x: scroll;
 `
+export const TagItemWhiteBackgroundContainer = styled.div`
+	background-color: white;
+	border-radius: 4px;
+`
 export const TagItem = styled.div`
 	display: flex;
 	place-items: center;
@@ -42,27 +46,27 @@ export const TagItem = styled.div`
 export default function TagListDisplay({tags, listHeader, emptyStateText, _onTagClick, _onTagDeleteClick}) {
 	const renderTag = (tag, index) => {
 		return (
-			<TagItem 
-				key={index}
-				tagColor={tag.color} 
-				style={{ marginRight: 8, marginBottom: 8, cursor: _onTagClick ? 'pointer' : 'default' }}
-				onClick={()=>_onTagClick && _onTagClick(tag)}
-			>
-				<Icon style={{ marginRight: 8 }}>{tag.type.icon}</Icon>
-				<div>{tag.name}</div>
-				{
-					_onTagDeleteClick && (
-						<Cancel 
-							style={{ cursor: 'pointer', marginLeft: 8 }} 
-							onClick={(e)=>{
-								e.preventDefault()
-								e.stopPropagation()
-								_onTagDeleteClick && _onTagDeleteClick(tag)
-							}}
-						/>
-					)
-				}
-			</TagItem>
+			<TagItemWhiteBackgroundContainer key={index} style={{ marginRight: 8, marginBottom: 8, cursor: _onTagClick ? 'pointer' : 'default' }}>
+				<TagItem 
+					tagColor={tag.color} 
+					onClick={()=>_onTagClick && _onTagClick(tag)}
+				>
+					<Icon style={{ marginRight: 8 }}>{tag.type.icon}</Icon>
+					<div>{tag.name}</div>
+					{
+						_onTagDeleteClick && (
+							<Cancel 
+								style={{ cursor: 'pointer', marginLeft: 8 }} 
+								onClick={(e)=>{
+									e.preventDefault()
+									e.stopPropagation()
+									_onTagDeleteClick && _onTagDeleteClick(tag)
+								}}
+							/>
+						)
+					}
+				</TagItem>
+			</TagItemWhiteBackgroundContainer>
 		)
 	}
 

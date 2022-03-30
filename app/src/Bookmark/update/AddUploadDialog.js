@@ -55,7 +55,7 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark, _
 			dialogActions={[
 				<ThemeButton
 					disabled={!uploadFiles || uploadFiles.length < 1} 
-					onClick={uploadFilesAndSaveURL}>{processing ? <CircularProgress size={20} /> : 'Upload'}</ThemeButton>
+					onClick={uploadFilesAndSaveURL}>{processing ? <CircularProgress size={24} /> : 'Upload'}</ThemeButton>
 			]}
 		>
 			{

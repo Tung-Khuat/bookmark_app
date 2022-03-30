@@ -14,8 +14,6 @@ import { useAuth } from './AuthContext'
 import { getAuth } from "firebase/auth";
 import { useNavigate } from 'react-router-dom'
 import { ThemeButton } from '../components/styledComponents/Buttons'
-import StandardInputField from '../components/inputs/StandardInputField'
-
 
 const LoginContainer = styled.div`
 	width: 100%;
@@ -153,7 +151,7 @@ function Login(props) {
 						onClick={ !processing ? handleSubmit : ()=>{}}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress /> : 'Login' } </ThemeButton>
+					> { processing ? <CircularProgress size={24} /> : 'Login' } </ThemeButton>
 
 					<StyledLink to='/reset-password'>Forgot your password?</StyledLink>
 					<div>Don't have an account? <StyledLink to='/signup'> Sign up here.</StyledLink></div>

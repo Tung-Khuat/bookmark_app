@@ -48,7 +48,7 @@ const GlobalStyles = createGlobalStyle`
 	//MUI styles 
 
 	// Inputs and TextFields
-	input, label, .Mui-focused, .MuiOutlinedInput-input, .MuiInputLabel-root  {
+	input, label, .Mui-focused, .MuiOutlinedInput-input, .MuiInputLabel-root {
 		color: ${props => props.theme.themeColors.primaryContrastA} !important;
 		&:focus {
 			color: ${props => props.theme.themeColors.primaryContrastA} !important;
@@ -67,6 +67,11 @@ const GlobalStyles = createGlobalStyle`
 
 	.Mui-focused fieldset{
 		border-color: ${props => props.theme.themeColors.highlight} !important;
+	}
+
+	// Checkbox
+	.Mui-checked{
+		color: ${props => props.theme.themeColors.highlight} !important;
 	}
 `
 export default GlobalStyles;

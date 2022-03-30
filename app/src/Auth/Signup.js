@@ -168,7 +168,7 @@ function Signup(props) {
 						onClick={ !processing && handleSubmit}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress /> : 'Sign Up' } </ThemeButton>
+					> { processing ? <CircularProgress size={24} /> : 'Sign Up' } </ThemeButton>
 
 					<div>Already signed up? <StyledLink to='/login'> Login to your existing account</StyledLink> </div>
 				</SignupActions>
