@@ -57,7 +57,7 @@ const AvatarContainer = styled.div`
 `
 const StyledIcon = styled(ThemeIcon)`
 	font-size: 36px;
-	color: ${(props) => props.theme.fixedColors.primaryContrastA};
+	color: ${(props) => props.theme.fixedColors.primaryContrastB};
 `
 
 function UserProfileFAB({loggedInUser}) {

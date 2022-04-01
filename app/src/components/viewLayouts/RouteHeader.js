@@ -7,8 +7,8 @@ const Container = styled.div`
 	padding: 8px 0 16px;
 	position: sticky;
     top: 0;
-    background: ${props => props.theme.fixedColors.secondaryContrastB};
-    color: ${props => props.theme.fixedColors.primaryContrastA};
+    background: ${props => props.theme.fixedColors.secondaryContrastA};
+    color: ${props => props.theme.fixedColors.primaryContrastB};
     z-index: 20;
 `
 const HeaderSection = styled.div`

@@ -8,8 +8,8 @@ import { StandardDialogTitle } from '../styledComponents/BasicComponents'
 const DialogTitleWithActions = styled(StandardDialogTitle)`
 	display: grid;
 	grid-template-columns: auto minmax(80px, 1fr) auto;
-	background-color:  ${(props) => props.theme.fixedColors.secondaryContrastB};
-	color: ${(props) => props.theme.fixedColors.primaryContrastA};
+	background-color:  ${(props) => props.theme.fixedColors.secondaryContrastA};
+	color: ${(props) => props.theme.fixedColors.primaryContrastB};
 	align-items: center;
 `
 const ActionContainer = styled.div`

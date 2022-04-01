@@ -22,11 +22,11 @@ const Disabled = styled(Base)`
 	color: ${(props) => props.theme.themeColors.primaryContrastA + '4c'} !important;
 	border-color: ${(props) => props.theme.themeColors.primaryContrastA + '4c'} !important;
 `
-const Raised = styled(Base)`
-	background: ${(props) => props.theme.themeColors.highlight};
-	color: ${(props) => props.theme.themeColors.primaryContrastB};
+const Contained = styled(Base)`
+	background: ${(props) => props.theme.themeColors.neutral};
+	color: ${(props) => props.theme.fixedColors.primaryContrastB};
 	&:hover {
-		background: ${(props) => props.theme.themeColors.highlight};
+		background: ${(props) => props.theme.themeColors.neutral};
 		opacity: 0.9;
 	}
 `
@@ -46,7 +46,7 @@ export const ThemeButton = (props) => {
 	}
 
 	if (props.variant === 'contained') {
-		return <Raised {...props}>{props.children}</Raised>
+		return <Contained {...props}>{props.children}</Contained>
 	}
 
 	if (props.variant === 'outlined') {

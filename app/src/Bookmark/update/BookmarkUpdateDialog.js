@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CircularProgress, IconButton, InputAdornment } from '@mui/material'
+import { CircularProgress, InputAdornment } from '@mui/material'
 import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -7,7 +7,7 @@ import * as bookmarkActions from '../../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
 import ManageUploadsAndThumbnailPanel from './ManageUploadsAndThumbnailPanel'
 import { firestoreConnect } from 'react-redux-firebase'
-import { ContentCopy, Delete, Launch } from '@mui/icons-material'
+import { Launch } from '@mui/icons-material'
 import StandardInputField from '../../components/inputs/StandardInputField'
 import BookmarkTagsEditor from '../Tags/BookmarkTagsEditor'
 import { ThemeButton } from '../../components/styledComponents/Buttons'
@@ -83,7 +83,7 @@ function BookmarkUpdateDialog (props) {
 			]}
 			rightTitleActions={[
 				<div style={{ padding: 8, cursor: 'pointer', display: 'flex', placeItems: 'center' }} onClick={onBookmarkDelete}>
-					{processing ? <CircularProgress size={24}/> : <ThemeIcon staticThemeA>delete</ThemeIcon>}
+					{processing ? <CircularProgress size={24}/> : <ThemeIcon staticThemeB>delete</ThemeIcon>}
 				</div>
 			]}
 		>

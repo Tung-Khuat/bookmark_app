@@ -85,4 +85,15 @@ export const defaultThemes = [
             highlight: "#2ca6a4",
         }),
     },
+    {
+        name: 'Default Theme 7',
+        themeColors: includeAllProperties({
+            primaryContrastA: "#202020",
+            primaryContrastB: "#E8EDDF",
+            secondaryContrastA: "#303030",
+            secondaryContrastB: "#CFDBD5",
+            neutral: "#5c5c5c",
+            highlight: "#cfaa48",
+        }),
+    },
 ]
