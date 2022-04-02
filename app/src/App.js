@@ -37,7 +37,7 @@ function App(props) {
 				linkColor: highlight,
 				primary:  primary || highlight,
 				destructive:  destructive || "#d32f2f",
-				destructive:  secondary || "#2f50d3",
+				secondary:  secondary || "#2886e3",
 			}
 			setTheme(updatedTheme)
 		}
