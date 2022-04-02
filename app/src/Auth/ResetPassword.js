@@ -120,7 +120,7 @@ function ResetPassword() {
 					<ThemeButton
 						fullWidth 
 						variant="contained" 
-						color="primary" 
+						highlight
 						onClick={ !processing && handleSubmit}
 						style={{ margin: '8px 0' }}
 						disabled={processing}

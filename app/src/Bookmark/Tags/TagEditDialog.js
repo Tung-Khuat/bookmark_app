@@ -166,7 +166,11 @@ function TagEditDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Tag Select"}
 			dialogActions={[
-				<ThemeButton onClick={onTagAddSubmit}>Update Tag List</ThemeButton>
+				<ThemeButton
+					variant="contained"
+					highlightText
+					onClick={onTagAddSubmit}
+				>Update Tag List</ThemeButton>
 			]}
 		>
 			<div>

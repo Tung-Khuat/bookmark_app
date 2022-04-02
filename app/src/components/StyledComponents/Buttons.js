@@ -3,41 +3,63 @@ import styled from 'styled-components'
 import { Button } from '@mui/material'
 
 const Base = styled(Button)`
-	color: ${(props) => props.theme.themeColors.primaryContrastA};
-	background: ${(props) => props.theme.themeColors.primaryContrastB};
+	color: ${(props) => props.color ? props.color : getThemeFontColor(props)};
+	background: ${(props) => props.bgColor ? props.bgColor : getThemeBackgroundColor(props)};
 	&:hover {
-		background: ${(props) => props.theme.themeColors.primaryContrastB};
 		opacity: 0.9;
 	}
 `
 const Transparent = styled(Base)`
-	background: transparent;
+	background: transparent !important;
+	color: ${(props) => props.color ? props.color : getThemeFontColor(props)};
 	&:hover {
-		background: ${(props) => props.theme.themeColors.primaryContrastB + 'd4'};
+		color: ${(props) => props.theme.themeColors.highlight};
 	}
 `
 const Flat = styled(Base)`
+	color: ${(props) => props.color ? props.color : getThemeFontColor(props)};
+	&:hover {
+		color: ${(props) => props.theme.themeColors.highlight};
+	}
 `
 const Disabled = styled(Base)`
 	color: ${(props) => props.theme.themeColors.primaryContrastA + '4c'} !important;
 	border-color: ${(props) => props.theme.themeColors.primaryContrastA + '4c'} !important;
 `
 const Contained = styled(Base)`
-	background: ${(props) => props.theme.themeColors.neutral};
-	color: ${(props) => props.theme.fixedColors.primaryContrastB};
+	background: ${(props) => props.bgColor ? props.bgColor : getThemeBackgroundColor(props)};
+	color: ${(props) => props.highlightText ? getThemeFontColor(props) : props.theme.fixedColors.primaryContrastB};
 	&:hover {
-		background: ${(props) => props.theme.themeColors.neutral};
-		opacity: 0.9;
+		background: ${(props) => props.theme.themeColors.highlight};
+		color: ${(props) => props.theme.fixedColors.primaryContrastB};
 	}
 `
 const Outlined = styled(Base)`
-	border: 1px solid ${(props) => props.theme.themeColors.primaryContrastA};
-	color: ${(props) => props.theme.themeColors.primaryContrastA};
+	border: 1px solid ${(props) => props.color ? props.color : getThemeFontColor(props)};
+	color: ${(props) => props.color ? props.color : getThemeFontColor(props)};
 	&:hover {
-		opacity: 0.9;
-		border: 1px solid ${(props) => props.theme.themeColors.primaryContrastA};
+		border: 1px solid ${(props) => props.color ? props.color : getThemeFontColor(props)};
 	}
 `
+const getThemeBackgroundColor = (props) => {
+	if (props.primary) return props.theme.primary
+	if (props.secondary) return props.theme.secondary
+	if (props.neutral) return props.theme.themeColors.neutral
+	if (props.highlight) return props.theme.themeColors.highlight
+	if (props.destructive) return props.theme.destructive
+
+	return props.theme.themeColors.primaryContrastB ||' #111111'
+}
+const getThemeFontColor = (props) => {
+	if (props.primary) return props.theme.primary
+	if (props.secondary) return props.theme.secondary
+	if (props.neutral) return props.theme.themeColors.primaryContrastA
+	if (props.highlightText) return props.theme.themeColors.highlight
+	if (props.highlight) return props.theme.themeColors.primaryContrastA
+	if (props.destructive) return props.theme.destructive
+
+	return props.theme.themeColors.primaryContrastA || ' #fff'
+}
 
 export const ThemeButton = (props) => {
 

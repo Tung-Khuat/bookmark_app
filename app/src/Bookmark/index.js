@@ -127,6 +127,7 @@ function Bookmark (props) {
 						style={{ marginRight: 16 }}
 						onClick={()=>setSelectMode(false)}
 						variant="contained"
+						highlight
 					>Cancel select mode</ThemeButton>
 				</SelectModePanel>
 			)

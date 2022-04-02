@@ -27,7 +27,7 @@ function App(props) {
 			if(darkMode) {
 				updatedThemeColors = reverseContrastColors(updatedThemeColors)
 			}
-			const { primaryContrastA, primaryContrastB, highlight } = updatedThemeColors
+			const { primaryContrastA, primaryContrastB, highlight, primary, secondary, destructive } = updatedThemeColors
 			const updatedTheme = {
 				...storedTheme,
 				fixedColors: storedTheme.themeColors, 
@@ -35,6 +35,9 @@ function App(props) {
 				fontColor: primaryContrastA,
 				backgroundColor: primaryContrastB,
 				linkColor: highlight,
+				primary:  primary || highlight,
+				destructive:  destructive || "#d32f2f",
+				destructive:  secondary || "#2f50d3",
 			}
 			setTheme(updatedTheme)
 		}

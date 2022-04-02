@@ -77,7 +77,11 @@ function BookmarkUpdateDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Bookmark update"}
 			dialogActions={[
-				<ThemeButton variant="contained" onClick={onBookmarkUpdate}>
+				<ThemeButton 
+					variant="contained"
+					highlightText 
+					onClick={onBookmarkUpdate}
+				>
 					{processing ? <CircularProgress style={{ color: '#fff' }} size={24} /> : 'Update'}
 				</ThemeButton>
 			]}
