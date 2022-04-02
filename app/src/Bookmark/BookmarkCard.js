@@ -21,7 +21,7 @@ const BookmarkTitle = styled.div`
 	margin-bottom: 4px;
 `
 const BookmarkCardContainer = styled(Card)`
-	background: #ffffff5c !important;
+	background: ${(props) => props.theme.themeColors.secondaryContrastB} !important;
 	margin: 0 16px 16px 0;
 	width: 320px;
 	height: ${cardHeight + 'px'};
