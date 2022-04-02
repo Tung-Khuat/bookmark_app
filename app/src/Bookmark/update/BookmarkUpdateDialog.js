@@ -78,7 +78,7 @@ function BookmarkUpdateDialog (props) {
 			dialogTitle={"Bookmark update"}
 			dialogActions={[
 				<ThemeButton 
-					variant="contained"
+					variant="raised"
 					highlightText 
 					onClick={onBookmarkUpdate}
 				>

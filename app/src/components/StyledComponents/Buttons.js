@@ -46,7 +46,7 @@ const getThemeBackgroundColor = (props) => {
 	if (props.secondary) return props.theme.secondary
 	if (props.neutral) return props.theme.themeColors.neutral
 	if (props.highlight) return props.theme.themeColors.highlight
-	if (props.destructive) return props.theme.destructive
+	if (props.destructive) return props.variant === "raised" ? props.theme.destructive : 'transparent'
 
 	return props.theme.themeColors.primaryContrastB ||' #111111'
 }
@@ -56,7 +56,7 @@ const getThemeFontColor = (props) => {
 	if (props.neutral) return props.theme.themeColors.primaryContrastA
 	if (props.highlightText) return props.theme.themeColors.highlight
 	if (props.highlight) return props.theme.themeColors.primaryContrastA
-	if (props.destructive) return props.theme.destructive
+	if (props.destructive) return props.variant === "raised" ? ' #fff' : props.theme.destructive
 
 	return props.theme.themeColors.primaryContrastA || ' #fff'
 }
@@ -67,11 +67,11 @@ export const ThemeButton = (props) => {
 		return <Disabled {...props}>{props.children}</Disabled>
 	}
 
-	if (props.variant === 'contained') {
+	if (props.variant === "raised") {
 		return <Contained {...props}>{props.children}</Contained>
 	}
 
-	if (props.variant === 'outlined') {
+	if (props.variant === "outlined") {
 		return <Outlined {...props}>{props.children}</Outlined>
 	}
 
@@ -79,5 +79,5 @@ export const ThemeButton = (props) => {
 		return <Transparent {...props}>{props.children}</Transparent>
 	}
 
-	return <Flat {...props}>{props.children}</Flat>
+	return <Outlined {...props}>{props.children}</Outlined>
 }

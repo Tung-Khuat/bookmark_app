@@ -111,8 +111,8 @@ function Bookmark (props) {
 						<div>
 							<ThemeButton
 								disabled={!selectedBookmarkUUIDs.length || processing}
-								variant='outlined' 
-								color='error' 
+								variant="raised"
+								primary 
 								onClick={handleDeleteSelected}>{processing ? <CircularProgress size={24} /> : (<><Delete />  Delete selected</>)} </ThemeButton>
 						</div>
 						<div style={{ marginRight: 16 }}>
@@ -126,7 +126,7 @@ function Bookmark (props) {
 					<ThemeButton 
 						style={{ marginRight: 16 }}
 						onClick={()=>setSelectMode(false)}
-						variant="contained"
+						variant="raised"
 						highlight
 					>Cancel select mode</ThemeButton>
 				</SelectModePanel>

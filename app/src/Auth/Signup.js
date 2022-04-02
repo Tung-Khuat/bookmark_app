@@ -163,7 +163,7 @@ function Signup(props) {
 					}
 					<ThemeButton
 						fullWidth 
-						variant="contained" 
+						variant="raised" 
 						highlight 
 						onClick={ !processing && handleSubmit}
 						style={{ margin: '8px 0' }}
