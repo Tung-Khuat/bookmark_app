@@ -112,7 +112,7 @@ function Bookmark (props) {
 							<ThemeButton
 								disabled={!selectedBookmarkUUIDs.length || processing}
 								variant="raised"
-								primary 
+								destructive 
 								onClick={handleDeleteSelected}>{processing ? <CircularProgress size={24} /> : (<><Delete />  Delete selected</>)} </ThemeButton>
 						</div>
 						<div style={{ marginRight: 16 }}>
