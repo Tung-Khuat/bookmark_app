@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components'
 import { DialogTitle } from '@mui/material'
 import { Link } from 'react-router-dom'
+import StandardInputField from '../inputs/StandardInputField'
 
 export const StandardDialogTitle = styled(DialogTitle)`
 	background-color: ${(props) => props.theme.primary};
@@ -31,7 +32,7 @@ export const StandardDialogContent = styled.section`
 `
 export const StandardTitle = styled.p`
 	font-size: 2em;
-	color: ${(props) => props.color ? props.color : props.theme.darkest};
+	color: ${(props) => props.color ? props.color : props.theme.themeColors.primaryContrastB};
 	margin-bottom: 16px;
 `
 export const StandardLabel = styled.p`
@@ -40,15 +41,25 @@ export const StandardLabel = styled.p`
 `
 export const Subtext = styled.span`
 	font-size: 0.7em;
-	color: rgba(0,0,0,0.5);
+	color: ${(props) => props.color ? props.color : props.theme.themeColors.primaryContrastB} + '4c';
 `
 export const StyledAnchor = styled.a`
 	cursor: pointer;
-	color: ${(props) => props.theme.primary || '#1976d2'};
+	color: ${(props) => props.theme.linkColor};
 `
 export const StyledLink = styled(Link)`
 	cursor: pointer;
-	color: ${(props) => props.theme.primary || '#1976d2'};
+	color: ${(props) => props.theme.linkColor};
+`
+export const LoginStyleInputField = styled(StandardInputField)`
+	margin: 0;
+	color: rgba(0, 0, 0, 0.87) !important;
+	input, label {
+		color: rgba(0, 0, 0, 0.87) !important;
+		&:focus {
+			color: rgba(0, 0, 0, 0.87) !important;
+		}
+	}
 `
 const slideIn = keyframes`
 	from {

@@ -9,8 +9,8 @@ const DropzoneContainer = styled.div`
 	width: 100%;
 	height: 200px;
 	border-radius: 8px;
-	background-color: #fafafa;
-	border: 2px dashed #dbdbdb; 
+	background-color: ${(props) => props.theme.themeColors.primaryContrastB + '4c'};
+	border: 2px dashed ${(props) => props.theme.themeColors.primaryContrastA + '4c'}; 
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -18,7 +18,7 @@ const DropzoneContainer = styled.div`
 `
 const InstructionText = styled.p`
 	font-size: 1.5em;
-	color: #adacac;
+	color: ${(props) => props.theme.themeColors.primaryContrastA + '4c'};
 `
 const PreviewsContainer = styled.div`
 	display: flex;
@@ -29,7 +29,7 @@ const PreviewsContainer = styled.div`
 const PreviewOuter = styled.div`
 	display: inline-flex;
 	border-radius: 8px;
-	border: 1px solid #eaeaea;
+	border: 1px solid ${(props) => props.theme.themeColors.primaryContrastA + '4c'};
 	margin-bottom: 8px;
 	margin-right: 8px;
 	width: 175px;
@@ -147,7 +147,11 @@ function ImageDropzone({_callbackOnDrop}) {
 					)
 				}
 			</DropzoneContainer>
-			<PreviewsContainer>{filePreviews.map(renderPreview)}</PreviewsContainer>
+			{
+				filePreviews && filePreviews.length > 0 && (
+					<PreviewsContainer>{filePreviews.map(renderPreview)}</PreviewsContainer>
+				)
+			}
 		</div>
 	)
 }

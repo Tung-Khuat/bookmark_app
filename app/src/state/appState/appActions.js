@@ -16,3 +16,13 @@ export const clearCacheDirectoryPath = () => ({
 	type: 'CLEAR_CACHE_DIRECTORY_PATH',
 })
 
+export const setAppTheme = (theme) => ({
+	type: 'SET_APP_THEME',
+	theme,
+})
+
+export const toggleDarkMode = () => ({
+	type: 'TOGGLE_DARK_MODE',
+})
+
+

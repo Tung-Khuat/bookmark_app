@@ -7,6 +7,7 @@ import { useAuth } from '../auth/AuthContext'
 import StandardDialog from '../components/dialogs/StandardDialog'
 import { StyledAnchor } from '../components/styledComponents/BasicComponents'
 import * as authActions from '../state/firebaseActions/auth-actions'
+import ThemeControlPanel from '../themes/ThemeControlPanel'
 
 
 function UserPersonalizedSettingsDialog (props) {
@@ -29,7 +30,8 @@ function UserPersonalizedSettingsDialog (props) {
 			dialogSize={"small"}
 			open={open}
 			_setOpen={_setOpen}
-		>
+		>	
+			<ThemeControlPanel />
 			<StyledAnchor onClick={handleLogout}>Logout</StyledAnchor>
 		</StandardDialog>
 	)

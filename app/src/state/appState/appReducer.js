@@ -1,12 +1,22 @@
+import { defaultThemes } from "../../themes/defaultThemes"
+
 const maxDirectoryCache = 7
 
-const initialState = {
+export const initialState = {
+    theme: defaultThemes[0],
+    darkMode: true,
     directoriesCached: [],
     directoryPathCached: ''
 }
 
 export default function appReducer(state = initialState, action) {
     switch (action.type) {
+        case 'SET_APP_THEME':
+            return { ...state, theme: action.theme }
+
+        case 'TOGGLE_DARK_MODE':
+            return { ...state, darkMode: !state.darkMode }
+
         case 'CACHE_DIRECTORY':
             const updated = [...state.directoriesCached, action.directory]
         

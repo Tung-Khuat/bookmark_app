@@ -5,15 +5,15 @@ import { compose, bindActionCreators } from 'redux'
 
 import * as appActions from '../state/appState/authState/auth-app-actions'
 
-import { Card, CardActions, Button, TextField, CircularProgress } from '@material-ui/core'
+import { Card, CardActions, CircularProgress } from '@material-ui/core'
 import { AccountCircle, Lock } from '@mui/icons-material'
 import HelperTextField from '../components/HelperTextField'
-import { StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
+import { LoginStyleInputField, StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import { useAuth } from './AuthContext'
 import { getAuth } from "firebase/auth";
 import { useNavigate } from 'react-router-dom'
-
+import { ThemeButton } from '../components/styledComponents/Buttons'
 
 const LoginContainer = styled.div`
 	width: 100%;
@@ -87,7 +87,7 @@ function Login(props) {
 				{
 					icon ? icon : <div/>
 				}
-				<TextField  
+				<LoginStyleInputField 
 					label={label}
 					value={value} 
 					onChange={(e) => _onChange(e.target.value)}
@@ -137,21 +137,21 @@ function Login(props) {
 		<LoginContainer>
 			<LoginCard>
 
-				<StandardTitle style={{ width: '100%', textAlign: 'center' }}>Login</StandardTitle>
+				<StandardTitle color={'rgba(0, 0, 0, 0.87)'} style={{ width: '100%', textAlign: 'center' }}>Login</StandardTitle>
 				{ inputFields.map(renderInputField) }
 
 				<LoginActions>
 					{ 
 						helperText && <HelperTextField helperText={helperText} type={'error'} />								
 					}
-					<Button 
+					<ThemeButton 
 						fullWidth 
-						variant="contained" 
-						color="primary" 
+						variant="raised" 
+						highlight 
 						onClick={ !processing ? handleSubmit : ()=>{}}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress /> : 'Login' } </Button>
+					> { processing ? <CircularProgress size={24} /> : 'Login' } </ThemeButton>
 
 					<StyledLink to='/reset-password'>Forgot your password?</StyledLink>
 					<div>Don't have an account? <StyledLink to='/signup'> Sign up here.</StyledLink></div>

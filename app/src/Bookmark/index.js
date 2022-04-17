@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { firestoreConnect } from 'react-redux-firebase'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import { Button, Checkbox, CircularProgress, Fab } from '@mui/material'
+import { Checkbox, CircularProgress, Fab } from '@mui/material'
 import { Add, CreateNewFolder, Delete, Lock } from '@mui/icons-material'
 import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
@@ -15,6 +15,7 @@ import Directory from './Directory'
 import WithRouterHooks  from '../components/HOC/WithRouterHooks'
 import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 import BookmarkCard from './BookmarkCard'
+import { ThemeButton } from '../components/styledComponents/Buttons'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -43,10 +44,31 @@ const SelectModeLeftContainer = styled.div`
 `
 const PathLink = styled.span`
 	cursor: pointer;
-  	color: ${(props) => props.theme.primary || '#1976d2'};
+  	color: ${(props) => props.theme.themeColors.highlight};
 `
 const UnderlineText = styled.span`
 	text-decoration: underline;
+`
+const ThemeCheckbox = styled(Checkbox)`
+	color: ${(props) => props.theme.themeColors.primaryContrastA};
+`
+const ThemeFab = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	width: 48px;
+	height: 48px;
+	position: fixed;
+    bottom: 34px;
+    right: 34px;
+	border-radius: 50%;
+	box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%), 0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%);
+	background-color: ${(props) => props.theme.themeColors.highlight};
+	color: ${(props) => props.theme.fixedColors.primaryContrastB};
+	&:hover {
+		opacity: 0.9;
+	}
 `
 
 function Bookmark (props) {
@@ -87,47 +109,48 @@ function Bookmark (props) {
 				<SelectModePanel>
 					<SelectModeLeftContainer>
 						<div>
-							<Button 
+							<ThemeButton
 								disabled={!selectedBookmarkUUIDs.length || processing}
-								variant='outlined' 
-								color='error' 
-								onClick={handleDeleteSelected}>{processing ? <CircularProgress size={20} /> : (<><Delete />  Delete selected</>)} </Button>
+								variant="raised"
+								destructive 
+								onClick={handleDeleteSelected}>{processing ? <CircularProgress size={24} /> : (<><Delete />  Delete selected</>)} </ThemeButton>
 						</div>
 						<div style={{ marginRight: 16 }}>
-							<Checkbox 
+							<ThemeCheckbox 
 								checked={Boolean(selectedBookmarkUUIDs.length === bookmarks.length)}
 								onClick={() => setSelectedBookmarkUUIDs(selectedBookmarkUUIDs.length === bookmarks.length ? [] : allBookmarkUUIDs)} 
 							/> Select All
 						</div>
 						<div>{`${selectedBookmarkUUIDs?.length} selected`}</div>
 					</SelectModeLeftContainer>
-					<Button 
+					<ThemeButton 
 						style={{ marginRight: 16 }}
 						onClick={()=>setSelectMode(false)}
-						variant="contained"
-					>Cancel select mode</Button>
+						variant="raised"
+						highlight
+					>Cancel select mode</ThemeButton>
 				</SelectModePanel>
 			)
 		}
 		return (
 			<SelectModePanel>
 				<div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
-					<Button 
+					<ThemeButton 
 						style={{ marginLeft: 32 }} 
 						onClick={()=>setCreateDirectoryDialogVisible(true)} 
 						variant="outlined"
 					>
 						<CreateNewFolder style={{ marginRight: 8 }} /> New Folder
-					</Button>
+					</ThemeButton>
 				</div>
 				<SelectModeLeftContainer>
 					<div>{`${bookmarks.length} bookmarks`}</div>
 				</SelectModeLeftContainer>
-				<Button 
-					style={{ marginRight: 16 }}
+				<ThemeButton 
+					style={{ marginRight: 32 }}
 					onClick={()=>setSelectMode(true)}
 					variant="outlined"
-				>Select mode</Button>
+				>Select mode</ThemeButton>
 			</SelectModePanel>
 		)
 	}
@@ -198,27 +221,28 @@ function Bookmark (props) {
 				renderSelectModePanel()
 			}
 			<Directory currentDirectory={currentDirectory} />
-			<BookmarksContainer>
-				{bookmarks 
-					? bookmarks.map((bookmark)=>(
-						<div key={bookmark.uuid}>
-							<BookmarkCard 
-								bookmark={bookmark} 
-								selectedBookmarkUUIDs={selectedBookmarkUUIDs}
-								_setSelectedBookmarkUUIDs={setSelectedBookmarkUUIDs} 
-								selectMode={selectMode} 
-							/>
-						</div>
-					)) 
-					: <div>No Bookmarks found</div> }
-			</BookmarksContainer>
-			<Fab 
-				size="medium" color="primary" aria-label="add"
-				style={{ position: 'fixed', bottom: 34, right: 34 }}
+			<div style={{ paddingInline: 24 }}>
+				<BookmarksContainer>
+					{bookmarks 
+						? bookmarks.map((bookmark)=>(
+							<div key={bookmark.uuid}>
+								<BookmarkCard 
+									bookmark={bookmark} 
+									selectedBookmarkUUIDs={selectedBookmarkUUIDs}
+									_setSelectedBookmarkUUIDs={setSelectedBookmarkUUIDs} 
+									selectMode={selectMode} 
+								/>
+							</div>
+						)) 
+						: <div>No Bookmarks found</div> }
+				</BookmarksContainer>
+			</div>
+			<ThemeFab 
+				size="medium" aria-label="add"
 				onClick={()=>setCreateBookmarkDialogVisible(true)}	
 			>
 				<Add />
-			</Fab>
+			</ThemeFab>
 
 			<BookmarkCreateDialog visible={createBookmarkDialogVisible} _setVisible={setCreateBookmarkDialogVisible} />
 			{

@@ -8,7 +8,6 @@ import { createFirestoreInstance } from 'redux-firestore'
 import firebase from 'firebase/compat/app'
 import { SnackbarProvider } from 'notistack';
 import { StyledEngineProvider } from '@mui/material/styles';
-import GlobalStyles from './components/styledComponents/GlobalStyles'
 import AuthProvider from './auth/AuthContext'
 
 const rrfProps = {
@@ -29,7 +28,6 @@ ReactDOM.render(
 			<ReactReduxFirebaseProvider {...rrfProps}>
 				<StyledEngineProvider injectFirst>					
 					<SnackbarProvider maxSnack={3}>
-						<GlobalStyles />
 							<AuthProvider>
 								<App />
 							</AuthProvider> 

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Button, FormControl, Icon, InputAdornment, InputLabel, MenuItem, Select } from '@mui/material'
+import { FormControl, Icon, InputAdornment, InputLabel, MenuItem, Select } from '@mui/material'
 import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
 import * as bookmarkActions from '../../state/firebaseActions/bookmark-actions'
 import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
-import { Tag } from '@mui/icons-material'
 import { v4 as uuid } from 'uuid'
 import StandardInputField from '../../components/inputs/StandardInputField'
-import TagListDisplay, { TagItem } from './TagListDisplay'
+import TagListDisplay, { TagItem, TagItemWhiteBackgroundContainer } from './TagListDisplay'
+import { ThemeButton } from '../../components/styledComponents/Buttons'
+import { ThemeIcon } from '../../components/styledComponents/Icons'
 
 const maxTagNameLength = 30
 const presetColors = ["#3f62b5", "#579a4a", "#a72c4e", "#ff951b", "#292929"]
@@ -165,7 +166,11 @@ function TagEditDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Tag Select"}
 			dialogActions={[
-				<Button onClick={onTagAddSubmit}>Update Tag List</Button>
+				<ThemeButton
+					variant="raised"
+					highlightText
+					onClick={onTagAddSubmit}
+				>Update Tag List</ThemeButton>
 			]}
 		>
 			<div>
@@ -212,7 +217,7 @@ function TagEditDialog (props) {
 							InputProps={{
 								startAdornment: (
 									<InputAdornment position="start">
-										<Tag />
+										<ThemeIcon >tag</ThemeIcon>
 									</InputAdornment>
 								),
 							}} 
@@ -227,19 +232,21 @@ function TagEditDialog (props) {
 						</div>
 					</LeftSideTagCreate>
 					<RightSideTagCreate>
-						<TagItem tagColor={newTag.color}>
-							<Icon style={{ marginRight: 8 }}>{newTag.type.icon}</Icon>
-							{newTag.name || 'Placeholder'}
-						</TagItem>
+						<TagItemWhiteBackgroundContainer>
+							<TagItem tagColor={newTag.color}>
+								<Icon style={{ marginRight: 8 }}>{newTag.type.icon}</Icon>
+								{newTag.name || 'Placeholder'}
+							</TagItem>
+						</TagItemWhiteBackgroundContainer>
 					</RightSideTagCreate>
 				</NewTagCreateContainer>
 				
-				<Button 
+				<ThemeButton 
 					disabled={!newTag.name} 
 					variant="outlined"
 					style={{ margin: '16px 0', width: '100%' }}
 					onClick={onTagCreate}
-				>Add New Tag</Button>
+				>Add New Tag</ThemeButton>
 			</div>
 			<TagListDisplay 
 				tags={unselectedTags} 

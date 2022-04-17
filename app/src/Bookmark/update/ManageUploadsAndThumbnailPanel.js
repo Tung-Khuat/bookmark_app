@@ -20,10 +20,12 @@ const Preview = styled.div`
 	width: 75px;
 	height: 45px;
 	background: url(${({url}) => url});
-	border: 3px solid transparent;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
+`
+const PreviewBorder = styled.div`
+	border: 3px solid ${(props) => props.highlighted ? props.theme.themeColors.highlight : 'transparent'};
 `
 const SpotlightContainer = styled.div`
 	width: 100%;
@@ -49,10 +51,10 @@ const SpotlightActions = styled.div`
 `
 const ActionButton = styled(IconButton)`
 	background-color: rgb(0 0 0 / 40%);
-	color: ${({coloredIcon}) => coloredIcon ? "#1776d1" : "#fff"} !important;
+	color: ${(props) => props.coloredIcon ? props.theme.themeColors.highlight : "#fff"} !important;
 	margin-right: 8px;
 	&:hover {
-		background-color: #1776d1;
+		background-color: ${(props) => props.theme.themeColors.highlight};
 	}
 `
 const AddUploadButton = styled.div`
@@ -64,8 +66,13 @@ const AddUploadButton = styled.div`
 	place-items: center;
 	opacity: 0.5;
 	&:hover {
-		color: #1776d1;
+		color: ${(props) => props.theme.themeColors.highlight};
 		opacity: 1;
+	}
+`
+const ThemeBadge = styled(Badge)`
+	span {
+		background-color: ${(props) => props.isColored ? props.theme.themeColors.highlight : 'transparent'};
 	}
 `
 
@@ -78,17 +85,18 @@ function ManageUploadsAndThumbnailPanel ({uploadLinks, bookmarkThumbnail, _updat
 		const { url } = preview
 		const isBookmarkThumbnail = url === bookmarkThumbnail.url
 		return (
-			<Badge 
-				badgeContent={isBookmarkThumbnail && <Photo style={{ fontSize: '1em', color: "fff" }} />}
-				color={isBookmarkThumbnail ? "primary" : undefined}
+			<ThemeBadge 
 				key={index}
+				badgeContent={isBookmarkThumbnail && <Photo style={{ fontSize: '1em', color: "fff" }} />}
+				isColored={isBookmarkThumbnail}
 			>
-				<Preview 
-					url={url} 
-					onClick={()=>setCurrentSpotlight(preview)} 
-					style={{ borderColor: url === currentSpotlight?.url ? '#1776d1' : 'transparent'}}
-				/>
-			</Badge>
+				<PreviewBorder highlighted={url === currentSpotlight?.url}>
+					<Preview 
+						url={url} 
+						onClick={()=>setCurrentSpotlight(preview)} 
+					/>
+				</PreviewBorder>
+			</ThemeBadge>
 		)
 	}
 
