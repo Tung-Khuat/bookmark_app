@@ -13,7 +13,8 @@ const DropzoneLoadingPlaceholder = styled.div`
 	width: 100%;
 	height: 200px;
 	border-radius: 8px;
-	background-color: #fafafa;
+	background-color: ${(props) => props.theme.themeColors.primaryContrastB + '4c'};
+	border: 2px dashed ${(props) => props.theme.themeColors.primaryContrastA + '4c'}; 
 	border: 2px dashed #dbdbdb; 
 	display: flex;
 	justify-content: center;
