@@ -113,7 +113,8 @@ export const _upload = ({bookmarkUUID, file}) =>
 		}
 
 		try {
-			const storageRef = ref(storage, `bookmark-uploads/${bookmarkUUID}/${file.name}`)
+			const renamedFile = getSanitizedNameFile(file)
+			const storageRef = ref(storage, `bookmark-uploads/${bookmarkUUID}/${renamedFile.name}`)
 			// Create the file metadata
 			const metadata = {
 				customMetadata: {
@@ -122,7 +123,6 @@ export const _upload = ({bookmarkUUID, file}) =>
 			}
 
 			const operation = new Promise((resolve, reject) => {
-				const renamedFile = getSanitizedNameFile(file)
 				const uploadTask = uploadBytesResumable(storageRef, renamedFile, metadata)
 
 				const progressFunc = (snapshot) => {
