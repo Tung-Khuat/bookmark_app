@@ -1,4 +1,3 @@
-import { CircularProgress } from '@mui/material'
 import styled from 'styled-components'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
@@ -8,6 +7,7 @@ import { useSnackbar } from 'notistack'
 import ImageDropzone from '../../components/ImageDropzone'
 import * as bookmarkActions from '../../state/firebaseActions/bookmark-actions'
 import { ThemeButton } from '../../components/styledComponents/Buttons'
+import { ThemedCircularProgress } from '../../components/styledComponents/BasicComponents'
 
 const DropzoneLoadingPlaceholder = styled.div`
 	width: 100%;
@@ -58,13 +58,13 @@ function AddUploadDialog({visible, _setVisible, bookmarkUUID, _updateBookmark, _
 					variant="raised"
 					highlightText 
 					disabled={!uploadFiles || uploadFiles.length < 1} 
-					onClick={uploadFilesAndSaveURL}>{processing ? <CircularProgress size={24} /> : 'Upload'}</ThemeButton>
+					onClick={uploadFilesAndSaveURL}>{processing ? <ThemedCircularProgress size={24} /> : 'Upload'}</ThemeButton>
 			]}
 		>
 			{
 				processing ? (
 					<DropzoneLoadingPlaceholder>
-						<CircularProgress />
+						<ThemedCircularProgress />
 					</DropzoneLoadingPlaceholder>
 				) : (
 					<ImageDropzone _callbackOnDrop={(files) => setUploadFiles(files)} />

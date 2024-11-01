@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { bindActionCreators, compose } from 'redux'
-import { Card, CardActions, CircularProgress } from '@material-ui/core'
+import { Card, CardActions } from '@material-ui/core'
 import { AccountCircle, Lock } from '@mui/icons-material'
-import { LoginStyleInputField, StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
+import { LoginStyleInputField, StandardTitle, StyledLink, ThemedCircularProgress } from '../components/styledComponents/BasicComponents'
 
 import * as authActions from '../state/firebaseActions/auth-actions'
 import * as appActions from '../state/appState/authState/auth-app-actions'
@@ -168,7 +168,7 @@ function Signup(props) {
 						onClick={ !processing && handleSubmit}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress size={24} /> : 'Sign Up' } </ThemeButton>
+					> { processing ? <ThemedCircularProgress size={24} /> : 'Sign Up' } </ThemeButton>
 
 					<div>Already signed up? <StyledLink to='/login'> Login to your existing account</StyledLink> </div>
 				</SignupActions>

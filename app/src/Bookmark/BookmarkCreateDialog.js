@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { CircularProgress } from '@mui/material'
 import StandardDialog from '../components/dialogs/StandardDialog'
 import ImageDropzone from '../components/ImageDropzone'
 import { bindActionCreators, compose } from 'redux'
@@ -11,6 +10,7 @@ import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 import StandardInputField from '../components/inputs/StandardInputField'
 import BookmarkTagsEditor from './Tags/BookmarkTagsEditor'
 import { ThemeButton } from '../components/styledComponents/Buttons'
+import { ThemedCircularProgress } from '../components/styledComponents/BasicComponents'
 
 const DropzoneLoadingPlaceholder = styled.div`
 	width: 100%;
@@ -90,7 +90,7 @@ function BookmarkCreateDialog (props) {
 					variant="raised"
 					highlightText
 					onClick={onBookmarkCreate}
-			>{processing ? <CircularProgress style={{ color: '#fff' }} size={24} /> : 'Create'}</ThemeButton>
+			>{processing ? <ThemedCircularProgress size={24} /> : 'Create'}</ThemeButton>
 			]}
 		>
 			<StandardInputField
@@ -115,7 +115,7 @@ function BookmarkCreateDialog (props) {
 			{
 				uploading ? (
 					<DropzoneLoadingPlaceholder>
-						<CircularProgress />
+						<ThemedCircularProgress />
 					</DropzoneLoadingPlaceholder>
 				) : (
 					<ImageDropzone _callbackOnDrop={(files) => setUploadFiles(files)} />
