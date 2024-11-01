@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CircularProgress, InputAdornment } from '@mui/material'
+import { InputAdornment } from '@mui/material'
 import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -12,6 +12,7 @@ import StandardInputField from '../../components/inputs/StandardInputField'
 import BookmarkTagsEditor from '../Tags/BookmarkTagsEditor'
 import { ThemeButton } from '../../components/styledComponents/Buttons'
 import { ThemeIcon } from '../../components/styledComponents/Icons'
+import { ThemedCircularProgress } from '../../components/styledComponents/BasicComponents'
 
 function BookmarkUpdateDialog (props) {
 	const { visible, bookmarkUUID, ordered, _setVisible, _updateBookmark, _deleteBookmark } = props
@@ -82,12 +83,12 @@ function BookmarkUpdateDialog (props) {
 					highlightText 
 					onClick={onBookmarkUpdate}
 				>
-					{processing ? <CircularProgress style={{ color: '#fff' }} size={24} /> : 'Update'}
+					{processing ? <ThemedCircularProgress size={24} /> : 'Update'}
 				</ThemeButton>
 			]}
 			rightTitleActions={[
 				<div style={{ padding: 8, cursor: 'pointer', display: 'flex', placeItems: 'center' }} onClick={onBookmarkDelete}>
-					{processing ? <CircularProgress size={24}/> : <ThemeIcon staticThemeB>delete</ThemeIcon>}
+					{processing ? <ThemedCircularProgress size={24}/> : <ThemeIcon staticThemeB>delete</ThemeIcon>}
 				</div>
 			]}
 		>

@@ -5,10 +5,10 @@ import { compose, bindActionCreators } from 'redux'
 
 import * as appActions from '../state/appState/authState/auth-app-actions'
 
-import { Card, CardActions, CircularProgress } from '@material-ui/core'
+import { Card, CardActions } from '@material-ui/core'
 import { AccountCircle, Lock } from '@mui/icons-material'
 import HelperTextField from '../components/HelperTextField'
-import { LoginStyleInputField, StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
+import { LoginStyleInputField, StandardTitle, StyledLink, ThemedCircularProgress } from '../components/styledComponents/BasicComponents'
 import WithLoggedInUser from '../components/HOC/auth/WithLoggedInUser'
 import { useAuth } from './AuthContext'
 import { getAuth } from "firebase/auth";
@@ -151,7 +151,7 @@ function Login(props) {
 						onClick={ !processing ? handleSubmit : ()=>{}}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress size={24} /> : 'Login' } </ThemeButton>
+					> { true ? <ThemedCircularProgress size={24} /> : 'Login' } </ThemeButton>
 
 					<StyledLink to='/reset-password'>Forgot your password?</StyledLink>
 					<div>Don't have an account? <StyledLink to='/signup'> Sign up here.</StyledLink></div>

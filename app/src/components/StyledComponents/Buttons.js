@@ -25,7 +25,7 @@ const Flat = styled(Base)`
 const Disabled = styled(Base)`
 	color: ${(props) => props.theme.themeColors.primaryContrastA + '4c'} !important;
 	border-color: ${(props) => props.theme.themeColors.primaryContrastA + '4c'} !important;
-`
+	`
 const Contained = styled(Base)`
 	background: ${(props) => props.bgColor ? props.bgColor : getThemeBackgroundColor(props)};
 	color: ${(props) => props.highlightText ? getThemeFontColor(props) : props.theme.fixedColors.primaryContrastB};
@@ -41,7 +41,8 @@ const Outlined = styled(Base)`
 		border: 1px solid ${(props) => props.color ? props.color : getThemeFontColor(props)};
 	}
 `
-const getThemeBackgroundColor = (props) => {
+
+export const getThemeBackgroundColor = (props) => {
 	if (props.primary) return props.theme.primary
 	if (props.secondary) return props.theme.secondary
 	if (props.neutral) return props.theme.themeColors.neutral
@@ -50,7 +51,7 @@ const getThemeBackgroundColor = (props) => {
 
 	return props.theme.themeColors.primaryContrastB ||' #111111'
 }
-const getThemeFontColor = (props) => {
+export const getThemeFontColor = (props) => {
 	if (props.primary) return props.theme.primary
 	if (props.secondary) return props.theme.secondary
 	if (props.neutral) return props.theme.themeColors.primaryContrastA

@@ -3,10 +3,10 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 
-import { Card, CardActions, CircularProgress } from '@mui/material'
+import { Card, CardActions } from '@mui/material'
 import { useAuth } from './AuthContext'
 import HelperTextField from '../components/HelperTextField'
-import { LoginStyleInputField, StandardTitle, StyledLink } from '../components/styledComponents/BasicComponents'
+import { LoginStyleInputField, StandardTitle, StyledLink, ThemedCircularProgress } from '../components/styledComponents/BasicComponents'
 import { AccountCircle } from '@mui/icons-material'
 import { ThemeButton } from '../components/styledComponents/Buttons'
 
@@ -124,7 +124,7 @@ function ResetPassword() {
 						onClick={ !processing && handleSubmit}
 						style={{ margin: '8px 0' }}
 						disabled={processing}
-					> { processing ? <CircularProgress /> : 'Reset Password' } </ThemeButton>
+					> { processing ? <ThemedCircularProgress /> : 'Reset Password' } </ThemeButton>
 
 					<StyledLink to='/login'> Back to login.</StyledLink>
 				</ResetPasswordActions>

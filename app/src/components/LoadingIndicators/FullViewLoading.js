@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { CircularProgress } from '@material-ui/core'
+import { ThemedCircularProgress } from '../styledComponents/BasicComponents'
 
 const LoadingContainer = styled.div`
 	width: 100vw;
@@ -13,7 +13,7 @@ const LoadingContainer = styled.div`
 export default function FullViewLoading() {
 	return (
 		<LoadingContainer>
-			<CircularProgress />
+			<ThemedCircularProgress />
 		</LoadingContainer>
 	)
 }

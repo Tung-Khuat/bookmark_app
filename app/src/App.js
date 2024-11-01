@@ -6,8 +6,6 @@ import {
 	Routes,
 	Route,
 } from "react-router-dom";
-import { ConnectedRouter } from 'connected-react-router'
-import { history } from './state/store'
 import routes from './routes'
 import FullViewLoading from './components/loadingIndicators/FullViewLoading'
 import UserProfileFAB from './components/viewLayouts/UserProfileFAB'
@@ -54,7 +52,7 @@ function App(props) {
 	}
 
 	// Routing
-	const createRouteElement = (route) => {
+	const createRoute = (route) => {
 		const routeProps = {
 			key: route.path,
 			exact: route.exact,
@@ -62,13 +60,18 @@ function App(props) {
 			element: route.component,
 		}
 
-		if(!route.public){
-			return <Route {...routeProps} element={<PrivateRoute element={route.component} />}/>
-		}
-		
 		return <Route {...routeProps} />
 	}
-	const routeElements = routes.map(createRouteElement)
+	const createPrivateRoutes = (routes) => {
+		return (
+			<Route element={<PrivateRoute />}>
+				{routes.map(createRoute)}
+          	</Route>
+		)
+
+	}
+	const publicRoutes = routes.filter((route)=> route.public)
+	const privateRoutes = routes.filter((route)=> !route.public)
 
 	const renderRoute = () => {
 		return (
@@ -79,7 +82,8 @@ function App(props) {
 					)
 				}
 				<Routes>
-					{routeElements}
+					{publicRoutes.map(createRoute)}
+					{createPrivateRoutes(privateRoutes)}
 				</Routes>
 			</>
 		)
@@ -93,11 +97,9 @@ function App(props) {
 		<Suspense fallback={<FullViewLoading />}>
 			<ThemeProvider theme={theme}>
 				<GlobalStyles theme={theme} />
-				<ConnectedRouter history={history}>
 					<Router>
-							{renderRoute()}
+						{renderRoute()}
 					</Router>
-				</ConnectedRouter>
 			</ThemeProvider>
 		</Suspense>
 	)

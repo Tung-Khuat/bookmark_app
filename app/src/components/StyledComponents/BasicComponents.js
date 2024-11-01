@@ -2,6 +2,8 @@ import styled, { keyframes } from 'styled-components'
 import { DialogTitle } from '@mui/material'
 import { Link } from 'react-router-dom'
 import StandardInputField from '../inputs/StandardInputField'
+import { CircularProgress } from '@mui/material'
+import { getThemeFontColor } from './Buttons'
 
 export const StandardDialogTitle = styled(DialogTitle)`
 	background-color: ${(props) => props.theme.primary};
@@ -60,6 +62,9 @@ export const LoginStyleInputField = styled(StandardInputField)`
 			color: rgba(0, 0, 0, 0.87) !important;
 		}
 	}
+`
+export const ThemedCircularProgress = styled(CircularProgress)`
+	color: ${(props) => props.highlightText ? getThemeFontColor(props) : props.theme.fixedColors?.primaryContrastB};
 `
 const slideIn = keyframes`
 	from {

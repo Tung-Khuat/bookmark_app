@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { CircularProgress } from '@mui/material'
 import StandardDialog from '../../components/dialogs/StandardDialog'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
@@ -8,6 +7,7 @@ import { useSnackbar } from 'notistack'
 import WithDirectoryParentUUID from '../../components/HOC/WithDirectoryParentUUID'
 import StandardInputField from '../../components/inputs/StandardInputField'
 import { ThemeButton } from '../../components/styledComponents/Buttons'
+import { ThemedCircularProgress } from '../../components/styledComponents/BasicComponents'
 
 const initialDirectoryState =  {
 	name: "",
@@ -49,7 +49,7 @@ function DirectoryCreateDialog (props) {
 			_setOpen={_setVisible}
 			dialogTitle={"Directory create"}
 			dialogActions={[
-				<ThemeButton variant="raised" onClick={onDirectoryCreate}>{processing ? <CircularProgress style={{ color: '#fff' }} size={24} /> : 'Create'}</ThemeButton>
+				<ThemeButton variant="raised" onClick={onDirectoryCreate}>{processing ? <ThemedCircularProgress size={24} /> : 'Create'}</ThemeButton>
 			]}
 		>
 			<StandardInputField

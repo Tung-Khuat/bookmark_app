@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { isLoaded } from 'react-redux-firebase'
-import { CircularProgress } from '@mui/material'
+import { ThemedCircularProgress } from '../styledComponents/BasicComponents'
 
 const LoadingStateContainer = styled.div`
 	width: 100vw;
@@ -30,16 +30,16 @@ export default ({storeAs, hideLoading, uuidProp}) => (ComponentToWrap) => {
 				console.error(this.props.firestoreReducer)
 			}
 			if (!ordered) {
-				return hideLoading ? null : <LoadingStateContainer><CircularProgress /></LoadingStateContainer>
+				return hideLoading ? null : <LoadingStateContainer><ThemedCircularProgress /></LoadingStateContainer>
 			}
 
 			if (uuidProp) {
 				if (!isLoaded(ordered[storeAs + this.props[uuidProp]])) {
-					return hideLoading ? null : <LoadingStateContainer><CircularProgress /></LoadingStateContainer>
+					return hideLoading ? null : <LoadingStateContainer><ThemedCircularProgress /></LoadingStateContainer>
 				}
 			} else {
 				if (!isLoaded(ordered[storeAs])) {
-					return hideLoading ? null : <LoadingStateContainer><CircularProgress /></LoadingStateContainer>
+					return hideLoading ? null : <LoadingStateContainer><ThemedCircularProgress /></LoadingStateContainer>
 				}
 			}
 

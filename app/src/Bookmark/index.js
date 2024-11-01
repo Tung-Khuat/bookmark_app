@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { firestoreConnect } from 'react-redux-firebase'
 import { bindActionCreators, compose } from 'redux'
 import { connect } from 'react-redux'
-import { Checkbox, CircularProgress, Fab } from '@mui/material'
+import { Checkbox, Fab } from '@mui/material'
 import { Add, CreateNewFolder, Delete, Lock } from '@mui/icons-material'
 import * as bookmarkActions from '../state/firebaseActions/bookmark-actions'
 import { useSnackbar } from 'notistack'
@@ -16,6 +16,7 @@ import WithRouterHooks  from '../components/HOC/WithRouterHooks'
 import WithDirectoryParentUUID from '../components/HOC/WithDirectoryParentUUID'
 import BookmarkCard from './BookmarkCard'
 import { ThemeButton } from '../components/styledComponents/Buttons'
+import { ThemedCircularProgress } from '../components/styledComponents/BasicComponents'
 
 const BookmarksContainer = styled.div`
 	display: grid;
@@ -113,7 +114,7 @@ function Bookmark (props) {
 								disabled={!selectedBookmarkUUIDs.length || processing}
 								variant="raised"
 								destructive 
-								onClick={handleDeleteSelected}>{processing ? <CircularProgress size={24} /> : (<><Delete />  Delete selected</>)} </ThemeButton>
+								onClick={handleDeleteSelected}>{processing ? <ThemedCircularProgress size={24} /> : (<><Delete />  Delete selected</>)} </ThemeButton>
 						</div>
 						<div style={{ marginRight: 16 }}>
 							<ThemeCheckbox 
